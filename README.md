@@ -57,5 +57,3 @@ This project is proudly licensed under the [Unlicense](LICENSE). Use it, sell it
 ## 💡 Disclaimer
 
 WeedMate is intended for use in whatever-the-fuck-you-want. Take my code, put your name on it, sell it to Jeff Bezos, make a fortune—whatever you feel like. This is free, no strings attached, and I’m not responsible if it gets you rich or gets you in jail. 
-
-Use it, fork it, wipe your ass with it, put your dick in it. I don't give a fuck.
