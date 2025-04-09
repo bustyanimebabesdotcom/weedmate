@@ -1,3 +1,0 @@
-/mnt/c/users/mike hunt/documents/c/dailyhello/weedmate/build/CMakeFiles/weedmate.dir
-/mnt/c/users/mike hunt/documents/c/dailyhello/weedmate/build/CMakeFiles/edit_cache.dir
-/mnt/c/users/mike hunt/documents/c/dailyhello/weedmate/build/CMakeFiles/rebuild_cache.dir

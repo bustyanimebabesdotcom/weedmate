@@ -1,1 +1,0 @@
-/usr/bin/cc -O3 -s -Wall -Wextra -Wpedantic CMakeFiles/weedmate.dir/main.c.o CMakeFiles/weedmate.dir/functions.c.o -o weedmate  -lm 
