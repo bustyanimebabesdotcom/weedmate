@@ -2,6 +2,8 @@
 // Functions live in:       functions.c
 // Macros + declarations:   common.h
 
+// test comment
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
