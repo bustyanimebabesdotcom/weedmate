@@ -49,16 +49,16 @@ static int budTenderInputCheck ( int x ) {
 		return BUDTENDER_BREAK;
 	}
 
-    if ( x != 1 ) {
+	if ( x != 1 ) {
 
-        CLEAR_SCREEN();
-        printf( "Invalid input. Please pick a valid number.\n" );
-        flushInputBuffer();
-        return BUDTENDER_CONTINUE;
+		CLEAR_SCREEN();
+		printf( "Invalid input. Please pick a valid number.\n" );
+		flushInputBuffer();
+		return BUDTENDER_CONTINUE;
 
-    }
+	}
 
-    return BUDTENDER_OK;
+	return BUDTENDER_OK;
 }
 
 /**
@@ -68,25 +68,25 @@ static int budTenderInputCheck ( int x ) {
  */
 static int budTenderSanityCheck ( int x ) {
 
-    if ( x == MIN_STRAIN_PRICE ) {
-        CLEAR_SCREEN();
-        puts( "Nothing is free, not even death." );
-        return BUDTENDER_CONTINUE;
-    }
+	if ( x == MIN_STRAIN_PRICE ) {
+		CLEAR_SCREEN();
+		puts( "Nothing is free, not even death." );
+		return BUDTENDER_CONTINUE;
+	}
 
-    if ( x > MAX_STRAIN_PRICE ) {
-        CLEAR_SCREEN();
-        puts( "Bro... no weed is worth that much." );
-        return BUDTENDER_CONTINUE;
-    }
+	if ( x > MAX_STRAIN_PRICE ) {
+		CLEAR_SCREEN();
+		puts( "Bro... no weed is worth that much." );
+		return BUDTENDER_CONTINUE;
+	}
 
-    if ( x < 0 ) {
-        CLEAR_SCREEN();
-        printf( "Illegal input value interpreted as '%u'\n", (unsigned int)x );
-        return BUDTENDER_CONTINUE;
-    }
+	if ( x < 0 ) {
+		CLEAR_SCREEN();
+		printf( "Illegal input value interpreted as '%u'\n", (unsigned int)x );
+		return BUDTENDER_CONTINUE;
+	}
 
-    return BUDTENDER_OK;
+	return BUDTENDER_OK;
 }
 
 /**
@@ -96,32 +96,32 @@ static int budTenderSanityCheck ( int x ) {
  */
 void motd ( void ) {
 
-    puts( "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" );
-    puts( "██ ███ ██ ▄▄▄██ ▄▄▄██ ▄▄▀██ ▄▀▄ █ ▄▄▀█▄▄ ▄▄██ ▄▄▄██" );
-    puts( "██ █ █ ██ ▄▄▄██ ▄▄▄██ ██ ██ █ █ █ ▀▀ ███ ████ ▄▄▄██" );
-    puts( "██▄▀▄▀▄██ ▀▀▀██ ▀▀▀██ ▀▀ ██ ███ █ ██ ███ ████ ▀▀▀██" );
-    puts( "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" );
+	puts( "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" );
+	puts( "██ ███ ██ ▄▄▄██ ▄▄▄██ ▄▄▀██ ▄▀▄ █ ▄▄▀█▄▄ ▄▄██ ▄▄▄██" );
+	puts( "██ █ █ ██ ▄▄▄██ ▄▄▄██ ██ ██ █ █ █ ▀▀ ███ ████ ▄▄▄██" );
+	puts( "██▄▀▄▀▄██ ▀▀▀██ ▀▀▀██ ▀▀ ██ ███ █ ██ ███ ████ ▀▀▀██" );
+	puts( "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" );
 
-    putchar( '\n' );
-    puts( "               Welcome to weedmate!                      " );
-    putchar( '\n' );
-    puts( "press 'l' to browse the strain list." );
-    puts( "press 'c' to see the prices." );
-    puts( "press 'm' to reprint this message." );
-    puts( "press 'q' to quit." );
-    puts( "press '+' to double prices." );
-    puts( "press '-' to cut prices in half." );
-    putchar( '\n' );
-    puts( "Enter your input." );
+	putchar( '\n' );
+	puts( "               Welcome to weedmate!                      " );
+	putchar( '\n' );
+	puts( "press 'l' to browse the strain list." );
+	puts( "press 'c' to see the prices." );
+	puts( "press 'm' to reprint this message." );
+	puts( "press 'q' to quit." );
+	puts( "press '+' to double prices." );
+	puts( "press '-' to cut prices in half." );
+	putchar( '\n' );
+	puts( "Enter your input." );
 
 }
 
 static void printStrainPriceMessage ( int choice, const char* tense ) {
-    
-    CLEAR_SCREEN();
-    if ( choice >= 0 && choice < STRAIN_COUNT ) {
-        printf( "The price of Strain #%d - %s %s $%u/g\n", choice + USER_INPUT_OFFSET, strains[choice].name, tense, strains[choice].price );
-    }
+
+	CLEAR_SCREEN();
+	if ( choice >= 0 && choice < STRAIN_COUNT ) {
+	printf( "The price of Strain #%d - %s %s $%u/g\n", choice + USER_INPUT_OFFSET, strains[choice].name, tense, strains[choice].price );
+	}
 
 }
 
@@ -132,7 +132,7 @@ static void printStrainPriceMessage ( int choice, const char* tense ) {
  */
 static void printStrainPrice ( int choice ) {
 
-    printStrainPriceMessage( choice, "is" );
+	printStrainPriceMessage( choice, "is" );
 
 }
 
@@ -143,7 +143,7 @@ static void printStrainPrice ( int choice ) {
  */
 static void printNewStrainPrice ( int choice ) {
 
-    printStrainPriceMessage( choice, "has been changed to" );
+	printStrainPriceMessage( choice, "has been changed to" );
 
 }
 
@@ -154,12 +154,12 @@ static void printNewStrainPrice ( int choice ) {
  */
 void printStrainList ( void ) {
 
-    puts( "========= Strain List =========" );
-    putchar( '\n' );
+	puts( "========= Strain List =========" );
+	putchar( '\n' );
 
-    for ( int i = 0; i < STRAIN_COUNT; i++ ) {                                                        // 2nd iteration, new coding technique acquired!
-        printf( "%4d. %-20s $%2u\n", i + USER_INPUT_OFFSET, strains[i].name, strains[i].price );
-    }
+	for ( int i = 0; i < STRAIN_COUNT; i++ ) {                                                        // 2nd iteration, new coding technique acquired!
+	printf( "%4d. %-20s $%2u\n", i + USER_INPUT_OFFSET, strains[i].name, strains[i].price );
+	}
 
 }
 
@@ -172,18 +172,18 @@ void printStrainList ( void ) {
  */
 void strainPriceAdjust ( strain_t* strains, int mode ) {
 
-    for ( int i = 0; i < STRAIN_COUNT; i++) {
-        if ( mode == 1 ) {
-            strains[i].price <<= 1;
-        }
-        else if ( mode == -1 ) {
-            strains[i].price >>= 1;
-        }
-        else {
-            // error handling
-            fprintf( stderr, "strainPriceAdjust: invalid mode ( %d )\n", mode );
-        }
-    }
+	for ( int i = 0; i < STRAIN_COUNT; i++) {
+		if ( mode == 1 ) {
+			strains[i].price <<= 1;
+		}
+		else if ( mode == -1 ) {
+			strains[i].price >>= 1;
+		}
+		else {
+			// error handling
+			fprintf( stderr, "strainPriceAdjust: invalid mode ( %d )\n", mode );
+		}
+	}
 
 }
 
@@ -194,11 +194,11 @@ void strainPriceAdjust ( strain_t* strains, int mode ) {
  */
 void exitWeedMate ( void ) {
 
-    CLEAR_SCREEN();
-    puts( "Thank you for using weedmate!" );
-    putchar( '\n' );
-    printf( "Terminating with exit code %d!\n", EXIT_CODE );
-    EXIT_ALT_SCREEN();
+	CLEAR_SCREEN();
+	puts( "Thank you for using weedmate!" );
+	putchar( '\n' );
+	printf( "Terminating with exit code %d!\n", EXIT_CODE );
+	EXIT_ALT_SCREEN();
 
 }
 
@@ -209,22 +209,22 @@ void exitWeedMate ( void ) {
  */
 static int getStrainChoice ( const char *prompt ) {
 
-    printf( prompt, STRAIN_COUNT );
+	printf( prompt, STRAIN_COUNT );
 
-    int choice;
-    int result = scanf( "%d", &choice );
-    int check = budTenderInputCheck( result );
+	int choice;
+	int result = scanf( "%d", &choice );
+	int check = budTenderInputCheck( result );
 
-    if ( check == BUDTENDER_BREAK ) return BUDTENDER_BREAK;
-    if ( check == BUDTENDER_CONTINUE ) return BUDTENDER_CONTINUE;
+	if ( check == BUDTENDER_BREAK ) return BUDTENDER_BREAK;
+	if ( check == BUDTENDER_CONTINUE ) return BUDTENDER_CONTINUE;
 
-    if ( choice < 1 || choice > STRAIN_COUNT ) {
-        CLEAR_SCREEN();
-        printf( "That number is not on the list. Please pick a valid number.\n" );
-        return BUDTENDER_CONTINUE;
-    }
+	if ( choice < 1 || choice > STRAIN_COUNT ) {
+		CLEAR_SCREEN();
+		printf( "That number is not on the list. Please pick a valid number.\n" );
+		return BUDTENDER_CONTINUE;
+	}
 
-    return choice;
+	return choice;
 }
 
 /**
@@ -232,49 +232,49 @@ static int getStrainChoice ( const char *prompt ) {
  */
 void budTenderMenu ( void ) {
 
-    CLEAR_SCREEN();
-    puts( "=== Budtender Access Granted ===" );
+	CLEAR_SCREEN();
+	puts( "=== Budtender Access Granted ===" );
 
-    while ( 1 ) {
+	while ( 1 ) {
 
-        putchar( '\n' );
-        printStrainList();
-        putchar( '\n' );
+		putchar( '\n' );
+		printStrainList();
+		putchar( '\n' );
 
-        int result;
-        int check;
+		int result;
+		int check;
 
-        int choice = getStrainChoice( "Enter strain number to update ( 1–%d ):\n" );
+		int choice = getStrainChoice( "Enter strain number to update ( 1–%d ):\n" );
 
-        if ( choice == BUDTENDER_BREAK ) break;
-        if ( choice == BUDTENDER_CONTINUE ) continue;
+		if ( choice == BUDTENDER_BREAK ) break;
+		if ( choice == BUDTENDER_CONTINUE ) continue;
 
-        choice -= USER_INPUT_OFFSET;
+		choice -= USER_INPUT_OFFSET;
 
-        if ( choice == FENT_KUSH ) {
-            CLEAR_SCREEN();
-            printf( "You are not worthy to alter the price of %s!\n", strains[FENT_KUSH].name );
-            continue;
-        }
+		if ( choice == FENT_KUSH ) {
+			CLEAR_SCREEN();
+			printf( "You are not worthy to alter the price of %s!\n", strains[FENT_KUSH].name );
+			continue;
+		}
 
-        CLEAR_SCREEN();
-        printf( "Enter your new price for %s.\n", strains[choice].name );
+		CLEAR_SCREEN();
+		printf( "Enter your new price for %s.\n", strains[choice].name );
 
-        unsigned int newPrice;
-        result = scanf( "%u", &newPrice );
-        check = budTenderInputCheck( result );
+		unsigned int newPrice;
+		result = scanf( "%u", &newPrice );
+		check = budTenderInputCheck( result );
 
-        if ( check == BUDTENDER_BREAK ) break;
-        if ( check == BUDTENDER_CONTINUE ) continue;
+		if ( check == BUDTENDER_BREAK ) break;
+		if ( check == BUDTENDER_CONTINUE ) continue;
 
-        int sanityStatus = budTenderSanityCheck( newPrice );
-        if (sanityStatus == BUDTENDER_CONTINUE) continue;
+		int sanityStatus = budTenderSanityCheck( newPrice );
+		if (sanityStatus == BUDTENDER_CONTINUE) continue;
 
-        strains[choice].price = newPrice;
-        printNewStrainPrice( choice );
-        break;
+		strains[choice].price = newPrice;
+		printNewStrainPrice( choice );
+		break;
 
-    }
+	}
 
 }
 
@@ -285,31 +285,31 @@ void budTenderMenu ( void ) {
  */
 void handleStrainPriceLookup ( void ) {
 
-    CLEAR_SCREEN();
-    printStrainList();
-    while (1) {
+	CLEAR_SCREEN();
+	printStrainList();
+	while (1) {
 
-        putchar( '\n' );
-        printf( "Enter strain number ( 1–%d ):\n", STRAIN_COUNT );
+		putchar( '\n' );
+		printf( "Enter strain number ( 1–%d ):\n", STRAIN_COUNT );
 
-        int choice;
+		int choice;
 
-        if ( scanf ("%d", &choice ) != 1 ) {
-            printf( "Invalid input. Please pick a valid number.\n" );
-            flushInputBuffer();
-            continue;
-        }
+		if ( scanf ("%d", &choice ) != 1 ) {
+			printf( "Invalid input. Please pick a valid number.\n" );
+			flushInputBuffer();
+			continue;
+		}
 
-        if ( choice < 1 || choice > STRAIN_COUNT ) {
-            printf( "Try Again.\n" );
-            continue;
-        }
+		if ( choice < 1 || choice > STRAIN_COUNT ) {
+			printf( "Try Again.\n" );
+			continue;
+		}
 
-        choice -= USER_INPUT_OFFSET;
+		choice -= USER_INPUT_OFFSET;
 
-        printStrainPrice( choice );
-        break;
+		printStrainPrice( choice );
+		break;
 
-    }
+	}
 
 }
