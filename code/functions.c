@@ -106,11 +106,12 @@ void motd ( void ) {
 	puts( "               Welcome to weedmate!                      " );
 	putchar( '\n' );
 	puts( "press 'l' to browse the strain list." );
-	puts( "press 'c' to see the prices." );
-	puts( "press 'm' to reprint this message." );
-	puts( "press 'q' to quit." );
+	puts( "press 'p' to check the price of individual strains." );
+	puts( "press 'c' to open the calculator." );
 	puts( "press '+' to double prices." );
 	puts( "press '-' to cut prices in half." );
+	puts( "press 'm' to reprint this message." );
+	puts( "press 'q' to quit." );
 	putchar( '\n' );
 	puts( "Enter your input." );
 
@@ -310,6 +311,75 @@ void handleStrainPriceLookup ( void ) {
 		printStrainPrice( choice );
 		break;
 
+	}
+
+}
+
+void weedCalc ( void ) {
+
+	int num1 = 0;
+	int num2 = 0;
+
+	char mod = 0;
+	double result = 0.0;
+
+	puts( "Enter your first number." );
+	if ( scanf ("%d", &num1 ) != 1 ) {
+		printf( "Invalid input. Please pick a valid number.\n" );
+		flushInputBuffer();
+		return;
+	}
+
+	puts( "Enter your modifier ( + - * / )." );
+	if ( scanf (" %c", &mod ) != 1 ) {
+		printf( "Invalid input. Please pick a valid modifier.\n" );
+		flushInputBuffer();
+		return;
+	}
+
+	puts( "Enter your second number." );
+	if ( scanf ("%d", &num2 ) != 1 ) {
+		printf( "Invalid input. Please pick a valid number.\n" );
+		flushInputBuffer();
+		return;
+	}
+
+	if ( mod == '+' ) {
+		result = num1 + num2;
+	}
+
+	else if ( mod == '-' ) {
+		result = num1 - num2;
+	}
+
+	else if ( mod == '*' ) {
+		result = num1 * num2;
+	}
+
+	else if ( mod == '/' ) {
+
+		if ( num2 == 0 ) {
+			puts( "You cannot divide by zero." );
+			return;
+		}
+
+		else {
+			result = (double)num1 / num2;
+		}
+
+	}
+
+	else {
+		puts( "Invalid input. Exiting calculator." );
+		return;
+	}
+
+	if ( mod == '/' ) {
+		printf( "Your answer is: %.15f\n", result );
+	}
+
+	else {
+		printf( "Your answer is: %d\n", (int)result );
 	}
 
 }

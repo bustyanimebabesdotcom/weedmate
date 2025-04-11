@@ -52,8 +52,8 @@ int main ( void ) {
 				RETURN_TO_MENU_MSG();
 				break;
 
-			case 'c':
-			case 'C':
+			case 'p':
+			case 'P':
 				// redundant function, might be useful one day
 				handleStrainPriceLookup();
 				RETURN_TO_MENU_MSG();
@@ -82,6 +82,12 @@ int main ( void ) {
 				RETURN_TO_MENU_MSG();
 				break;
 
+			case 'c':
+			case 'C':
+				CLEAR_SCREEN();
+				weedCalc();
+				RETURN_TO_MENU_MSG();
+				break;
 			default:
 				// in case of oh shit moment
 				CLEAR_SCREEN();

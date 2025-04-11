@@ -26,6 +26,9 @@ void budTenderMenu				( void );
 void handleStrainPriceLookup	( void );
 void strainPriceAdjust			( strain_t* strains, int mode );
 
+// === Math shit, cause why not ===
+void weedCalc					( void );
+
 // === Global strain array ( defined in functions.c ) ===
 extern strain_t					strains[STRAIN_COUNT];
 
