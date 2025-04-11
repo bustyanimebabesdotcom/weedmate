@@ -10,23 +10,23 @@
 
 // === strain_t: represents weed strains ( name + price) ===
 typedef struct {
-    char                        *name;
-    unsigned int                price;
+	char						*name;
+	unsigned int				price;
 } strain_t;
 
 // === Init / Exit ===
-void motd                       ( void );
-void exitWeedMate               ( void );
+void motd						( void );
+void exitWeedMate				( void );
 
 // === Display ===
-void printStrainList            ( void );
+void printStrainList			( void );
 
 // === Menus / Interaction ===
-void budTenderMenu              ( void );
-void handleStrainPriceLookup    ( void );
-void strainPriceAdjust          ( strain_t* strains, int mode );
+void budTenderMenu				( void );
+void handleStrainPriceLookup	( void );
+void strainPriceAdjust			( strain_t* strains, int mode );
 
 // === Global strain array ( defined in functions.c ) ===
-extern strain_t                 strains[STRAIN_COUNT];
+extern strain_t					strains[STRAIN_COUNT];
 
 #endif
