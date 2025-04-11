@@ -33,8 +33,8 @@ strain_t strains[STRAIN_COUNT] = {
  */
 static void flushInputBuffer ( void ) {
 
-    int ch;
-    while ( ( ch = getchar() ) != '\n' && ch != EOF );
+	int ch;
+	while ( ( ch = getchar() ) != '\n' && ch != EOF );
 
 }
 
@@ -44,10 +44,10 @@ static void flushInputBuffer ( void ) {
  */
 static int budTenderInputCheck ( int x ) {
 
-    if ( x == EOF ) {
-        puts( "Exiting Budtender Menu." );
-        return BUDTENDER_BREAK;
-    }
+	if ( x == EOF ) {
+		puts( "Exiting Budtender Menu." );
+		return BUDTENDER_BREAK;
+	}
 
     if ( x != 1 ) {
 
