@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
+#include <stdbool.h>
 #include "common.h"
 
 strain_t strains[STRAIN_COUNT] = {
@@ -315,71 +316,96 @@ void handleStrainPriceLookup ( void ) {
 
 }
 
-void weedCalc ( void ) {
-
-	int num1 = 0;
-	int num2 = 0;
-
-	char mod = 0;
-	double result = 0.0;
+/**
+ * weedCalcInput - handles input for weedcalc
+ *
+ * Lets the user input first number, second number, and a modifier
+ */
+static void weedCalcInput ( int *a, char *mod, int *b ) {
 
 	puts( "Enter your first number." );
-	if ( scanf ("%d", &num1 ) != 1 ) {
+	if ( scanf ("%d", a ) != 1 ) {
 		printf( "Invalid input. Please pick a valid number.\n" );
 		flushInputBuffer();
 		return;
 	}
 
 	puts( "Enter your modifier ( + - * / )." );
-	if ( scanf (" %c", &mod ) != 1 ) {
+	if ( scanf (" %c", mod ) != 1 ) {
 		printf( "Invalid input. Please pick a valid modifier.\n" );
 		flushInputBuffer();
 		return;
 	}
 
 	puts( "Enter your second number." );
-	if ( scanf ("%d", &num2 ) != 1 ) {
+	if ( scanf ("%d", b ) != 1 ) {
 		printf( "Invalid input. Please pick a valid number.\n" );
 		flushInputBuffer();
 		return;
 	}
 
-	if ( mod == '+' ) {
-		result = num1 + num2;
-	}
+}
 
-	else if ( mod == '-' ) {
-		result = num1 - num2;
-	}
+/*
+ * doCalculation - performs basic arithmetic operations for weedCalc
+ *
+ * No input, automates the process.
+ */
+static double doCalculation ( int a, char mod, int b, bool *success ) {
+	
+	*success = true;
 
-	else if ( mod == '*' ) {
-		result = num1 * num2;
-	}
+	switch ( mod ) {
 
-	else if ( mod == '/' ) {
+		case '+': return a + b;
+		case '-': return a - b;
+		case '*': return a * b;
+		case '/': {
+			if ( b == 0) {
+				puts( "You cannot divide by 0!" );
+				*success = false;
+				return 0;
+			}
 
-		if ( num2 == 0 ) {
-			puts( "You cannot divide by zero." );
-			return;
+			return (double)a / b;
 		}
 
-		else {
-			result = (double)num1 / num2;
+		default: {
+			puts( "Invalid operator. Please try again." );
+			*success = false;
+			return 0;
 		}
 
 	}
 
-	else {
-		puts( "Invalid input. Exiting calculator." );
+}
+
+/** 
+ * weedCalc - simple calculator, self explanatory.  
+ */
+void weedCalc ( void ) {
+
+	int num1 = 0;
+	int num2 = 0;
+	char mod = 0;
+	double result = 0.0;
+	bool success = false;
+
+	weedCalcInput( &num1, &mod, &num2 );
+	result = doCalculation( num1, mod, num2, &success );
+
+	if ( !success ) {
+		// Error handled by doCalculation
 		return;
 	}
 
+	printf( "Your number is: " );
 	if ( mod == '/' ) {
-		printf( "Your answer is: %.15f\n", result );
+		printf( "%.15f\n", result );
 	}
 
 	else {
-		printf( "Your answer is: %d\n", (int)result );
+		printf( "%d\n", (int)result );
 	}
 
 }
