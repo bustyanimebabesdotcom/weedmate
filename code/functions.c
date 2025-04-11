@@ -8,21 +8,21 @@
 #include "common.h"
 
 strain_t strains[STRAIN_COUNT] = {
-    { "White Death",            13 },
-    { "Purple Plutonium OG",    12 },
-    { "Dankmestic Abuse",       24 },
-    { "Fentanyl Kush",          48 },
-    { "Blunt Trauma",           10 },
-    { "Petroleum #42",          35 },
-    { "Ganjaffi",               23 },
-    { "Dental Prescription",     9 },
-    { "Hebrew Kush",             6 },
-    { "Rohypno-Chronic",        30 },
-    { "Holy Shit OG",            8 },
-    { "George W Kush",           8 },
-    { "Bad Dragon",             17 },
-    { "Carpet Muncher",         11 },
-    { "Freedom Highve",         22 }
+	{ "White Death",            13 },
+	{ "Purple Plutonium OG",    12 },
+	{ "Dankmestic Abuse",       24 },
+	{ "Fentanyl Kush",          48 },
+	{ "Blunt Trauma",           10 },
+	{ "Petroleum #42",          35 },
+	{ "Ganjaffi",               23 },
+	{ "Dental Prescription",     9 },
+	{ "Hebrew Kush",             6 },
+	{ "Rohypno-Chronic",        30 },
+	{ "Holy Shit OG",            8 },
+	{ "George W Kush",           8 },
+	{ "Bad Dragon",             17 },
+	{ "Carpet Muncher",         11 },
+	{ "Freedom Highve",         22 }
 };
 
 /**
