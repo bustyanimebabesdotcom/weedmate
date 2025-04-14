@@ -127,7 +127,7 @@ void printStrainList ( void ) {
 	puts( "========= Strain List =========" );
 	putchar( '\n' );
 
-	for ( int i = 0; i < STRAIN_COUNT; i++ ) {                                                        // 2nd iteration, new coding technique acquired!
+	for ( int i = 0; i < STRAIN_COUNT; i++ ) {
 	printf( "%4d. %-20s $%2u\n", i + USER_INPUT_OFFSET, strains[i].name, strains[i].price );
 	}
 
