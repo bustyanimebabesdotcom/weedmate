@@ -26,6 +26,12 @@ void budTenderMenu				( void );
 void handleStrainPriceLookup	( void );
 void strainPriceAdjust			( strain_t* strains, int mode );
 
+// === Input handling ===
+int getIntInput					( const char * prompt );
+unsigned int getUsIntInput		( const char * prompt );
+char getCharInput				( const char * prompt );
+void flushInputBuffer			( void );
+
 // === Math shit, cause why not ===
 void weedCalc					( void );
 

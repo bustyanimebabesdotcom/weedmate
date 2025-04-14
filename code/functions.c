@@ -1,11 +1,15 @@
 // functions.c - arrays, functions, and the big meat of WeedMate
 // Main routing:            main.c
-// Macros + declarations:   common.h
+// Input handling			inputhandler.c
+// Declarations:   			common.h
+// Macros:					macros.h
+// project:					weedmate
 
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
 #include <stdbool.h>
+#include <string.h>
 #include "common.h"
 
 strain_t strains[STRAIN_COUNT] = {
@@ -25,42 +29,6 @@ strain_t strains[STRAIN_COUNT] = {
 	{ "Carpet Muncher",         11 },
 	{ "Freedom Highve",         22 }
 };
-
-/**
- * flushInputBuffer - Clears any remaining characters from stdin.
- *
- * Used after scanf fails or reads partial input, to prevent leftover
- * characters from screwing up future input operations.
- */
-static void flushInputBuffer ( void ) {
-
-	int ch;
-	while ( ( ch = getchar() ) != '\n' && ch != EOF );
-
-}
-
-/**
- * budTenderInputCheck - Validates raw scanf() result for user input.
- *
- */
-static int budTenderInputCheck ( int x ) {
-
-	if ( x == EOF ) {
-		puts( "Exiting Budtender Menu." );
-		return BUDTENDER_BREAK;
-	}
-
-	if ( x != 1 ) {
-
-		CLEAR_SCREEN();
-		printf( "Invalid input. Please pick a valid number.\n" );
-		flushInputBuffer();
-		return BUDTENDER_CONTINUE;
-
-	}
-
-	return BUDTENDER_OK;
-}
 
 /**
  * budTenderSanityCheck - Validates logical price constraints for a strain.
@@ -213,16 +181,12 @@ static int getStrainChoice ( const char *prompt ) {
 
 	printf( prompt, STRAIN_COUNT );
 
-	int choice;
-	int result = scanf( "%d", &choice );
-	int check = budTenderInputCheck( result );
-
-	if ( check == BUDTENDER_BREAK ) return BUDTENDER_BREAK;
-	if ( check == BUDTENDER_CONTINUE ) return BUDTENDER_CONTINUE;
+	int choice = getIntInput("");
 
 	if ( choice < 1 || choice > STRAIN_COUNT ) {
 		CLEAR_SCREEN();
 		printf( "That number is not on the list. Please pick a valid number.\n" );
+
 		return BUDTENDER_CONTINUE;
 	}
 
@@ -235,6 +199,7 @@ static int getStrainChoice ( const char *prompt ) {
 void budTenderMenu ( void ) {
 
 	CLEAR_SCREEN();
+	flushInputBuffer();
 	puts( "=== Budtender Access Granted ===" );
 
 	while ( 1 ) {
@@ -243,10 +208,8 @@ void budTenderMenu ( void ) {
 		printStrainList();
 		putchar( '\n' );
 
-		int result;
-		int check;
-
-		int choice = getStrainChoice( "Enter strain number to update ( 1–%d ):\n" );
+		printf( "Enter strain number to update ( 1–%d ):\n", STRAIN_COUNT );
+		int choice = getStrainChoice("");
 
 		if ( choice == BUDTENDER_BREAK ) break;
 		if ( choice == BUDTENDER_CONTINUE ) continue;
@@ -261,13 +224,7 @@ void budTenderMenu ( void ) {
 
 		CLEAR_SCREEN();
 		printf( "Enter your new price for %s.\n", strains[choice].name );
-
-		unsigned int newPrice;
-		result = scanf( "%u", &newPrice );
-		check = budTenderInputCheck( result );
-
-		if ( check == BUDTENDER_BREAK ) break;
-		if ( check == BUDTENDER_CONTINUE ) continue;
+		unsigned int newPrice = getUsIntInput("");
 
 		int sanityStatus = budTenderSanityCheck( newPrice );
 		if (sanityStatus == BUDTENDER_CONTINUE) continue;
@@ -288,18 +245,18 @@ void budTenderMenu ( void ) {
 void handleStrainPriceLookup ( void ) {
 
 	CLEAR_SCREEN();
-	printStrainList();
+	flushInputBuffer();
 	while (1) {
 
 		putchar( '\n' );
 		printf( "Enter strain number ( 1–%d ):\n", STRAIN_COUNT );
 
-		int choice;
+		int choice = getIntInput("");
 
-		if ( scanf ("%d", &choice ) != 1 ) {
-			printf( "Invalid input. Please pick a valid number.\n" );
-			flushInputBuffer();
-			continue;
+		if ( choice == 0 ) {
+			CLEAR_SCREEN();
+			puts("Canceled strain search...");
+			break;
 		}
 
 		if ( choice < 1 || choice > STRAIN_COUNT ) {
@@ -323,26 +280,10 @@ void handleStrainPriceLookup ( void ) {
  */
 static void weedCalcInput ( int *a, char *mod, int *b ) {
 
-	puts( "Enter your first number." );
-	if ( scanf ("%d", a ) != 1 ) {
-		printf( "Invalid input. Please pick a valid number.\n" );
-		flushInputBuffer();
-		return;
-	}
-
-	puts( "Enter your modifier ( + - * / )." );
-	if ( scanf (" %c", mod ) != 1 ) {
-		printf( "Invalid input. Please pick a valid modifier.\n" );
-		flushInputBuffer();
-		return;
-	}
-
-	puts( "Enter your second number." );
-	if ( scanf ("%d", b ) != 1 ) {
-		printf( "Invalid input. Please pick a valid number.\n" );
-		flushInputBuffer();
-		return;
-	}
+	flushInputBuffer();
+	*a = getIntInput( "Enter your first number:\n" );
+	*mod = getCharInput( "Enter your modifier ( + - * / ):\n" );
+	*b = getIntInput( "Enter your second number:\n" );
 
 }
 
@@ -373,7 +314,7 @@ static double doCalculation ( int a, char mod, int b, bool *success ) {
 		default: {
 			puts( "Invalid operator. Please try again." );
 			*success = false;
-			return 0;
+			return EXIT_CODE;
 		}
 
 	}

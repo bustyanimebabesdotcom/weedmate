@@ -1,6 +1,9 @@
 // main.c — Terminal ritual grounds for WeedMate
 // Functions live in:       functions.c
-// Macros + declarations:   common.h
+// Input handling:			inputhandler.c
+// Declarations:   			common.h
+// Macros:					macros.h
+// project:					weedmate
 
 #include <stdio.h>
 #include <stdlib.h>
