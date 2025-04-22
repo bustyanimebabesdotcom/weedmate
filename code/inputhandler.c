@@ -29,9 +29,7 @@ int getIntInput( const char * prompt ) {
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
 
-		if ( sscanf( buffer, "%d", &value ) == 1 ) {
-			return value;
-		}
+		if ( sscanf( buffer, "%d", &value ) == 1 ) return value;
 	
 		fprintf( stderr, "Invalid number. Try again\n");
 
@@ -60,9 +58,7 @@ unsigned int getUsIntInput( const char * prompt ) {
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
 
-		if ( sscanf( buffer, "%u", &value ) == 1 ) {
-			return value;
-		}
+		if ( sscanf( buffer, "%u", &value ) == 1 ) return value;
 	
 		fprintf( stderr, "Invalid number. Try again\n");
 		
@@ -89,9 +85,7 @@ char getCharInput( const char * prompt ) {
 			continue;
 		}
 		
-		if ( sscanf( buffer, " %c", &value ) == 1 ) {
-			return value;
-		}
+		if ( sscanf( buffer, " %c", &value ) == 1 ) return value;
 	
 		fprintf( stderr, "Invalid modifier. Try again\n");
 	}
