@@ -39,9 +39,38 @@ int getIntInput( const char * prompt ) {
 }
 
 /**
+ * getFloatInput - a safer alternative to scanf for floating point numbers
+ *
+ * usage - float = getFloatInput( "String\n" );
+ */
+float getFloatInput( const char * prompt ) {
+
+	char buffer[BUFFER_SIZE];
+	float value;
+
+	while ( 1 ) {
+		printf( "%s", prompt );
+
+		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
+			fprintf( stderr, "Error in input stream.\n" );
+			continue;
+		}
+
+		buffer[strcspn( buffer, "\n" )] = '\0';
+
+		if ( sscanf( buffer, "%f", &value ) == 1 ) return value;
+	
+		fprintf( stderr, "Invalid number. Try again\n");
+
+		
+	}
+
+}
+
+/**
  * getUsIntInput - a safer alternative to scanf for unsigned integers
  *
- * usage - unsigned int = getIntInput( "String\n" );
+ * usage - unsigned int = getUsIntInput( "String\n" );
  */
 unsigned int getUsIntInput( const char * prompt ) {
 

@@ -305,7 +305,7 @@ static double doCalculation ( int a, char mod, int b, bool *success ) {
 			if ( b == 0) {
 				puts( "You cannot divide by 0!" );
 				*success = false;
-				return 0;
+				return DECIMAL_EXIT;
 			}
 
 			return (double)a / b;
@@ -314,7 +314,7 @@ static double doCalculation ( int a, char mod, int b, bool *success ) {
 		default: {
 			puts( "Invalid operator. Please try again." );
 			*success = false;
-			return EXIT_CODE;
+			return DECIMAL_EXIT;
 		}
 
 	}
@@ -342,7 +342,7 @@ void weedCalc ( void ) {
 
 	printf( "Your number is: " );
 	if ( mod == '/' ) {
-		printf( "%.15f\n", result );
+		printf( "%.8f\n", result );
 	}
 
 	else {

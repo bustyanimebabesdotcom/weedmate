@@ -7,6 +7,7 @@
 // === Exit codes ===
 #define EXIT_CODE				0
 #define CRASH_CODE				1
+#define DECIMAL_EXIT			0.0
 
 // === Terminal control ===
 #define ENTER_ALT_SCREEN()		printf("\033[?1049h")
