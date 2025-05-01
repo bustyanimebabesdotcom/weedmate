@@ -179,7 +179,7 @@ void exitWeedMate ( void ) {
  */
 static int getStrainChoice( void ) {
 
-	int choice = getIntInput(NULL);
+	int choice = getIntInput();
 
 	if ( choice < 1 || choice > STRAIN_COUNT ) {
 		CLEAR_SCREEN();
@@ -222,7 +222,7 @@ void budTenderMenu ( void ) {
 
 		CLEAR_SCREEN();
 		printf( "Enter your new price for %s.\n", strains[choice].name );
-		unsigned int newPrice = getUIntInput(NULL);
+		unsigned int newPrice = getUIntInput();
 
 		int sanityStatus = budTenderSanityCheck( newPrice );
 		if (sanityStatus == BUDTENDER_CONTINUE) continue;
@@ -249,7 +249,7 @@ void handleStrainPriceLookup ( void ) {
 		putchar( '\n' );
 		printf( "Enter strain number ( 1–%d ):\n", STRAIN_COUNT );
 
-		int choice = getIntInput(NULL);
+		int choice = getIntInput();
 
 		if ( choice == 0 ) {
 			CLEAR_SCREEN();
@@ -279,9 +279,15 @@ void handleStrainPriceLookup ( void ) {
 static void weedCalcInput ( int *a, char *mod, int *b ) {
 
 	flushInputBuffer();
-	*a = getIntInput( "Enter your first number:" );
-	*mod = getCharInput( "Enter your modifier ( + - * / ):" );
-	*b = getIntInput( "Enter your second number:" );
+
+	puts( "Enter your first number:" );
+	*a = getIntInput();
+
+	puts( "Enter your modifier ( + - * / ):" );
+	*mod = getCharInput();
+	
+	puts( "Enter your second number:" );
+	*b = getIntInput();
 
 }
 

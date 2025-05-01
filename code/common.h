@@ -27,10 +27,10 @@ void handleStrainPriceLookup	( void );
 void strainPriceAdjust			( strain_t* strains, int mode );
 
 // === Input handling ===
-int getIntInput					( const char * prompt );
-unsigned int getUIntInput		( const char * prompt );
-char getCharInput				( const char * prompt );
-float getFloatInput				( const char * prompt );
+int getIntInput					( void );
+unsigned int getUIntInput		( void );
+char getCharInput				( void );
+float getFloatInput				( void );
 void flushInputBuffer			( void );
 
 // === Math shit, cause why not ===

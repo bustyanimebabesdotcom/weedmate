@@ -14,13 +14,11 @@
  *
  * usage - int = getIntInput( "String\n" );
  */
-int getIntInput( const char *prompt ) {
+int getIntInput( void ) {
 
 	char buffer[BUFFER_SIZE];
 	int value;
 	char extra;
-
-	if ( prompt && *prompt ) puts( prompt );
 
 	while ( 1 ) {
 
@@ -45,13 +43,11 @@ int getIntInput( const char *prompt ) {
  *
  * usage - float = getFloatInput( "String\n" );
  */
-float getFloatInput( const char *prompt ) {
+float getFloatInput( void ) {
 
 	char buffer[BUFFER_SIZE];
 	float value;
-	char extra;
-
-	if ( prompt && *prompt ) puts( prompt );
+	char *endptr;
 
 	while ( 1 ) {
 
@@ -62,11 +58,15 @@ float getFloatInput( const char *prompt ) {
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
 
-		if ( sscanf( buffer, "%f %c", &value, &extra ) == 1 ) return value;
-	
-		fprintf( stderr, "Invalid number. Try again\n");
+		// Convert string to float. 'endptr' is set to the first invalid character after the number.
+		value = strtof( buffer, &endptr );
 
-		
+		if ( endptr == buffer || *endptr != '\0') {
+			fprintf( stderr, "Invalid number. Try again\n");
+			continue;
+		}
+	
+		return value;
 	}
 
 }
@@ -76,13 +76,11 @@ float getFloatInput( const char *prompt ) {
  *
  * usage - unsigned int = getUIntInput( "String\n" );
  */
-unsigned int getUIntInput( const char *prompt ) {
+unsigned int getUIntInput( void ) {
 
 	char buffer[BUFFER_SIZE];
 	unsigned int value;
 	char extra;
-
-	if ( prompt && *prompt ) puts( prompt );
 
 	while ( 1 ) {
 
@@ -98,7 +96,6 @@ unsigned int getUIntInput( const char *prompt ) {
 		fprintf( stderr, "Invalid number. Try again\n");
 		
 	}
-
 }
 
 
@@ -107,13 +104,11 @@ unsigned int getUIntInput( const char *prompt ) {
  *
  * usage - char = getCharInput( "String\n" );
  */
-char getCharInput( const char *prompt ) {
+char getCharInput( void ) {
 
 	char buffer[BUFFER_SIZE];
 	char value;
 	char extra;
-
-	if ( prompt && *prompt ) puts( prompt );
 
 	while ( 1 ) {
 
@@ -121,6 +116,8 @@ char getCharInput( const char *prompt ) {
 			fprintf( stderr, "Error in input stream.\n" );
 			continue;
 		}
+
+		buffer[strcspn( buffer, "\n" )] = '\0';
 		
 		if ( sscanf( buffer, " %c %c", &value, &extra ) == 1 ) return value;
 	
