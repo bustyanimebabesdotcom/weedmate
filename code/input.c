@@ -1,4 +1,4 @@
-// inputhandler.c - safe(er than scanf) input handling
+// input.c - safe(er than scanf) input handling
 // Main routing:            main.c
 // Functions live in:       functions.c
 // Declarations:   			common.h

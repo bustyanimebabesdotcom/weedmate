@@ -6,6 +6,6 @@ set(CMAKE_C_FLAGS "-O3 -s -Wall -Wextra -Wpedantic")
 add_executable(weedmate
     code/main.c
     code/functions.c
-	code/inputhandler.c
+	code/input.c
 )
 target_link_libraries(weedmate m)
