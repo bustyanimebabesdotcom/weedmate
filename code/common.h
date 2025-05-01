@@ -28,7 +28,7 @@ void strainPriceAdjust			( strain_t* strains, int mode );
 
 // === Input handling ===
 int getIntInput					( const char * prompt );
-unsigned int getUsIntInput		( const char * prompt );
+unsigned int getUIntInput		( const char * prompt );
 char getCharInput				( const char * prompt );
 float getFloatInput				( const char * prompt );
 void flushInputBuffer			( void );

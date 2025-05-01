@@ -14,13 +14,15 @@
  *
  * usage - int = getIntInput( "String\n" );
  */
-int getIntInput( const char * prompt ) {
+int getIntInput( const char *prompt ) {
 
 	char buffer[BUFFER_SIZE];
 	int value;
+	char extra;
+
+	if ( prompt && *prompt ) puts( prompt );
 
 	while ( 1 ) {
-		printf( "%s", prompt );
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
 			fprintf( stderr, "Error in input stream.\n" );
@@ -29,7 +31,7 @@ int getIntInput( const char * prompt ) {
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
 
-		if ( sscanf( buffer, "%d", &value ) == 1 ) return value;
+		if ( sscanf( buffer, "%d %c", &value, &extra ) == 1 ) return value;
 	
 		fprintf( stderr, "Invalid number. Try again\n");
 
@@ -43,13 +45,15 @@ int getIntInput( const char * prompt ) {
  *
  * usage - float = getFloatInput( "String\n" );
  */
-float getFloatInput( const char * prompt ) {
+float getFloatInput( const char *prompt ) {
 
 	char buffer[BUFFER_SIZE];
 	float value;
+	char extra;
+
+	if ( prompt && *prompt ) puts( prompt );
 
 	while ( 1 ) {
-		printf( "%s", prompt );
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
 			fprintf( stderr, "Error in input stream.\n" );
@@ -58,7 +62,7 @@ float getFloatInput( const char * prompt ) {
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
 
-		if ( sscanf( buffer, "%f", &value ) == 1 ) return value;
+		if ( sscanf( buffer, "%f %c", &value, &extra ) == 1 ) return value;
 	
 		fprintf( stderr, "Invalid number. Try again\n");
 
@@ -68,17 +72,19 @@ float getFloatInput( const char * prompt ) {
 }
 
 /**
- * getUsIntInput - a safer alternative to scanf for unsigned integers
+ * getUIntInput - a safer alternative to scanf for unsigned integers
  *
- * usage - unsigned int = getUsIntInput( "String\n" );
+ * usage - unsigned int = getUIntInput( "String\n" );
  */
-unsigned int getUsIntInput( const char * prompt ) {
+unsigned int getUIntInput( const char *prompt ) {
 
 	char buffer[BUFFER_SIZE];
 	unsigned int value;
+	char extra;
+
+	if ( prompt && *prompt ) puts( prompt );
 
 	while ( 1 ) {
-		printf( "%s", prompt );
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
 			fprintf( stderr, "Error in input stream.\n" );
@@ -87,7 +93,7 @@ unsigned int getUsIntInput( const char * prompt ) {
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
 
-		if ( sscanf( buffer, "%u", &value ) == 1 ) return value;
+		if ( sscanf( buffer, "%u %c", &value, &extra ) == 1 ) return value;
 	
 		fprintf( stderr, "Invalid number. Try again\n");
 		
@@ -101,20 +107,22 @@ unsigned int getUsIntInput( const char * prompt ) {
  *
  * usage - char = getCharInput( "String\n" );
  */
-char getCharInput( const char * prompt ) {
+char getCharInput( const char *prompt ) {
 
 	char buffer[BUFFER_SIZE];
 	char value;
+	char extra;
+
+	if ( prompt && *prompt ) puts( prompt );
 
 	while ( 1 ) {
-		printf( "%s", prompt );
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
 			fprintf( stderr, "Error in input stream.\n" );
 			continue;
 		}
 		
-		if ( sscanf( buffer, " %c", &value ) == 1 ) return value;
+		if ( sscanf( buffer, " %c %c", &value, &extra ) == 1 ) return value;
 	
 		fprintf( stderr, "Invalid modifier. Try again\n");
 	}

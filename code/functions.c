@@ -177,11 +177,9 @@ void exitWeedMate ( void ) {
  *
  * Prints the strain list and validates user input.
  */
-static int getStrainChoice ( const char *prompt ) {
+static int getStrainChoice( void ) {
 
-	printf( prompt, STRAIN_COUNT );
-
-	int choice = getIntInput("");
+	int choice = getIntInput(NULL);
 
 	if ( choice < 1 || choice > STRAIN_COUNT ) {
 		CLEAR_SCREEN();
@@ -209,7 +207,7 @@ void budTenderMenu ( void ) {
 		putchar( '\n' );
 
 		printf( "Enter strain number to update ( 1–%d ):\n", STRAIN_COUNT );
-		int choice = getStrainChoice("");
+		int choice = getStrainChoice();
 
 		if ( choice == BUDTENDER_BREAK ) break;
 		if ( choice == BUDTENDER_CONTINUE ) continue;
@@ -224,7 +222,7 @@ void budTenderMenu ( void ) {
 
 		CLEAR_SCREEN();
 		printf( "Enter your new price for %s.\n", strains[choice].name );
-		unsigned int newPrice = getUsIntInput("");
+		unsigned int newPrice = getUIntInput(NULL);
 
 		int sanityStatus = budTenderSanityCheck( newPrice );
 		if (sanityStatus == BUDTENDER_CONTINUE) continue;
@@ -251,7 +249,7 @@ void handleStrainPriceLookup ( void ) {
 		putchar( '\n' );
 		printf( "Enter strain number ( 1–%d ):\n", STRAIN_COUNT );
 
-		int choice = getIntInput("");
+		int choice = getIntInput(NULL);
 
 		if ( choice == 0 ) {
 			CLEAR_SCREEN();
@@ -281,9 +279,9 @@ void handleStrainPriceLookup ( void ) {
 static void weedCalcInput ( int *a, char *mod, int *b ) {
 
 	flushInputBuffer();
-	*a = getIntInput( "Enter your first number:\n" );
-	*mod = getCharInput( "Enter your modifier ( + - * / ):\n" );
-	*b = getIntInput( "Enter your second number:\n" );
+	*a = getIntInput( "Enter your first number:" );
+	*mod = getCharInput( "Enter your modifier ( + - * / ):" );
+	*b = getIntInput( "Enter your second number:" );
 
 }
 
