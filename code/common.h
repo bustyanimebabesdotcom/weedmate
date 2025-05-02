@@ -25,6 +25,7 @@ void printStrainList			( void );
 void budTenderMenu				( void );
 void handleStrainPriceLookup	( void );
 void strainPriceAdjust			( strain_t* strains, int mode );
+void flushInputBuffer			( void );
 
 // === Math shit, cause why not ===
 void weedCalc					( void );

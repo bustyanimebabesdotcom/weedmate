@@ -17,6 +17,4 @@ double getDoubleInput			( void );
 char getCharInput				( void );
 char getCharInputFiltered		( const char *allowed );
 
-void flushInputBuffer			( void );
-
 #endif

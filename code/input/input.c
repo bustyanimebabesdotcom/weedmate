@@ -3,8 +3,6 @@
 // There are obviously better input libraries, but the purpose of this is to be
 // A safe(r) alternative to scanf for noobs like me.
 
-// TODO: Add EOF handling to stop infinite looping. Obvious bug with easy fix.
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -27,8 +25,15 @@ int getIntInput( void ) {
 	while ( 1 ) {
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			fprintf( stderr, "Error in input stream.\n" );
-			continue;
+			if ( feof( stdin ) ) {
+				fputs( "EOF received. Exiting.\n", stderr );
+				exit(EXIT_SUCCESS);
+			}
+
+			else {
+				fputs( "Error in input stream.\n", stderr );
+				continue;
+			}
 		}
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
@@ -37,12 +42,12 @@ int getIntInput( void ) {
 		value = strtol( buffer, &endptr, 10 );
 		
 		if ( endptr == buffer || *endptr != '\0' ) {
-			fprintf( stderr, "Invalid number. Try again.\n");
+			fputs( "Invalid number. Try again.\n", stderr);
 			continue;
 		}
 
-		if ( errno == ERANGE || value < INT_MIN || value > INT_MAX ) {
-			fprintf( stderr, "Value out of range. Try again\n");
+		if ( errno == ERANGE ) {
+			fputs( "Value out of range. Try again.\n", stderr );
 			continue;
 		}
 
@@ -65,8 +70,15 @@ unsigned int getUIntInput( void ) {
 	while ( 1 ) {
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			fprintf( stderr, "Error in input stream.\n" );
-			continue;
+			if ( feof( stdin ) ) {
+				fputs( "EOF received. Exiting.\n", stderr );
+				exit(EXIT_SUCCESS);
+			}
+
+			else {
+				fputs( "Error in input stream.\n", stderr );
+				continue;
+			}
 		}
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
@@ -75,12 +87,12 @@ unsigned int getUIntInput( void ) {
 		value = strtoul( buffer, &endptr, 10 );
 
 		if ( endptr == buffer || *endptr != '\0') {
-			fprintf( stderr, "Invalid number. Try again.\n");
+			fputs( "Invalid number. Try again.\n", stderr );
 			continue;
 		}
 		
-		if ( errno == ERANGE || value > UINT_MAX ) {
-			fprintf( stderr, "Value out of range. Try again.\n");
+		if ( errno == ERANGE ) {
+			fputs( "Value out of range. Try again.\n", stderr);
 			continue;
 		}
 
@@ -103,8 +115,15 @@ float getFloatInput( void ) {
 	while ( 1 ) {
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			fprintf( stderr, "Error in input stream.\n" );
-			continue;
+			if ( feof( stdin ) ) {
+				fputs( "EOF received. Exiting.\n", stderr );
+				exit(EXIT_SUCCESS);
+			}
+
+			else {
+				fputs( "Error in input stream.\n", stderr );
+				continue;
+			}
 		}
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
@@ -114,12 +133,12 @@ float getFloatInput( void ) {
 		value = strtof( buffer, &endptr );
 
 		if ( endptr == buffer || *endptr != '\0') {
-			fprintf( stderr, "Invalid number. Try again.\n");
+			fputs( "Invalid number. Try again.\n", stderr );
 			continue;
 		}
 
 		if ( errno == ERANGE || !isfinite( value ) ) {
-			fprintf( stderr, "Number out of range. Try again.\n" );
+			fputs( "Number out of range. Try again.\n", stderr );
 			continue;
 		}
 	
@@ -142,8 +161,15 @@ long getLongInput( void ) {
 	while ( 1 ) {
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			fprintf( stderr, "Error in input stream.\n" );
-			continue;
+			if ( feof( stdin ) ) {
+				fputs( "EOF received. Exiting.\n", stderr );
+				exit(EXIT_SUCCESS);
+			}
+
+			else {
+				fputs( "Error in input stream.\n", stderr );
+				continue;
+			}
 		}
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
@@ -152,12 +178,12 @@ long getLongInput( void ) {
 		value = strtol( buffer, &endptr, 10 );
 		
 		if ( endptr == buffer || *endptr != '\0' ) {
-			fprintf( stderr, "Invalid number. Try again.\n");
+			fputs( "Invalid number. Try again.\n", stderr );
 			continue;
 		}
 
 		if ( errno == ERANGE ) {
-			fprintf( stderr, "Value out of range. Try again\n");
+			fputs( "Value out of range. Try again.\n", stderr );
 			continue;
 		}
 
@@ -180,8 +206,15 @@ unsigned long getULongInput( void ) {
 	while ( 1 ) {
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			fprintf( stderr, "Error in input stream.\n" );
-			continue;
+			if ( feof( stdin ) ) {
+				fputs( "EOF received. Exiting.\n", stderr );
+				exit(EXIT_SUCCESS);
+			}
+
+			else {
+				fputs( "Error in input stream.\n", stderr );
+				continue;
+			}
 		}
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
@@ -190,12 +223,12 @@ unsigned long getULongInput( void ) {
 		value = strtoul( buffer, &endptr, 10 );
 		
 		if ( endptr == buffer || *endptr != '\0' ) {
-			fprintf( stderr, "Invalid number. Try again.\n");
+			fputs( "Invalid number. Try again.\n", stderr );
 			continue;
 		}
 
-		if ( errno == ERANGE || value > ULONG_MAX ) {
-			fprintf( stderr, "Value out of range. Try again\n");
+		if ( errno == ERANGE ) {
+			fputs( "Value out of range. Try again.\n", stderr );
 			continue;
 		}
 
@@ -218,8 +251,15 @@ double getDoubleInput( void ) {
 	while ( 1 ) {
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			fprintf( stderr, "Error in input stream.\n" );
-			continue;
+			if ( feof( stdin ) ) {
+				fputs( "EOF received. Exiting.\n", stderr );
+				exit(EXIT_SUCCESS);
+			}
+
+			else {
+				fputs( "Error in input stream.\n", stderr );
+				continue;
+			}
 		}
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
@@ -228,12 +268,12 @@ double getDoubleInput( void ) {
 		value = strtod( buffer, &endptr );
 		
 		if ( endptr == buffer || *endptr != '\0' ) {
-			fprintf( stderr, "Invalid number. Try again.\n");
+			fputs( "Invalid number. Try again.\n", stderr );
 			continue;
 		}
 
 		if ( errno == ERANGE || !isfinite( value ) ) {
-			fprintf( stderr, "Value out of range. Try again\n");
+			fputs( "Value out of range. Try again.\n", stderr );
 			continue;
 		}
 
@@ -254,8 +294,15 @@ char getCharInput( void ) {
 	while ( 1 ) {
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			fprintf( stderr, "Error in input stream.\n" );
-			continue;
+			if ( feof( stdin ) ) {
+				fputs( "EOF received. Exiting.\n", stderr );
+				exit(EXIT_SUCCESS);
+			}
+
+			else {
+				fputs( "Error in input stream.\n", stderr );
+				continue;
+			}
 		}
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
@@ -264,7 +311,7 @@ char getCharInput( void ) {
 			return buffer[0];
 		}
 	
-		fprintf( stderr, "Invalid input. Please enter a single character.\n");
+		fputs( "Invalid input. Please enter a single character.\n", stderr);
 	}
 
 }
@@ -286,14 +333,21 @@ char getCharInputFiltered( const char *allowed ) {
 	while ( 1 ) {
 
 		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			fprintf( stderr, "Error in input stream.\n" );
-			continue;
+			if ( feof( stdin ) ) {
+				fputs( "EOF received. Exiting.\n", stderr );
+				exit(EXIT_SUCCESS);
+			}
+
+			else {
+				fputs( "Error in input stream.\n", stderr );
+				continue;
+			}
 		}
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
 		
 		if ( strlen(buffer) != 1 ) {
-			fprintf( stderr, "Invalid input. Please enter a single character.\n");
+			fputs( "Invalid input. Please enter a single character.\n", stderr );
 			continue;
 		}
 
@@ -303,21 +357,8 @@ char getCharInputFiltered( const char *allowed ) {
 			return c;
 		}
 	
-		fprintf( stderr, "Invalid input. Allowed %s\n", allowed );
+		fprintf( stderr, "Invalid input. Allowed: %s\n", allowed );
 		
 	}
-
-}
-
-/**
- * flushInputBuffer - Clears any remaining characters from stdin.
- *
- * Used after scanf fails or reads partial input, to prevent leftover
- * characters from screwing up future input operations.
- */
-void flushInputBuffer ( void ) {
-
-	int ch;
-	while ( ( ch = getchar() ) != '\n' && ch != EOF );
 
 }

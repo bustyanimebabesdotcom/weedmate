@@ -15,6 +15,7 @@ int main ( void ) {
 
 	// Enter alternate screen buffer — user won’t see their terminal history after quitting.
 	ENTER_ALT_SCREEN();
+	atexit(exitWeedMate);
 	CLEAR_SCREEN();
 	motd();
 

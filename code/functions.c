@@ -349,3 +349,16 @@ void weedCalc ( void ) {
 	}
 
 }
+
+/**
+ * flushInputBuffer - Clears any remaining characters from stdin.
+ *
+ * Used after scanf fails or reads partial input, to prevent leftover
+ * characters from screwing up future input operations.
+ */
+void flushInputBuffer ( void ) {
+
+	int ch;
+	while ( ( ch = getchar() ) != '\n' && ch != EOF );
+
+}
