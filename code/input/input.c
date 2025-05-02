@@ -3,6 +3,9 @@
 // There are obviously better input libraries, but the purpose of this is to be
 // A safe(r) alternative to scanf for noobs like me.
 
+// TODO: Wrap more copy pasted shit into helpers
+// TODO: Find better solution than exit on EOF.
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -11,10 +14,46 @@
 #include <math.h>
 #include "input.h"
 
+// This macro is ugly as fuck, but it saves a shit ton of space.
+// Lines of code saved: 128
+#define READ_AND_CLEAN(buf)											\
+	do {															\
+																	\
+		if ( fgets( buf, sizeof(buf), stdin ) == NULL ) {			\
+			if ( feof( stdin ) ) {									\
+				fputs( "EOF received. Exiting.\n", stderr );		\
+				exit(EXIT_SUCCESS);									\
+			}														\
+																	\
+			else {													\
+				fputs( "Error in input stream.\n", stderr );		\
+				continue;											\
+			}														\
+		}															\
+																	\
+		if ( !strchr( buf, '\n' ) && !feof( stdin ) ) {				\
+			drainStdin();											\
+		}															\
+																	\
+		buf[strcspn( buf, "\n" )] = '\0';							\
+																	\
+	} while (0)														\
+
+/**
+ * drainStdin - helper function that prevents buffer overflows.
+ */
+static void drainStdin( void ) {
+
+	int ch;
+	while ( ( ch = getchar() ) != '\n' && ch != EOF )
+		;
+
+}
+
 /**
  * getIntInput - a safer alternative to scanf for integers
  *
- * usage - int = getIntInput();
+ * usage - int x = getIntInput();
  */
 int getIntInput( void ) {
 
@@ -24,19 +63,7 @@ int getIntInput( void ) {
 
 	while ( 1 ) {
 
-		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			if ( feof( stdin ) ) {
-				fputs( "EOF received. Exiting.\n", stderr );
-				exit(EXIT_SUCCESS);
-			}
-
-			else {
-				fputs( "Error in input stream.\n", stderr );
-				continue;
-			}
-		}
-
-		buffer[strcspn( buffer, "\n" )] = '\0';
+		READ_AND_CLEAN(buffer);
 
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
@@ -46,7 +73,7 @@ int getIntInput( void ) {
 			continue;
 		}
 
-		if ( errno == ERANGE ) {
+		if ( errno == ERANGE || value < INT_MIN || value > INT_MAX ) {
 			fputs( "Value out of range. Try again.\n", stderr );
 			continue;
 		}
@@ -59,7 +86,7 @@ int getIntInput( void ) {
 /**
  * getUIntInput - a safer alternative to scanf for unsigned integers
  *
- * usage - unsigned int = getUIntInput();
+ * usage - unsigned int x = getUIntInput();
  */
 unsigned int getUIntInput( void ) {
 
@@ -69,19 +96,12 @@ unsigned int getUIntInput( void ) {
 
 	while ( 1 ) {
 
-		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			if ( feof( stdin ) ) {
-				fputs( "EOF received. Exiting.\n", stderr );
-				exit(EXIT_SUCCESS);
-			}
+		READ_AND_CLEAN(buffer);
 
-			else {
-				fputs( "Error in input stream.\n", stderr );
-				continue;
-			}
+		if ( buffer[0] == '-' ) {
+			fputs( "Invalid number. Try again.\n", stderr );
+			continue;
 		}
-
-		buffer[strcspn( buffer, "\n" )] = '\0';
 
 		errno = 0;
 		value = strtoul( buffer, &endptr, 10 );
@@ -91,7 +111,7 @@ unsigned int getUIntInput( void ) {
 			continue;
 		}
 		
-		if ( errno == ERANGE ) {
+		if ( errno == ERANGE || value > UINT_MAX ) {
 			fputs( "Value out of range. Try again.\n", stderr);
 			continue;
 		}
@@ -104,7 +124,7 @@ unsigned int getUIntInput( void ) {
 /**
  * getFloatInput - a safer alternative to scanf for floating point numbers
  *
- * usage - float = getFloatInput();
+ * usage - float x = getFloatInput();
  */
 float getFloatInput( void ) {
 
@@ -114,19 +134,7 @@ float getFloatInput( void ) {
 
 	while ( 1 ) {
 
-		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			if ( feof( stdin ) ) {
-				fputs( "EOF received. Exiting.\n", stderr );
-				exit(EXIT_SUCCESS);
-			}
-
-			else {
-				fputs( "Error in input stream.\n", stderr );
-				continue;
-			}
-		}
-
-		buffer[strcspn( buffer, "\n" )] = '\0';
+		READ_AND_CLEAN(buffer);
 
 		errno = 0;
 		// Convert string to float. 'endptr' is set to the first invalid character after the number.
@@ -150,7 +158,7 @@ float getFloatInput( void ) {
 /**
  * getLongInput - a safer alternative to scanf for integers
  *
- * usage - long = getLongInput();
+ * usage - long x = getLongInput();
  */
 long getLongInput( void ) {
 
@@ -160,19 +168,7 @@ long getLongInput( void ) {
 
 	while ( 1 ) {
 
-		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			if ( feof( stdin ) ) {
-				fputs( "EOF received. Exiting.\n", stderr );
-				exit(EXIT_SUCCESS);
-			}
-
-			else {
-				fputs( "Error in input stream.\n", stderr );
-				continue;
-			}
-		}
-
-		buffer[strcspn( buffer, "\n" )] = '\0';
+		READ_AND_CLEAN(buffer);
 
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
@@ -195,7 +191,7 @@ long getLongInput( void ) {
 /**
  * getULongInput - a safer alternative to scanf for unsigned longs
  *
- * usage - unsigned long = getULongInput();
+ * usage - unsigned long x = getULongInput();
  */
 unsigned long getULongInput( void ) {
 
@@ -205,19 +201,7 @@ unsigned long getULongInput( void ) {
 
 	while ( 1 ) {
 
-		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			if ( feof( stdin ) ) {
-				fputs( "EOF received. Exiting.\n", stderr );
-				exit(EXIT_SUCCESS);
-			}
-
-			else {
-				fputs( "Error in input stream.\n", stderr );
-				continue;
-			}
-		}
-
-		buffer[strcspn( buffer, "\n" )] = '\0';
+		READ_AND_CLEAN(buffer);
 
 		errno = 0;
 		value = strtoul( buffer, &endptr, 10 );
@@ -240,7 +224,7 @@ unsigned long getULongInput( void ) {
 /**
  * getDoubleInput - a safer alternative to scanf for doubles
  *
- * usage - double = getDoubleInput();
+ * usage - double x = getDoubleInput();
  */
 double getDoubleInput( void ) {
 
@@ -250,19 +234,7 @@ double getDoubleInput( void ) {
 
 	while ( 1 ) {
 
-		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			if ( feof( stdin ) ) {
-				fputs( "EOF received. Exiting.\n", stderr );
-				exit(EXIT_SUCCESS);
-			}
-
-			else {
-				fputs( "Error in input stream.\n", stderr );
-				continue;
-			}
-		}
-
-		buffer[strcspn( buffer, "\n" )] = '\0';
+		READ_AND_CLEAN(buffer);
 
 		errno = 0;
 		value = strtod( buffer, &endptr );
@@ -285,7 +257,9 @@ double getDoubleInput( void ) {
 /**
  * getCharInput - a safer alternative to scanf for chars
  *
- * usage - char = getCharInput();
+ * usage - char x = getCharInput();
+ *
+ * IMPORTANT: Only accepts one character. " a" and "a " are considered invalid.
  */
 char getCharInput( void ) {
 
@@ -293,19 +267,7 @@ char getCharInput( void ) {
 
 	while ( 1 ) {
 
-		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			if ( feof( stdin ) ) {
-				fputs( "EOF received. Exiting.\n", stderr );
-				exit(EXIT_SUCCESS);
-			}
-
-			else {
-				fputs( "Error in input stream.\n", stderr );
-				continue;
-			}
-		}
-
-		buffer[strcspn( buffer, "\n" )] = '\0';
+		READ_AND_CLEAN(buffer);
 		
 		if ( strlen(buffer) == 1 ) {
 			return buffer[0];
@@ -319,12 +281,17 @@ char getCharInput( void ) {
 /**
  * getCharInputFiltered - a safer alternative to scanf for chars
  *
- * usage - char = getCharInputFiltered( "abc" );
+ * usage - char x = getCharInputFiltered( "abc" );
  */
 char getCharInputFiltered( const char *allowed ) {
 
 	if ( allowed == NULL ){
-		fprintf( stderr, "getCharInputFiltered(): NULL passed to 'allowed'. Exiting.\n" );
+		fputs( "getCharInputFiltered(): NULL passed to 'allowed'. Exiting.\n", stderr );
+		exit(EXIT_FAILURE);
+	}
+
+	if ( allowed[0] == '\0' ) {
+		fputs( "No allowed characters specified. Exiting.\n", stderr );
 		exit(EXIT_FAILURE);
 	}
 
@@ -332,19 +299,7 @@ char getCharInputFiltered( const char *allowed ) {
 
 	while ( 1 ) {
 
-		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
-			if ( feof( stdin ) ) {
-				fputs( "EOF received. Exiting.\n", stderr );
-				exit(EXIT_SUCCESS);
-			}
-
-			else {
-				fputs( "Error in input stream.\n", stderr );
-				continue;
-			}
-		}
-
-		buffer[strcspn( buffer, "\n" )] = '\0';
+		READ_AND_CLEAN(buffer);
 		
 		if ( strlen(buffer) != 1 ) {
 			fputs( "Invalid input. Please enter a single character.\n", stderr );
