@@ -26,7 +26,6 @@ void printStrainList			( void );
 void budTenderMenu				( void );
 void handleStrainPriceLookup	( void );
 void strainPriceAdjust			( strain_t* strains, int mode );
-void flushInputBuffer			( void );
 
 // === Signals ===
 void installSignalHandlers		( void );

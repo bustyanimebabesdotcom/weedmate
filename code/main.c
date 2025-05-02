@@ -24,12 +24,7 @@ int main ( void ) {
 	int c;
 
 	// Main loop, runs until EOF
-	while ( ( c = getchar () ) != EOF ) {
-
-	// Ignore stray newline inputs
-	if ( c == '\n' ) {
-			continue;
-		}
+	while ( ( c = getCharInput () ) != EOF ) {
 
 		// Input processing
 		switch ( c ) {
@@ -59,7 +54,7 @@ int main ( void ) {
 			case 'P':
 				// redundant function, might be useful one day
 				CLEAR_SCREEN();
-				flushInputBuffer();
+//				flushInputBuffer();
 				handleStrainPriceLookup();
 				RETURN_TO_MENU_MSG();
 				break;
@@ -68,7 +63,7 @@ int main ( void ) {
 			case 'B':
 				// secret menu
 				CLEAR_SCREEN();
-				flushInputBuffer();
+//				flushInputBuffer();
 				budTenderMenu();
 				RETURN_TO_MENU_MSG();
 				break;
@@ -92,7 +87,7 @@ int main ( void ) {
 			case 'c':
 			case 'C':
 				CLEAR_SCREEN();
-				flushInputBuffer();
+//				flushInputBuffer();
 				weedCalc();
 				RETURN_TO_MENU_MSG();
 				break;
