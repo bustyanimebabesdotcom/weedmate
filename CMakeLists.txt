@@ -14,5 +14,6 @@ add_executable(weedmate
 target_include_directories(weedmate
   PRIVATE
     ${CMAKE_SOURCE_DIR}/code/include
+	${CMAKE_SOURCE_DIR}/code/input
 )
 target_link_libraries(weedmate m)

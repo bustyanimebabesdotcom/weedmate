@@ -12,7 +12,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <weedmate/common.h>
-#include "input/input.h"
+#include "input.h"
 
 strain_t strains[STRAIN_COUNT] = {
 	{ "White Death",            13 },
