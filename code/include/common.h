@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "macros.h"
+#include "terminal.h"
 
 // === strain_t: represents weed strains ( name + price) ===
 typedef struct {

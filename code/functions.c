@@ -9,10 +9,9 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <time.h>
 #include <stdbool.h>
 #include <string.h>
-#include "common.h"
+#include "include/common.h"
 #include "input/input.h"
 
 strain_t strains[STRAIN_COUNT] = {

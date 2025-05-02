@@ -1,4 +1,6 @@
 // input.h
+// project: weedmate
+
 #ifndef INPUT_H
 #define INPUT_H
 
@@ -17,4 +19,4 @@ double getDoubleInput			( void );
 char getCharInput				( void );
 char getCharInputFiltered		( const char *allowed );
 
-#endif
+#endif // INPUT_H
