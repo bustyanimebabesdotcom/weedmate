@@ -168,7 +168,40 @@ float getFloatInput( void ) {
 }
 
 /**
- * getLongInput - a safer alternative to scanf for integers
+ * getDoubleInput - a safer alternative to scanf for doubles
+ *
+ * usage - double x = getDoubleInput();
+ */
+double getDoubleInput( void ) {
+
+	char buffer[INPUT_BUFFER_SIZE];
+	char *endptr;
+	double value;
+
+	while ( 1 ) {
+
+		if (readInputLine(buffer, sizeof(buffer))) continue;
+
+		errno = 0;
+		value = strtod( buffer, &endptr );
+		
+		if ( endptr == buffer || *endptr != '\0' ) {
+			fputs( "Invalid number. Try again.\n", stderr );
+			continue;
+		}
+
+		if ( errno == ERANGE || !isfinite( value ) ) {
+			fputs( "Value out of range. Try again.\n", stderr );
+			continue;
+		}
+
+		return value;
+	}
+
+}
+
+/**
+ * getLongInput - a safer alternative to scanf for longs
  *
  * usage - long x = getLongInput();
  */
@@ -234,29 +267,62 @@ unsigned long getULongInput( void ) {
 }
 
 /**
- * getDoubleInput - a safer alternative to scanf for doubles
+ * getLongLongInput - a safer alternative to scanf for long longs
  *
- * usage - double x = getDoubleInput();
+ * usage - long long x = getLongLongInput();
  */
-double getDoubleInput( void ) {
+long long getLongLongInput( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 	char *endptr;
-	double value;
+	long long value;
 
 	while ( 1 ) {
 
 		if (readInputLine(buffer, sizeof(buffer))) continue;
 
 		errno = 0;
-		value = strtod( buffer, &endptr );
+		value = strtoll( buffer, &endptr, 10 );
 		
 		if ( endptr == buffer || *endptr != '\0' ) {
 			fputs( "Invalid number. Try again.\n", stderr );
 			continue;
 		}
 
-		if ( errno == ERANGE || !isfinite( value ) ) {
+		if ( errno == ERANGE ) {
+			fputs( "Value out of range. Try again.\n", stderr );
+			continue;
+		}
+
+		return value;
+	}
+
+}
+
+/**
+ * getULongLongInput - a safer alternative to scanf for unsigned long longs
+ *
+ * usage - unsigned long long x = getULongLongInput();
+ */
+unsigned long long getULongLongInput( void ) {
+
+	char buffer[INPUT_BUFFER_SIZE];
+	char *endptr;
+	unsigned long long value;
+
+	while ( 1 ) {
+
+		if (readInputLine(buffer, sizeof(buffer))) continue;
+
+		errno = 0;
+		value = strtoull( buffer, &endptr, 10 );
+		
+		if ( endptr == buffer || *endptr != '\0' ) {
+			fputs( "Invalid number. Try again.\n", stderr );
+			continue;
+		}
+
+		if ( errno == ERANGE ) {
 			fputs( "Value out of range. Try again.\n", stderr );
 			continue;
 		}
