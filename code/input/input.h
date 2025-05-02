@@ -6,11 +6,17 @@
 #define INPUT_BUFFER_SIZE		128
 
 // === Input handling ===
-int getIntInput					( void );
+int	getIntInput					( void );
 unsigned int getUIntInput		( void );
+
+float getFloatInput				( void );
+long getLongInput				( void );
+unsigned long getULongInput		( void );
+double getDoubleInput			( void );
+
 char getCharInput				( void );
 char getCharInputFiltered		( const char *allowed );
-float getFloatInput				( void );
+
 void flushInputBuffer			( void );
 
 #endif
