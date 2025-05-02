@@ -370,7 +370,7 @@ char getCharInputFiltered( const char *allowed ) {
 
 	if ( allowed[0] == '\0' ) {
 		fputs( "No allowed characters specified. Exiting.\n", stderr );
-		exit(EXIT_FAILURE);
+		return 1;
 	}
 
 	char buffer[INPUT_BUFFER_SIZE];
