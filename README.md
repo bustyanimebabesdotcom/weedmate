@@ -32,7 +32,7 @@ Features:
 - Optional filtered character input (`getCharInputFiltered("yn")` style).
 - Easy to extend, dead simple to read.
 
-`scanf()` chordle my balls. This is for people who don’t want to spend three hours debugging why their `scanf("%d")` keeps skipping lines.
+`scanf()` can chordle my balls. This is for people who don’t want to spend three hours debugging why their `scanf("%d")` keeps skipping lines.
 
 ---
 
