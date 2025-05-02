@@ -26,7 +26,7 @@ static void drainStdin( void ) {
 }
 
 /**
- * readAndClean - read one line from stdin into buf, strip newline,
+ * readInputLine - read one line from stdin into buf, strip newline,
  * 					drain the rest if line is too long, and handle EOF/errors
  * 
  * @buf: buffer to fill
@@ -37,7 +37,7 @@ static void drainStdin( void ) {
  *		1 on recoverable error ( caller should retry ),
  *		on EOF, clears error and returns 1 (caller should retry)
  */
-static int readAndClean( char *buf, size_t size ) {
+static int readInputLine( char *buf, size_t size ) {
 
 	if ( fgets( buf, size, stdin ) == NULL ) {
 		if ( feof( stdin ) ) {
@@ -75,7 +75,7 @@ int getIntInput( void ) {
 
 	while ( 1 ) {
 
-		if (readAndClean(buffer, sizeof(buffer))) continue;
+		if (readInputLine(buffer, sizeof(buffer))) continue;
 
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
@@ -108,7 +108,7 @@ unsigned int getUIntInput( void ) {
 
 	while ( 1 ) {
 
-		if (readAndClean(buffer, sizeof(buffer))) continue;
+		if (readInputLine(buffer, sizeof(buffer))) continue;
 
 		if ( buffer[0] == '-' ) {
 			fputs( "Invalid number. Try again.\n", stderr );
@@ -146,7 +146,7 @@ float getFloatInput( void ) {
 
 	while ( 1 ) {
 
-		if (readAndClean(buffer, sizeof(buffer))) continue;
+		if (readInputLine(buffer, sizeof(buffer))) continue;
 
 		errno = 0;
 		// Convert string to float. 'endptr' is set to the first invalid character after the number.
@@ -180,7 +180,7 @@ long getLongInput( void ) {
 
 	while ( 1 ) {
 
-		if (readAndClean(buffer, sizeof(buffer))) continue;
+		if (readInputLine(buffer, sizeof(buffer))) continue;
 
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
@@ -213,7 +213,7 @@ unsigned long getULongInput( void ) {
 
 	while ( 1 ) {
 
-		if (readAndClean(buffer, sizeof(buffer))) continue;
+		if (readInputLine(buffer, sizeof(buffer))) continue;
 
 		errno = 0;
 		value = strtoul( buffer, &endptr, 10 );
@@ -246,7 +246,7 @@ double getDoubleInput( void ) {
 
 	while ( 1 ) {
 
-		if (readAndClean(buffer, sizeof(buffer))) continue;
+		if (readInputLine(buffer, sizeof(buffer))) continue;
 
 		errno = 0;
 		value = strtod( buffer, &endptr );
@@ -279,7 +279,7 @@ char getCharInput( void ) {
 
 	while ( 1 ) {
 
-		if (readAndClean(buffer, sizeof(buffer))) continue;
+		if (readInputLine(buffer, sizeof(buffer))) continue;
 		
 		if ( strlen(buffer) == 1 ) {
 			return buffer[0];
@@ -311,7 +311,7 @@ char getCharInputFiltered( const char *allowed ) {
 
 	while ( 1 ) {
 
-		if (readAndClean(buffer, sizeof(buffer))) continue;
+		if (readInputLine(buffer, sizeof(buffer))) continue;
 		
 		if ( strlen(buffer) != 1 ) {
 			fputs( "Invalid input. Please enter a single character.\n", stderr );
