@@ -2,6 +2,8 @@
 // Main routing:            main.c
 // Input handling			input.c
 // Declarations:   			common.h
+//							input.h
+// Signals:					signals.c
 // Macros:					macros.h
 // project:					weedmate
 

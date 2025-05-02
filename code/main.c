@@ -2,6 +2,8 @@
 // Functions live in:       functions.c
 // Input handling:			input.c
 // Declarations:   			common.h
+//							input.h
+// Signals:					signals.c
 // Macros:					macros.h
 // project:					weedmate
 
@@ -15,8 +17,8 @@ int main ( void ) {
 
 	// Enter alternate screen buffer — user won’t see their terminal history after quitting.
 	ENTER_ALT_SCREEN();
-	// exitWeedMate function helps us leave the alt screen clean
 	atexit(exitWeedMate);
+	installSignalHandlers();
 	CLEAR_SCREEN();
 	motd();
 

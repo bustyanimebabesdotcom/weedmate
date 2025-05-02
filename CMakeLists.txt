@@ -5,6 +5,7 @@ set(CMAKE_C_FLAGS "-O3 -s -Wall -Wextra -Wpedantic")
 
 add_executable(weedmate
     code/main.c
+	code/signals.c
     code/functions.c
 	code/input/input.c
 )

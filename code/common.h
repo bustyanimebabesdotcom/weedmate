@@ -27,6 +27,9 @@ void handleStrainPriceLookup	( void );
 void strainPriceAdjust			( strain_t* strains, int mode );
 void flushInputBuffer			( void );
 
+// === Signals ===
+void installSignalHandlers		( void );
+
 // === Math shit, cause why not ===
 void weedCalc					( void );
 
