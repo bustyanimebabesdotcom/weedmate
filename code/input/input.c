@@ -26,7 +26,7 @@ static void drainStdin( void ) {
 }
 
 /**
- * readInputLine - read one line from stdin into buf, strip newline,
+ * readInputLine - read one line from stdin into buffer, strip newline,
  * 					drain the rest if line is too long, and handle EOF/errors
  * 
  * @buf: buffer to fill
