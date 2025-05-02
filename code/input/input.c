@@ -9,7 +9,7 @@
 #include <string.h>
 #include <limits.h>
 #include <math.h>
-#include "common.h"
+#include "../common.h"
 
 /**
  * getIntInput - a safer alternative to scanf for integers
