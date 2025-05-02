@@ -166,10 +166,10 @@ void strainPriceAdjust ( strain_t* strains, int mode ) {
 void exitWeedMate ( void ) {
 
 	CLEAR_SCREEN();
+	EXIT_ALT_SCREEN();
 	puts( "Thank you for using weedmate!" );
 	putchar( '\n' );
 	printf( "Terminating with exit code %d!\n", EXIT_CODE );
-	EXIT_ALT_SCREEN();
 
 }
 

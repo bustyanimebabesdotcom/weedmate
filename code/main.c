@@ -15,6 +15,7 @@ int main ( void ) {
 
 	// Enter alternate screen buffer — user won’t see their terminal history after quitting.
 	ENTER_ALT_SCREEN();
+	// exitWeedMate function helps us leave the alt screen clean
 	atexit(exitWeedMate);
 	CLEAR_SCREEN();
 	motd();
@@ -43,10 +44,6 @@ int main ( void ) {
 			case 'Q':
 				// clean exit
 				CLEAR_SCREEN();
-				EXIT_ALT_SCREEN();
-				puts( "Thank you for using weedmate!" );
-				putchar( '\n' );
-				printf( "Terminating with exit code %d!\n", EXIT_CODE );
 				return EXIT_CODE;
 
 			case 'l':
@@ -107,7 +104,5 @@ int main ( void ) {
 		}
 	}
 
-	// exitWeedMate function helps us leave the alt screen clean
-	exitWeedMate();
 	return EXIT_CODE;
 }
