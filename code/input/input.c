@@ -419,17 +419,16 @@ char *getStringInput( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 
-	if ( readInputLine( buffer, sizeof(buffer) ) ) {
-		return NULL;
-	}
+	if ( readInputLine( buffer, sizeof(buffer) ) ) return NULL;
 
-	char *str = malloc( strlen( buffer ) + 1 );
+	size_t len = strlen( buffer );
+	char *str = malloc( len + 1 );
 	if ( !str ) {
 		fputs( "Memory allocation failed.\n", stderr );
 		return NULL;
 	}
 
-	strcpy( str, buffer );
+	memcpy( str, buffer, len + 1 );
 	return str;
 
 }
