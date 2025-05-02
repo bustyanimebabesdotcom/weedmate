@@ -29,7 +29,4 @@
 #define BUDTENDER_BREAK			-1
 #define BUDTENDER_OK			1
 
-// === INPUT BUFFER ===
-#define BUFFER_SIZE				128
-
 #endif

@@ -1,15 +1,14 @@
 // input.c - safe(r than scanf) input handling
-// Main routing:            main.c
-// Functions live in:       functions.c
-// Declarations:   			common.h
-// Macros:					macros.h
-// project:					weedmate
+// This can be ported to any project, to be used as a standalone input library.
+// There are obviously better input libraries, but the purpose of this is to be
+// A safe(r) aleternative to scanf for noobs like me.
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <limits.h>
 #include <math.h>
-#include "../common.h"
+#include "input.h"
 
 /**
  * getIntInput - a safer alternative to scanf for integers
@@ -18,7 +17,7 @@
  */
 int getIntInput( void ) {
 
-	char buffer[BUFFER_SIZE];
+	char buffer[INPUT_BUFFER_SIZE];
 	long value;
 	char *endptr;
 
@@ -55,7 +54,7 @@ int getIntInput( void ) {
  */
 float getFloatInput( void ) {
 
-	char buffer[BUFFER_SIZE];
+	char buffer[INPUT_BUFFER_SIZE];
 	float value;
 	char *endptr;
 
@@ -93,7 +92,7 @@ float getFloatInput( void ) {
  */
 unsigned int getUIntInput( void ) {
 
-	char buffer[BUFFER_SIZE];
+	char buffer[INPUT_BUFFER_SIZE];
 	unsigned long value;
 	char *endptr;
 
@@ -131,7 +130,7 @@ unsigned int getUIntInput( void ) {
  */
 char getCharInput( void ) {
 
-	char buffer[BUFFER_SIZE];
+	char buffer[INPUT_BUFFER_SIZE];
 
 	while ( 1 ) {
 
@@ -158,7 +157,7 @@ char getCharInput( void ) {
  */
 char getCharInputFiltered( const char *allowed ) {
 
-	char buffer[BUFFER_SIZE];
+	char buffer[INPUT_BUFFER_SIZE];
 
 	while ( 1 ) {
 
