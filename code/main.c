@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "common.h"
-#include "input.h"
+#include "input/input.h"
 
 int main ( void ) {
 

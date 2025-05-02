@@ -11,7 +11,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "common.h"
-#include "input.h"
+#include "input/input.h"
 
 strain_t strains[STRAIN_COUNT] = {
 	{ "White Death",            13 },
