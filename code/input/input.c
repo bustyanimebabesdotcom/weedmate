@@ -14,31 +14,6 @@
 #include <math.h>
 #include "input.h"
 
-// This macro is ugly as fuck, but it saves a shit ton of space.
-// Lines of code saved: 128
-#define READ_AND_CLEAN(buf)											\
-	do {															\
-																	\
-		if ( fgets( buf, sizeof(buf), stdin ) == NULL ) {			\
-			if ( feof( stdin ) ) {									\
-				fputs( "EOF received. Exiting.\n", stderr );		\
-				exit(EXIT_SUCCESS);									\
-			}														\
-																	\
-			else {													\
-				fputs( "Error in input stream.\n", stderr );		\
-				continue;											\
-			}														\
-		}															\
-																	\
-		if ( !strchr( buf, '\n' ) && !feof( stdin ) ) {				\
-			drainStdin();											\
-		}															\
-																	\
-		buf[strcspn( buf, "\n" )] = '\0';							\
-																	\
-	} while (0)														\
-
 /**
  * drainStdin - helper function that prevents buffer overflows.
  */
@@ -47,6 +22,43 @@ static void drainStdin( void ) {
 	int ch;
 	while ( ( ch = getchar() ) != '\n' && ch != EOF )
 		;
+
+}
+
+/**
+ * readAndClean - read one line from stdin into buf, strip newline,
+ * 					drain the rest if line is too long, and handle EOF/errors
+ * 
+ * @buf: buffer to fill
+ * @size: size of buf (e.g. INPUT_BUFFER_SIZE)
+ * 
+ * Returns:
+ * 		0 on success,
+ *		1 on recoverable error ( caller should retry ),
+ *		on EOF, calls (exit), never returns
+ */
+static int readAndClean( char *buf, size_t size ) {
+
+	if ( fgets( buf, size, stdin ) == NULL ) {
+		if ( feof( stdin ) ) {
+			clearerr(stdin);
+			return 1;
+		}
+
+		else {
+			fputs( "Error in input stream.\n", stderr );
+			return 1;	// caller should retry
+		}
+	}
+
+	// if no newline in buf and not EOF, flush the rest
+	if ( !strchr( buf, '\n' ) && !feof( stdin ) ) {
+		drainStdin();
+	}
+
+	// strip trailing newline
+	buf[strcspn( buf, "\n" )] = '\0';
+	return 0;
 
 }
 
@@ -63,7 +75,7 @@ int getIntInput( void ) {
 
 	while ( 1 ) {
 
-		READ_AND_CLEAN(buffer);
+		if (readAndClean(buffer, sizeof(buffer))) continue;
 
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
@@ -96,7 +108,7 @@ unsigned int getUIntInput( void ) {
 
 	while ( 1 ) {
 
-		READ_AND_CLEAN(buffer);
+		if (readAndClean(buffer, sizeof(buffer))) continue;
 
 		if ( buffer[0] == '-' ) {
 			fputs( "Invalid number. Try again.\n", stderr );
@@ -134,7 +146,7 @@ float getFloatInput( void ) {
 
 	while ( 1 ) {
 
-		READ_AND_CLEAN(buffer);
+		if (readAndClean(buffer, sizeof(buffer))) continue;
 
 		errno = 0;
 		// Convert string to float. 'endptr' is set to the first invalid character after the number.
@@ -168,7 +180,7 @@ long getLongInput( void ) {
 
 	while ( 1 ) {
 
-		READ_AND_CLEAN(buffer);
+		if (readAndClean(buffer, sizeof(buffer))) continue;
 
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
@@ -201,7 +213,7 @@ unsigned long getULongInput( void ) {
 
 	while ( 1 ) {
 
-		READ_AND_CLEAN(buffer);
+		if (readAndClean(buffer, sizeof(buffer))) continue;
 
 		errno = 0;
 		value = strtoul( buffer, &endptr, 10 );
@@ -234,7 +246,7 @@ double getDoubleInput( void ) {
 
 	while ( 1 ) {
 
-		READ_AND_CLEAN(buffer);
+		if (readAndClean(buffer, sizeof(buffer))) continue;
 
 		errno = 0;
 		value = strtod( buffer, &endptr );
@@ -267,7 +279,7 @@ char getCharInput( void ) {
 
 	while ( 1 ) {
 
-		READ_AND_CLEAN(buffer);
+		if (readAndClean(buffer, sizeof(buffer))) continue;
 		
 		if ( strlen(buffer) == 1 ) {
 			return buffer[0];
@@ -299,7 +311,7 @@ char getCharInputFiltered( const char *allowed ) {
 
 	while ( 1 ) {
 
-		READ_AND_CLEAN(buffer);
+		if (readAndClean(buffer, sizeof(buffer))) continue;
 		
 		if ( strlen(buffer) != 1 ) {
 			fputs( "Invalid input. Please enter a single character.\n", stderr );
