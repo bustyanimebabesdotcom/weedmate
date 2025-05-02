@@ -35,7 +35,7 @@ static void drainStdin( void ) {
  * Returns:
  * 		0 on success,
  *		1 on recoverable error ( caller should retry ),
- *		on EOF, calls (exit), never returns
+ *		on EOF, it just retries for valid input. No exit trickery.
  */
 static int readAndClean( char *buf, size_t size ) {
 
