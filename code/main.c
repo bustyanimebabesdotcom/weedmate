@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "common.h"
+#include "input.h"
 
 int main ( void ) {
 
@@ -58,6 +59,8 @@ int main ( void ) {
 			case 'p':
 			case 'P':
 				// redundant function, might be useful one day
+				CLEAR_SCREEN();
+				flushInputBuffer();
 				handleStrainPriceLookup();
 				RETURN_TO_MENU_MSG();
 				break;
@@ -65,6 +68,8 @@ int main ( void ) {
 			case 'b':
 			case 'B':
 				// secret menu
+				CLEAR_SCREEN();
+				flushInputBuffer();
 				budTenderMenu();
 				RETURN_TO_MENU_MSG();
 				break;
@@ -88,6 +93,7 @@ int main ( void ) {
 			case 'c':
 			case 'C':
 				CLEAR_SCREEN();
+				flushInputBuffer();
 				weedCalc();
 				RETURN_TO_MENU_MSG();
 				break;

@@ -1,4 +1,4 @@
-// common.h - contains function declarations
+// common.h - contains common function declarations
 // project: weedmate
 
 #ifndef COMMON_H
@@ -25,13 +25,6 @@ void printStrainList			( void );
 void budTenderMenu				( void );
 void handleStrainPriceLookup	( void );
 void strainPriceAdjust			( strain_t* strains, int mode );
-
-// === Input handling ===
-int getIntInput					( void );
-unsigned int getUIntInput		( void );
-char getCharInput				( void );
-float getFloatInput				( void );
-void flushInputBuffer			( void );
 
 // === Math shit, cause why not ===
 void weedCalc					( void );

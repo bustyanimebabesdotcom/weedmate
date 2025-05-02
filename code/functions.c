@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "common.h"
+#include "input.h"
 
 strain_t strains[STRAIN_COUNT] = {
 	{ "White Death",            13 },
@@ -196,8 +197,6 @@ static int getStrainChoice( void ) {
  */
 void budTenderMenu ( void ) {
 
-	CLEAR_SCREEN();
-	flushInputBuffer();
 	puts( "=== Budtender Access Granted ===" );
 
 	while ( 1 ) {
@@ -241,9 +240,7 @@ void budTenderMenu ( void ) {
  * Provides a numbered list and handles bad input or out-of-range entries.
  */
 void handleStrainPriceLookup ( void ) {
-
-	CLEAR_SCREEN();
-	flushInputBuffer();
+	
 	while (1) {
 
 		putchar( '\n' );
@@ -278,14 +275,12 @@ void handleStrainPriceLookup ( void ) {
  */
 static void weedCalcInput ( int *a, char *mod, int *b ) {
 
-	flushInputBuffer();
-
 	puts( "Enter your first number:" );
 	*a = getIntInput();
 
 	puts( "Enter your modifier ( + - * / ):" );
-	*mod = getCharInput();
-	
+	*mod = getCharInputFiltered("+-*/");
+
 	puts( "Enter your second number:" );
 	*b = getIntInput();
 

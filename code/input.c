@@ -7,6 +7,8 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
+#include <math.h>
 #include "common.h"
 
 /**
@@ -17,8 +19,8 @@
 int getIntInput( void ) {
 
 	char buffer[BUFFER_SIZE];
-	int value;
-	char extra;
+	long value;
+	char *endptr;
 
 	while ( 1 ) {
 
@@ -29,11 +31,19 @@ int getIntInput( void ) {
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
 
-		if ( sscanf( buffer, "%d %c", &value, &extra ) == 1 ) return value;
-	
-		fprintf( stderr, "Invalid number. Try again\n");
-
+		value = strtol( buffer, &endptr, 10 );
 		
+		if ( endptr == buffer || *endptr != '\0' ) {
+			fprintf( stderr, "Invalid number. Try again.\n");
+			continue;
+		}
+
+		if ( value < INT_MIN || value > INT_MAX ) {
+			fprintf( stderr, "Value out of range. Try again\n");
+			continue;
+		}
+
+		return (int)value;
 	}
 
 }
@@ -62,7 +72,12 @@ float getFloatInput( void ) {
 		value = strtof( buffer, &endptr );
 
 		if ( endptr == buffer || *endptr != '\0') {
-			fprintf( stderr, "Invalid number. Try again\n");
+			fprintf( stderr, "Invalid number. Try again.\n");
+			continue;
+		}
+
+		if ( !isfinite( value ) ) {
+			fprintf( stderr, "Number out of range. Try again.\n" );
 			continue;
 		}
 	
@@ -79,8 +94,8 @@ float getFloatInput( void ) {
 unsigned int getUIntInput( void ) {
 
 	char buffer[BUFFER_SIZE];
-	unsigned int value;
-	char extra;
+	unsigned long value;
+	char *endptr;
 
 	while ( 1 ) {
 
@@ -91,24 +106,32 @@ unsigned int getUIntInput( void ) {
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
 
-		if ( sscanf( buffer, "%u %c", &value, &extra ) == 1 ) return value;
-	
-		fprintf( stderr, "Invalid number. Try again\n");
+		value = strtoul( buffer, &endptr, 10 );
+
+		if ( endptr == buffer || *endptr != '\0') {
+			fprintf( stderr, "Invalid number. Try again.\n");
+			continue;
+		}
 		
+		if ( value > UINT_MAX ) {
+			fprintf( stderr, "Value out of range. Try again.\n");
+			continue;
+		}
+
+		return (unsigned int)value;
 	}
+
 }
 
 
 /**
  * getCharInput - a safer alternative to scanf for chars
  *
- * usage - char = getCharInput( "String\n" );
+ * usage - char = getCharInput();
  */
 char getCharInput( void ) {
 
 	char buffer[BUFFER_SIZE];
-	char value;
-	char extra;
 
 	while ( 1 ) {
 
@@ -119,9 +142,46 @@ char getCharInput( void ) {
 
 		buffer[strcspn( buffer, "\n" )] = '\0';
 		
-		if ( sscanf( buffer, " %c %c", &value, &extra ) == 1 ) return value;
+		if ( strlen(buffer) == 1 ) {
+			return buffer[0];
+		}
 	
-		fprintf( stderr, "Invalid modifier. Try again\n");
+		fprintf( stderr, "Invalid input. Please enter a single character.\n");
+	}
+
+}
+
+/**
+ * getCharInput - a safer alternative to scanf for chars
+ *
+ * usage - char = getCharInputAllowed( "abc" );
+ */
+char getCharInputFiltered( const char *allowed ) {
+
+	char buffer[BUFFER_SIZE];
+
+	while ( 1 ) {
+
+		if ( fgets( buffer, sizeof(buffer), stdin ) == NULL ) {
+			fprintf( stderr, "Error in input stream.\n" );
+			continue;
+		}
+
+		buffer[strcspn( buffer, "\n" )] = '\0';
+		
+		if ( strlen(buffer) != 1 ) {
+			fprintf( stderr, "Invalid input. Please enter a single character.\n");
+			continue;
+		}
+
+		char c = buffer[0];
+
+		if ( strchr( allowed, c ) != NULL ) {
+			return c;
+		}
+	
+		fprintf(stderr, "Invalid input. Allowed %s\n", allowed );
+		
 	}
 
 }
