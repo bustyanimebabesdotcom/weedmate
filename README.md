@@ -20,6 +20,22 @@ Do note, I'm not as of yet qualified to know whether any of this is true. Take i
 
 ---
 
+## 📥 Custom Input Library
+
+WeedMate comes with a **fully modular input library** that replaces C's cursed `scanf()` with a safer, no-bullshit alternative. It's designed for beginners who are sick of segfaults but not ready to write their own parsing logic from scratch.
+
+Features:
+- Uses `fgets` + `strtol` / `strtof` / `strtod` internally — no garbage left in stdin.
+- Graceful handling of invalid input with helpful error messages.
+- Rejects junk like `"abc123"` when expecting numbers.
+- Cleanly parses `int`, `unsigned`, `float`, `long`, `double`, and `char`.
+- Optional filtered character input (`getCharInputFiltered("yn")` style).
+- Easy to extend, dead simple to read.
+
+`scanf()` chordle my balls. This is for people who don’t want to spend three hours debugging why their `scanf("%d")` keeps skipping lines.
+
+---
+
 ## 🛠️ How to Build
 
 You need `cmake` and `make`:
