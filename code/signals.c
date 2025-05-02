@@ -7,7 +7,7 @@
  */
 
 #include <signal.h>
-#include "include/common.h"		// for ENTER_ALT_SCREEN(), exitWeedMate()
+#include <weedmate/common.h>		// for ENTER_ALT_SCREEN(), exitWeedMate()
 
 // on_stop (SIGINT/SIGTERM/SIGTSTP): exit alt buffer then re-raise so the shell suspends/exits.
 static void on_stop( int signo ) {
