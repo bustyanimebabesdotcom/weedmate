@@ -51,9 +51,11 @@ static int readInputLine( char *buf, size_t size ) {
 		}
 	}
 
-	// if no newline in buf and not EOF, flush the rest
+	// if no newline in buf and not EOF, flush the rest and return error code. This prevents potential buffer overflow.
 	if ( !strchr( buf, '\n' ) && !feof( stdin ) ) {
 		drainStdin();
+		fputs( "Input exceeding buffer size. Try again.\n", stderr );
+		return 1;
 	}
 
 	// strip trailing newline
@@ -393,5 +395,41 @@ char getCharInputFiltered( const char *allowed ) {
 		fprintf( stderr, "Invalid input. Allowed: %s\n", allowed );
 		
 	}
+
+}
+
+/**
+ * getStringInput - allocates and returns a line of user input from stdin
+ *
+ * NOTE: Caller must free the returned string!!!
+ * 
+ * safe usage example
+ * 
+
+	char *input = getStringInput();
+
+	if (!input) fputs( "Failed to read input. Try again.\n", stderr );
+	else {
+		printf("You entered: %s\n", input);
+		free(input);
+    	input = NULL;
+
+ */
+char *getStringInput( void ) {
+
+	char buffer[INPUT_BUFFER_SIZE];
+
+	if ( readInputLine( buffer, sizeof(buffer) ) ) {
+		return NULL;
+	}
+
+	char *str = malloc( strlen( buffer ) + 1 );
+	if ( !str ) {
+		fputs( "Memory allocation failed.\n", stderr );
+		return NULL;
+	}
+
+	strcpy( str, buffer );
+	return str;
 
 }
