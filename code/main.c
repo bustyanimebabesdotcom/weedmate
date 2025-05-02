@@ -52,9 +52,8 @@ int main ( void ) {
 
 			case 'p':
 			case 'P':
-				// redundant function, might be useful one day
 				CLEAR_SCREEN();
-//				flushInputBuffer();
+				// redundant function, might be useful one day
 				handleStrainPriceLookup();
 				RETURN_TO_MENU_MSG();
 				break;
@@ -63,7 +62,6 @@ int main ( void ) {
 			case 'B':
 				// secret menu
 				CLEAR_SCREEN();
-//				flushInputBuffer();
 				budTenderMenu();
 				RETURN_TO_MENU_MSG();
 				break;
@@ -87,7 +85,6 @@ int main ( void ) {
 			case 'c':
 			case 'C':
 				CLEAR_SCREEN();
-//				flushInputBuffer();
 				weedCalc();
 				RETURN_TO_MENU_MSG();
 				break;
