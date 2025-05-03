@@ -21,4 +21,6 @@ unsigned long long getULongLongInput	( void );
 char getCharInput						( void );
 char getCharInputFiltered				( const char *allowed );
 
+char *getStringInput					( void );
+
 #endif // INPUT_H
