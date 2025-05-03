@@ -1,4 +1,4 @@
-// input.h
+// input.c - version 1.0.0
 
 #ifndef INPUT_H
 #define INPUT_H
