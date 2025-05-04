@@ -1,4 +1,4 @@
-// input.c - version 1.0.0
+// input.c - version 1.0.1
 /* safe(r than scanf) input handling
  * This can be ported to any project, to be used as a standalone input library.
  * There are obviously better input libraries, but the purpose of this is to be
@@ -9,8 +9,9 @@
  */
 
 
-// TODO: Wrap more copy pasted shit into helpers
+// TODO: Wrap more copy pasted shit into helpers.
 // TODO: Find better solution than exit on EOF.
+// TODO: Optimize codebase where possible.
 
 #include <stdio.h>
 #include <string.h>
