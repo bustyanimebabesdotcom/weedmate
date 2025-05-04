@@ -422,16 +422,17 @@ char getCharInputFiltered( const char *allowed ) {
  * 
  * safe usage example
  * 
-
-	char *input = getStringInput();
-
-	if (!input) fputs( "Failed to read input. Try again.\n", stderr );
-	else {
-		printf("You entered: %s\n", input);
-		free(input);
-		input = NULL;
-	}
-
+ *
+ *	char *input = getStringInput();
+ *
+ *	if (!input) fputs( "Failed to read input. Try again.\n", stderr );
+ *	else {
+ *		printf("You entered: %s\n", input);
+ *		free(input);
+ *		input = NULL;
+ *	}
+ *
+ * NOTE: memcpy might not be the best option here.
  */
 char *getStringInput( void ) {
 
