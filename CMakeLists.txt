@@ -1,11 +1,26 @@
+# Specify minimum version of cmake
 cmake_minimum_required(VERSION 3.10)
+
+# Project name
 project(weedmate)
 
-set(CMAKE_C_FLAGS "-O3 -s -Wall -Wextra -Wpedantic")
+# Compiler
+set(CMAKE_C_COMPILER clang)
 
+# Compiler flags
+set(CMAKE_C_FLAGS "-Wall -Wextra -Wpedantic -Werror")
+
+# Release flags
+set(CMAKE_C_FLAGS_RELEASE "-O3")
+
+# Debug flags
+set(CMAKE_C_FLAGS_DEBUG "-g -O0")
+
+# C standard
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+# Source files to include
 add_executable(weedmate
 	code/main.c
 	code/signals.c
@@ -13,10 +28,12 @@ add_executable(weedmate
 	code/input/input.c
 )
 
-
+# Include directories for namespace
 target_include_directories(weedmate
   PRIVATE
 	${CMAKE_SOURCE_DIR}/code/include
 	${CMAKE_SOURCE_DIR}/code/input
 )
+
+# Link math library
 target_link_libraries(weedmate m)

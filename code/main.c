@@ -88,6 +88,14 @@ int main ( void ) {
 				weedCalc();
 				RETURN_TO_MENU_MSG();
 				break;
+
+			case 'r':
+			case 'R':
+				CLEAR_SCREEN();
+				renameStrain();
+				RETURN_TO_MENU_MSG();
+				break;
+
 			default:
 				// in case of oh shit moment
 				CLEAR_SCREEN();

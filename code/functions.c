@@ -78,13 +78,17 @@ void motd ( void ) {
 	putchar( '\n' );
 	puts( "press 'l' to browse the strain list." );
 	puts( "press 'p' to check the price of individual strains." );
-	puts( "press 'c' to open the calculator." );
+	puts( "press 'b' to open the budtender menu." );
+	putchar('\n');
 	puts( "press '+' to double prices." );
 	puts( "press '-' to cut prices in half." );
+	puts( "press 'c' to open the calculator." );
+	puts( "press 'r' to rename strains." );
+	putchar('\n');
 	puts( "press 'm' to reprint this message." );
 	puts( "press 'q' to quit." );
 	putchar( '\n' );
-	puts( "Enter your input." );
+	printf( "Enter your input: " );
 
 }
 
@@ -326,12 +330,14 @@ static double doCalculation ( int a, char mod, int b, bool *success ) {
  */
 void weedCalc ( void ) {
 
+	// declare variables
 	int num1 = 0;
 	int num2 = 0;
 	char mod = 0;
 	double result = 0.0;
 	bool success = false;
 
+	// take user input, and perform arithmetic operation
 	weedCalcInput( &num1, &mod, &num2 );
 	result = doCalculation( num1, mod, num2, &success );
 
@@ -340,6 +346,7 @@ void weedCalc ( void ) {
 		return;
 	}
 
+	// print result
 	printf( "Your number is: " );
 	if ( mod == '/' ) {
 		printf( "%.8f\n", result );
@@ -348,5 +355,59 @@ void weedCalc ( void ) {
 	else {
 		printf( "%d\n", (int)result );
 	}
+
+}
+
+/** 
+ * renameStrain - uses getStringInput() from the input library to  
+ * store a string in memory, write it to selected array slot
+ * and freeing the memory at the end. clean shit.
+ */
+void renameStrain( void ) {
+
+	// Get user selected strain slot
+	fprintf( stdout, "Enter strain to rename ( 1-%d ):\n", STRAIN_COUNT );
+	int slot = getIntInput();
+
+	// Validate selected slot is a valid number
+	if ( slot < 1 || slot > STRAIN_COUNT ) {
+		CLEAR_SCREEN();
+		fprintf( stderr, "Invalid strain number. Must be between 1-%d!\n", STRAIN_COUNT );
+		return;
+	}
+	
+	// Get strain name from user
+	CLEAR_SCREEN();
+	printf( "Enter string for slot #%d:\n", slot );
+	char *str = getStringInput();
+
+	// Check for invalid or empty input
+	if ( !str || strlen(str) == 0 ) {
+		free(str);
+		str = NULL;
+		fputs( "Empty string or error, slot unchanged.\n", stderr );
+		return;
+	}
+	
+	// Ensure name fits within max length
+	if ( strlen(str) >= MAX_STRAIN_LENGTH ) {
+		CLEAR_SCREEN();
+		fprintf( stderr, "Strain name exceeds max length of %d characters.\n", MAX_STRAIN_LENGTH - 1 );
+		free(str);
+		str = NULL;
+		return;
+	}
+
+	// Copy new name to strains[i].name, ensure null termination
+	strncpy( strains[slot - USER_INPUT_OFFSET].name, str, MAX_STRAIN_LENGTH - 1 );
+	strains[slot - USER_INPUT_OFFSET].name[MAX_STRAIN_LENGTH - 1] = '\0';
+	
+	// Display success message
+	CLEAR_SCREEN();
+	fprintf( stdout, "Strain name '%s' successfully applied to strain #%d\n", str, slot );
+
+	// Free the pointer
+	free(str);
+	str = NULL;
 
 }

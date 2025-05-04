@@ -1,8 +1,13 @@
 // input.c - version 1.0.0
-// safe(r than scanf) input handling
-// This can be ported to any project, to be used as a standalone input library.
-// There are obviously better input libraries, but the purpose of this is to be
-// A safe(r) alternative to scanf for noobs like me.
+/* safe(r than scanf) input handling
+ * This can be ported to any project, to be used as a standalone input library.
+ * There are obviously better input libraries, but the purpose of this is to be
+ * a safe(r) alternative to scanf for noobs like me.
+ * 
+ * Main safety features are simple prevention of buffer overflow exploits,
+ * and validating input.
+ */
+
 
 // TODO: Wrap more copy pasted shit into helpers
 // TODO: Find better solution than exit on EOF.
@@ -13,16 +18,22 @@
 #include <limits.h>
 #include <errno.h>
 #include <math.h>
+#include <ctype.h>
+#include <stdbool.h>
 #include "input.h"
 
 /**
- * drainStdin - helper function that prevents buffer overflows.
+ * drainStdin - Drains leftover input from stdin to prevent buffer overflows.
+ * Reads until newline or EOF is encountered
+ * 
+ * called by readInputLine()
  */
 static void drainStdin( void ) {
 
 	int ch;
+	// rRead and discard characters until newline or EOF
 	while ( ( ch = getchar() ) != '\n' && ch != EOF )
-		;
+		; // Empty loop body, smaller than {}
 
 }
 
@@ -40,6 +51,7 @@ static void drainStdin( void ) {
  */
 static int readInputLine( char *buf, size_t size ) {
 
+	// Read input line into buffer, check for errors or EOF
 	if ( fgets( buf, size, stdin ) == NULL ) {
 		if ( feof( stdin ) ) {
 			clearerr(stdin);
@@ -52,8 +64,9 @@ static int readInputLine( char *buf, size_t size ) {
 		}
 	}
 
-	// if no newline in buf and not EOF, flush the rest and return error code. This prevents potential buffer overflow.
+	// Check for overflow: no newline and not EOF means input too long
 	if ( !strchr( buf, '\n' ) && !feof( stdin ) ) {
+		// flush excess input to prevent overflow
 		drainStdin();
 		fputs( "Input exceeding buffer size. Try again.\n", stderr );
 		return 1;
@@ -382,6 +395,7 @@ char getCharInputFiltered( const char *allowed ) {
 
 		if (readInputLine(buffer, sizeof(buffer))) continue;
 		
+		// Ensure input is exactly one character
 		if ( strlen(buffer) != 1 ) {
 			fputs( "Invalid input. Please enter a single character.\n", stderr );
 			continue;
@@ -389,6 +403,7 @@ char getCharInputFiltered( const char *allowed ) {
 
 		char c = buffer[0];
 
+		// Return if character is in allowed set
 		if ( strchr( allowed, c ) != NULL ) {
 			return c;
 		}
@@ -413,23 +428,48 @@ char getCharInputFiltered( const char *allowed ) {
 	else {
 		printf("You entered: %s\n", input);
 		free(input);
-    	input = NULL;
+		input = NULL;
+	}
 
  */
 char *getStringInput( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 
+	// read input (return NULL on error/EOF ), get length of input string
 	if ( readInputLine( buffer, sizeof(buffer) ) ) return NULL;
-
 	size_t len = strlen( buffer );
+
+	// Allocate memory for string( length + 1 for null terminator )
 	char *str = malloc( len + 1 );
+	// Check for allocation failure
 	if ( !str ) {
 		fputs( "Memory allocation failed.\n", stderr );
 		return NULL;
 	}
 
+	// copy buffer to allocated string
 	memcpy( str, buffer, len + 1 );
 	return str;
+
+}
+
+/**
+ * getBoolInput - a safer alternative to scanf for boolean values
+ *
+ * Accepts "y" or "n" (case-insensitive).
+ *
+ * usage - bool x = getBoolInput();
+ */
+bool getBoolInput( void ) {
+
+	while ( 1 ) {
+		// Read single character, convert to lowercase
+		char c = tolower( getCharInput() );
+
+		if ( c == 'y' ) return true;
+		if ( c == 'n' ) return false;
+		fputs( "Invalid input. Enter 'y' or 'n'.\n", stderr );
+	}
 
 }
