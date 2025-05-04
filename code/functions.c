@@ -369,7 +369,7 @@ void renameStrain( void ) {
 	fprintf( stdout, "Enter strain to rename ( 1-%d ):\n", STRAIN_COUNT );
 	int slot = getIntInput();
 
-	// Validate selected slot is a valid number
+	// Check that selected slot is a valid number
 	if ( slot < 1 || slot > STRAIN_COUNT ) {
 		CLEAR_SCREEN();
 		fprintf( stderr, "Invalid strain number. Must be between 1-%d!\n", STRAIN_COUNT );
