@@ -432,7 +432,8 @@ char getCharInputFiltered( const char *allowed ) {
  *		input = NULL;
  *	}
  *
- * NOTE: memcpy might not be the best option here.
+ * NOTE: we use memcpy() because it copies exactly len + 1 byes from buffer, avoiding overflow and termination issues.
+ * 			the overhead is worth it in this case for the safety is provides over strpy() or strncpy()
  */
 char *getStringInput( void ) {
 
