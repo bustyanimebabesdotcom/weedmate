@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <weedmate/common.h>
-#include "input.h"\
+#include "input.h"
 
 int main ( void ) {
 
