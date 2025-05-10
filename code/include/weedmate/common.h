@@ -37,4 +37,7 @@ void installSignalHandlers		( void );
 // === Math shit, cause why not ===
 void weedCalc					( void );
 
+// === FILE IO ===
+void loadSaveFile				( void );
+
 #endif // COMMON_H

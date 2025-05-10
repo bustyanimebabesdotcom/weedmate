@@ -25,4 +25,7 @@
 #define BUDTENDER_BREAK			-1
 #define BUDTENDER_OK			1
 
+// === File i/o ===
+#define SAVE_FILE_NAME			".weedrc"
+
 #endif // MACROS_H

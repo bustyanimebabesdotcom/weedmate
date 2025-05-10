@@ -18,6 +18,7 @@ int main ( void ) {
 	atexit(exitWeedMate);		// Make sure program runs exit function to leave alternate screen buffer
 	installSignalHandlers();	// Make sure we can catch CTRL-Z, CTRL-C, CTRL-D, etc...
 	CLEAR_SCREEN();
+	loadSaveFile();
 	motd();
 
 	int c;

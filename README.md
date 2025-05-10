@@ -38,6 +38,25 @@ Features:
 
 ---
 
+## 💾 Save File Support
+
+WeedMate now supports persistent strain names using a hidden save file:
+
+- Save file path: `.weedrc` (created in the same directory as the binary)
+- Format: plain text, one strain name per line (15 lines total)
+- Max name length: 19 characters (20 including null terminator)
+
+### 📝 Behavior
+
+- On startup, if `.weedrc` exists, WeedMate loads strain names from it.
+- If any line in the save file exceeds the max length, the file is considered corrupt and is deleted.
+- Renaming a strain will update `.weedrc` with all current strain names.
+- If the file doesn't exist, default strain names are used.
+
+You don't need to manage this file manually — WeedMate handles it for you.
+
+---
+
 ## 🛠️ How to Build
 
 You need `cmake` and `make`:
