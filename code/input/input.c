@@ -1,4 +1,4 @@
-// input.c - version 1.0.5
+// input.c - version 1.0.6
 /* safe(r than scanf) input handling
  * This can be ported to any project, to be used as a standalone input library.
  * There are obviously better input libraries, but the purpose of this is to be
@@ -380,11 +380,14 @@ unsigned long long getULongLongInput( void ) {
  */
 char getCharInput( void ) {
 
-	char buffer[INPUT_BUFFER_SIZE];
+	char buffer[CHAR_INPUT_BUFFER_SIZE];
 
 	while ( 1 ) {
 
-		if ( readInputLine( buffer, sizeof(buffer) )) return EOF;
+		int result = readInputLine( buffer, sizeof(buffer) );
+		
+		if ( result == EOF ) return EOF;
+		if ( result == 1 ) continue;
 		if ( strlen(buffer) == 1 ) return buffer[0];
 	
 		printError( "Invalid input. Please enter a single character.\n" );
@@ -411,11 +414,15 @@ char getCharInputFiltered( const char *allowed ) {
 		return 1;
 	}
 
-	char buffer[INPUT_BUFFER_SIZE];
+	char buffer[CHAR_INPUT_BUFFER_SIZE];
 
 	while ( 1 ) {
 
-		if ( readInputLine( buffer, sizeof(buffer) )) return EOF;
+		int result = readInputLine( buffer, sizeof(buffer) );
+		
+		if ( result == EOF ) return EOF;
+		if ( result == 1 ) continue;
+		if ( strlen(buffer) == 1 ) return buffer[0];
 		
 		// Ensure input is exactly one character
 		if ( strlen(buffer) != 1 ) {

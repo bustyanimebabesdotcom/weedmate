@@ -1,4 +1,4 @@
-// input.h - version 1.0.5
+// input.h - version 1.0.6
 
 #ifndef INPUT_H
 #define INPUT_H
@@ -8,6 +8,7 @@
 
 // === INPUT BUFFER ===
 #define INPUT_BUFFER_SIZE				128
+#define CHAR_INPUT_BUFFER_SIZE			4
 
 // === Input handling ===
 int	getIntInput							( void );
