@@ -72,23 +72,22 @@ void motd ( void ) {
 	puts( " ██ ███ ██ ▄▄▄██ ▄▄▄██ ▄▄▀██ ▄▀▄ █ ▄▄▀█▄▄ ▄▄██ ▄▄▄██" );
 	puts( " ██ █ █ ██ ▄▄▄██ ▄▄▄██ ██ ██ █ █ █ ▀▀ ███ ████ ▄▄▄██" );
 	puts( " ██▄▀▄▀▄██ ▀▀▀██ ▀▀▀██ ▀▀ ██ ███ █ ██ ███ ████ ▀▀▀██" );
-	puts( " ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" );
+	puts( " ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\n" );
 
-	putchar( '\n' );
-	puts( "               Welcome to weedmate!                      " );
-	putchar( '\n' );
+	puts( "               Welcome to weedmate!\n" );
+
 	puts( "press 'l' to browse the strain list." );
 	puts( "press 'p' to check the price of individual strains." );
-	puts( "press 'b' to open the budtender menu." );
-	putchar('\n');
+	puts( "press 'b' to open the budtender menu.\n" );
+
 	puts( "press '+' to double prices." );
 	puts( "press '-' to cut prices in half." );
 	puts( "press 'c' to open the calculator." );
-	puts( "press 'r' to rename strains." );
-	putchar('\n');
+	puts( "press 'r' to rename strains.\n" );
+
 	puts( "press 'm' to reprint this message." );
-	puts( "press 'q' to quit." );
-	putchar( '\n' );
+	puts( "press 'q' to quit.\n" );
+
 	printf( "Enter your input: " );
 
 }
