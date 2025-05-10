@@ -1,4 +1,4 @@
-// input.c - version 1.0.1
+// input.c - version 1.0.2
 /* safe(r than scanf) input handling
  * This can be ported to any project, to be used as a standalone input library.
  * There are obviously better input libraries, but the purpose of this is to be
@@ -10,7 +10,6 @@
 
 
 // TODO: Wrap more copy pasted shit into helpers.
-// TODO: Find better solution than exit on EOF.
 // TODO: Optimize codebase where possible.
 
 #include <stdio.h>
@@ -22,6 +21,12 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include "input.h"
+
+static void printError( const char *msg ) {
+
+	fputs( msg, stderr );
+
+}
 
 /**
  * drainStdin - Drains leftover input from stdin to prevent buffer overflows.
@@ -46,9 +51,9 @@ static void drainStdin( void ) {
  * @size: size of buf (e.g. INPUT_BUFFER_SIZE)
  * 
  * Returns:
- * 		0 on success,
- *		1 on recoverable error ( caller should retry ),
- *		on EOF, clears error and returns 1 (caller should retry)
+ * 		0 - on success,
+ *		1 - on error,
+ *	   -1 - on EOF ( caller should check and handle appropriately ),
  */
 static int readInputLine( char *buf, size_t size ) {
 
@@ -56,11 +61,11 @@ static int readInputLine( char *buf, size_t size ) {
 	if ( fgets( buf, size, stdin ) == NULL ) {
 		if ( feof( stdin ) ) {
 			clearerr(stdin);
-			return 1;
+			return -1;
 		}
 
 		else {
-			fputs( "Error in input stream.\n", stderr );
+			printError( "Error in input stream.\n" );
 			return 1;	// caller should retry
 		}
 	}
@@ -69,7 +74,7 @@ static int readInputLine( char *buf, size_t size ) {
 	if ( !strchr( buf, '\n' ) && !feof( stdin ) ) {
 		// flush excess input to prevent overflow
 		drainStdin();
-		fputs( "Input exceeding buffer size. Try again.\n", stderr );
+		printError( "Input exceeding buffer size. Try again.\n" );
 		return 1;
 	}
 
@@ -92,18 +97,18 @@ int getIntInput( void ) {
 
 	while ( 1 ) {
 
-		if (readInputLine(buffer, sizeof(buffer))) continue;
+		if ( readInputLine( buffer, sizeof(buffer) )) return INT_MIN;
 
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
 		
 		if ( endptr == buffer || *endptr != '\0' ) {
-			fputs( "Invalid number. Try again.\n", stderr);
+			printError( "Invalid number. Try again.\n" );
 			continue;
 		}
 
 		if ( errno == ERANGE || value < INT_MIN || value > INT_MAX ) {
-			fputs( "Value out of range. Try again.\n", stderr );
+			printError( "Value out of range. Try again.\n" );
 			continue;
 		}
 
@@ -125,10 +130,10 @@ unsigned int getUIntInput( void ) {
 
 	while ( 1 ) {
 
-		if (readInputLine(buffer, sizeof(buffer))) continue;
+		if ( readInputLine( buffer, sizeof(buffer) )) return UINT_MAX;
 
 		if ( buffer[0] == '-' ) {
-			fputs( "Invalid number. Try again.\n", stderr );
+			printError( "Invalid number. Try again.\n" );
 			continue;
 		}
 
@@ -136,12 +141,12 @@ unsigned int getUIntInput( void ) {
 		value = strtoul( buffer, &endptr, 10 );
 
 		if ( endptr == buffer || *endptr != '\0') {
-			fputs( "Invalid number. Try again.\n", stderr );
+			printError( "Invalid number. Try again.\n" );
 			continue;
 		}
 		
 		if ( errno == ERANGE || value > UINT_MAX ) {
-			fputs( "Value out of range. Try again.\n", stderr);
+			printError( "Value out of range. Try again.\n" );
 			continue;
 		}
 
@@ -163,19 +168,19 @@ float getFloatInput( void ) {
 
 	while ( 1 ) {
 
-		if (readInputLine(buffer, sizeof(buffer))) continue;
+		if ( readInputLine( buffer, sizeof(buffer) )) return NAN;
 
 		errno = 0;
 		// Convert string to float. 'endptr' is set to the first invalid character after the number.
 		value = strtof( buffer, &endptr );
 
 		if ( endptr == buffer || *endptr != '\0') {
-			fputs( "Invalid number. Try again.\n", stderr );
+			printError( "Invalid number. Try again." );
 			continue;
 		}
 
 		if ( errno == ERANGE || !isfinite( value ) ) {
-			fputs( "Number out of range. Try again.\n", stderr );
+			printError( "Number out of range. Try again.\n" );
 			continue;
 		}
 	
@@ -197,18 +202,18 @@ double getDoubleInput( void ) {
 
 	while ( 1 ) {
 
-		if (readInputLine(buffer, sizeof(buffer))) continue;
+		if ( readInputLine( buffer, sizeof(buffer) )) return NAN;
 
 		errno = 0;
 		value = strtod( buffer, &endptr );
 		
 		if ( endptr == buffer || *endptr != '\0' ) {
-			fputs( "Invalid number. Try again.\n", stderr );
+			printError( "Invalid number. Try again.\n" );
 			continue;
 		}
 
 		if ( errno == ERANGE || !isfinite( value ) ) {
-			fputs( "Value out of range. Try again.\n", stderr );
+			printError( "Value out of range. Try again.\n" );
 			continue;
 		}
 
@@ -230,18 +235,18 @@ long getLongInput( void ) {
 
 	while ( 1 ) {
 
-		if (readInputLine(buffer, sizeof(buffer))) continue;
+		if ( readInputLine( buffer, sizeof(buffer) )) return LONG_MIN;
 
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
 		
 		if ( endptr == buffer || *endptr != '\0' ) {
-			fputs( "Invalid number. Try again.\n", stderr );
+			printError( "Invalid number. Try again.\n" );
 			continue;
 		}
 
 		if ( errno == ERANGE ) {
-			fputs( "Value out of range. Try again.\n", stderr );
+			printError( "Value out of range. Try again.\n" );
 			continue;
 		}
 
@@ -263,18 +268,18 @@ unsigned long getULongInput( void ) {
 
 	while ( 1 ) {
 
-		if (readInputLine(buffer, sizeof(buffer))) continue;
+		if ( readInputLine( buffer, sizeof(buffer) )) return ULONG_MAX;
 
 		errno = 0;
 		value = strtoul( buffer, &endptr, 10 );
 		
 		if ( endptr == buffer || *endptr != '\0' ) {
-			fputs( "Invalid number. Try again.\n", stderr );
+			printError( "Invalid number. Try again.\n" );
 			continue;
 		}
 
 		if ( errno == ERANGE ) {
-			fputs( "Value out of range. Try again.\n", stderr );
+			printError( "Value out of range. Try again.\n" );
 			continue;
 		}
 
@@ -296,18 +301,18 @@ long long getLongLongInput( void ) {
 
 	while ( 1 ) {
 
-		if (readInputLine(buffer, sizeof(buffer))) continue;
+		if ( readInputLine( buffer, sizeof(buffer) )) return LLONG_MIN;
 
 		errno = 0;
 		value = strtoll( buffer, &endptr, 10 );
 		
 		if ( endptr == buffer || *endptr != '\0' ) {
-			fputs( "Invalid number. Try again.\n", stderr );
+			printError( "Invalid number. Try again.\n" );
 			continue;
 		}
 
 		if ( errno == ERANGE ) {
-			fputs( "Value out of range. Try again.\n", stderr );
+			printError( "Value out of range. Try again.\n" );
 			continue;
 		}
 
@@ -329,18 +334,18 @@ unsigned long long getULongLongInput( void ) {
 
 	while ( 1 ) {
 
-		if (readInputLine(buffer, sizeof(buffer))) continue;
+		if ( readInputLine( buffer, sizeof(buffer) )) return ULLONG_MAX;;
 
 		errno = 0;
 		value = strtoull( buffer, &endptr, 10 );
 		
 		if ( endptr == buffer || *endptr != '\0' ) {
-			fputs( "Invalid number. Try again.\n", stderr );
+			printError( "Invalid number. Try again.\n" );
 			continue;
 		}
 
 		if ( errno == ERANGE ) {
-			fputs( "Value out of range. Try again.\n", stderr );
+			printError( "Value out of range. Try again.\n" );
 			continue;
 		}
 
@@ -362,13 +367,10 @@ char getCharInput( void ) {
 
 	while ( 1 ) {
 
-		if (readInputLine(buffer, sizeof(buffer))) continue;
-		
-		if ( strlen(buffer) == 1 ) {
-			return buffer[0];
-		}
+		if ( readInputLine( buffer, sizeof(buffer) )) return EOF;
+		if ( strlen(buffer) == 1 ) return buffer[0];
 	
-		fputs( "Invalid input. Please enter a single character.\n", stderr);
+		printError( "Invalid input. Please enter a single character.\n" );
 	}
 
 }
@@ -381,12 +383,12 @@ char getCharInput( void ) {
 char getCharInputFiltered( const char *allowed ) {
 
 	if ( allowed == NULL ){
-		fputs( "getCharInputFiltered(): NULL passed to 'allowed'. Exiting.\n", stderr );
+		printError( "getCharInputFiltered(): NULL passed to 'allowed'. Exiting.\n" );
 		exit(EXIT_FAILURE);
 	}
 
 	if ( allowed[0] == '\0' ) {
-		fputs( "No allowed characters specified. Exiting.\n", stderr );
+		printError( "No allowed characters specified. Exiting.\n" );
 		return 1;
 	}
 
@@ -394,20 +396,18 @@ char getCharInputFiltered( const char *allowed ) {
 
 	while ( 1 ) {
 
-		if (readInputLine(buffer, sizeof(buffer))) continue;
+		if ( readInputLine( buffer, sizeof(buffer) )) return EOF;
 		
 		// Ensure input is exactly one character
 		if ( strlen(buffer) != 1 ) {
-			fputs( "Invalid input. Please enter a single character.\n", stderr );
+			printError( "Invalid input. Please enter a single character.\n" );
 			continue;
 		}
 
 		char c = buffer[0];
 
 		// Return if character is in allowed set
-		if ( strchr( allowed, c ) != NULL ) {
-			return c;
-		}
+		if ( strchr( allowed, c ) != NULL ) return c;
 	
 		fprintf( stderr, "Invalid input. Allowed: %s\n", allowed );
 		
@@ -420,6 +420,7 @@ char getCharInputFiltered( const char *allowed ) {
  *
  * NOTE: Caller must free the returned string!!!
  * 
+ *
  * safe usage example
  * 
  *
@@ -440,19 +441,19 @@ char *getStringInput( void ) {
 	char buffer[INPUT_BUFFER_SIZE];
 
 	// read input (return NULL on error/EOF ), get length of input string
-	if ( readInputLine( buffer, sizeof(buffer) ) ) return NULL;
+	if ( readInputLine( buffer, sizeof(buffer) )) return NULL;
 	size_t len = strlen( buffer );
 
 	// Allocate memory for string( length + 1 for null terminator )
-	char *str = malloc( len + 1 );
+	char *str = malloc( len+1 );
 	// Check for allocation failure
 	if ( !str ) {
-		fputs( "Memory allocation failed.\n", stderr );
+		printError( "Memory allocation failed.\n" );
 		return NULL;
 	}
 
 	// copy buffer to allocated string
-	memcpy( str, buffer, len + 1 );
+	memcpy( str, buffer, len+1 );
 	return str;
 
 }
@@ -472,7 +473,7 @@ bool getBoolInput( void ) {
 
 		if ( c == 'y' ) return true;
 		if ( c == 'n' ) return false;
-		fputs( "Invalid input. Enter 'y' or 'n'.\n", stderr );
+		printError( "Invalid input. Enter 'y' or 'n'.\n" );
 	}
 
 }

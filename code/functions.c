@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
+#include <limits.h>
 #include <string.h>
 #include <weedmate/common.h>
 #include "input.h"
@@ -186,6 +187,11 @@ void exitWeedMate ( void ) {
 static int getStrainChoice( void ) {
 
 	int choice = getIntInput();
+	if ( choice == INT_MIN ) {
+		CLEAR_SCREEN();
+		fputs( "EOF detected. Function aborted.\n", stderr );
+		return BUDTENDER_BREAK;
+	}
 
 	if ( choice < 1 || choice > STRAIN_COUNT ) {
 		CLEAR_SCREEN();
@@ -228,6 +234,12 @@ void budTenderMenu ( void ) {
 		printf( "Enter your new price for %s.\n", strains[choice].name );
 		unsigned int newPrice = getUIntInput();
 
+		if ( newPrice == UINT_MAX ) {
+			CLEAR_SCREEN();
+			fputs( "EOF detected. Function aborted.\n", stderr );
+			break;
+		}
+
 		int sanityStatus = budTenderSanityCheck( newPrice );
 		if (sanityStatus == BUDTENDER_CONTINUE) continue;
 
@@ -248,10 +260,14 @@ void handleStrainPriceLookup ( void ) {
 	
 	while (1) {
 
-		putchar( '\n' );
 		printf( "Enter strain number ( 1–%d ):\n", STRAIN_COUNT );
 
 		int choice = getIntInput();
+		if ( choice == INT_MIN ) {
+			CLEAR_SCREEN();
+			fputs( "EOF detected. Function aborted.\n", stderr );
+			break;
+		}
 
 		if ( choice == 0 ) {
 			CLEAR_SCREEN();
@@ -278,16 +294,27 @@ void handleStrainPriceLookup ( void ) {
  *
  * Lets the user input first number, second number, and a modifier
  */
-static void weedCalcInput ( int *a, char *mod, int *b ) {
+static bool weedCalcInput ( int *a, char *mod, int *b ) {
+
+	int x, y;
+	int m;
 
 	puts( "Enter your first number:" );
-	*a = getIntInput();
+	x = getIntInput();
+	if ( x == INT_MIN ) return false;
 
 	puts( "Enter your modifier ( + - * / ):" );
-	*mod = getCharInputFiltered("+-*/");
+	m = getCharInputFiltered("+-*/");
+	if ( m == EOF ) return false;
 
 	puts( "Enter your second number:" );
-	*b = getIntInput();
+	y = getIntInput();
+	if ( y == INT_MIN ) return false;
+
+	*a = x;
+	*mod = (char)m;
+	*b = y;
+	return true;
 
 }
 
@@ -316,7 +343,8 @@ static double doCalculation ( int a, char mod, int b, bool *success ) {
 		}
 
 		default: {
-			puts( "Invalid operator. Please try again." );
+			CLEAR_SCREEN();
+			fputs( "Invalid input or EOF detected. Function aborted.\n", stderr );
 			*success = false;
 			return DECIMAL_EXIT;
 		}
@@ -369,6 +397,12 @@ void renameStrain( void ) {
 	fprintf( stdout, "Enter strain to rename ( 1-%d ):\n", STRAIN_COUNT );
 	int slot = getIntInput();
 
+	// check for EOF
+	if ( slot == INT_MIN ) {
+		CLEAR_SCREEN();
+		fputs( "EOF detected. Rename aborted.\n", stderr );
+		return;
+	}
 	// Check that selected slot is a valid number
 	if ( slot < 1 || slot > STRAIN_COUNT ) {
 		CLEAR_SCREEN();
@@ -378,19 +412,23 @@ void renameStrain( void ) {
 	
 	// Get strain name from user
 	CLEAR_SCREEN();
-	printf( "Enter string for slot #%d:\n", slot );
+	printf( "Enter new name for strain #%d,  '%s':\n", slot, strains[slot].name );
 	char *str = getStringInput();
 
-	// Check for invalid or empty input
-	if ( !str || strlen(str) == 0 ) {
+	// Get length of string, or 0 if str is NULL
+	size_t len = str ? strlen(str) : 0;
+
+	// Check for NULL or empty string
+	if ( len == 0 ) {
 		free(str);
 		str = NULL;
+		CLEAR_SCREEN();
 		fputs( "Empty string or error, slot unchanged.\n", stderr );
 		return;
 	}
 	
-	// Ensure name fits within max length
-	if ( strlen(str) >= MAX_STRAIN_LENGTH ) {
+	// Check if string exceeds max length
+	if ( len >= MAX_STRAIN_LENGTH ) {
 		CLEAR_SCREEN();
 		fprintf( stderr, "Strain name exceeds max length of %d characters.\n", MAX_STRAIN_LENGTH - 1 );
 		free(str);
@@ -398,13 +436,16 @@ void renameStrain( void ) {
 		return;
 	}
 
-	// Copy new name to strains[i].name, ensure null termination
-	strncpy( strains[slot - USER_INPUT_OFFSET].name, str, MAX_STRAIN_LENGTH - 1 );
-	strains[slot - USER_INPUT_OFFSET].name[MAX_STRAIN_LENGTH - 1] = '\0';
+	// Copy  len+1 bytes from heap to struct, which is stored in stack
+	memcpy(
+		strains[slot - USER_INPUT_OFFSET].name, // destination
+		str,                                    // source
+		len + 1                                 // include null terminator
+	);
 	
 	// Display success message
 	CLEAR_SCREEN();
-	fprintf( stdout, "Strain name '%s' successfully applied to strain #%d\n", str, slot );
+	fprintf( stdout, "Strain name '%s' successfully applied to slot #%d\n", str, slot );
 
 	// Free the pointer
 	free(str);

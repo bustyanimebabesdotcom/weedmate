@@ -10,14 +10,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <weedmate/common.h>
-#include "input.h"
+#include "input.h"\
 
 int main ( void ) {
 
-	// Enter alternate screen buffer — user won’t see their terminal history after quitting.
 	ENTER_ALT_SCREEN();
-	atexit(exitWeedMate);
-	installSignalHandlers();
+	atexit(exitWeedMate);		// Make sure program runs exit function to leave alternate screen buffer
+	installSignalHandlers();	// Make sure we can catch CTRL-Z, CTRL-C, CTRL-D, etc...
 	CLEAR_SCREEN();
 	motd();
 
@@ -31,7 +30,7 @@ int main ( void ) {
 
 			case 'm':
 			case 'M':
-				// Basically back to menu key. reprints the motd
+				// Prints menu
 				CLEAR_SCREEN();
 				motd();
 				break;
@@ -84,6 +83,7 @@ int main ( void ) {
 
 			case 'c':
 			case 'C':
+				// opens the calculator
 				CLEAR_SCREEN();
 				weedCalc();
 				RETURN_TO_MENU_MSG();
@@ -91,6 +91,7 @@ int main ( void ) {
 
 			case 'r':
 			case 'R':
+				// lets user rename strains
 				CLEAR_SCREEN();
 				renameStrain();
 				RETURN_TO_MENU_MSG();

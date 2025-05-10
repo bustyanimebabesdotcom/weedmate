@@ -14,7 +14,7 @@ set(CMAKE_C_FLAGS "-Wall -Wextra -Wpedantic -Werror")
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 
 # Debug flags
-set(CMAKE_C_FLAGS_DEBUG "-g -O0")
+set(CMAKE_C_FLAGS_DEBUG "-g -O0 -fsanitize=address -fno-omit-frame-pointer")
 
 # C standard
 set(CMAKE_C_STANDARD 99)
