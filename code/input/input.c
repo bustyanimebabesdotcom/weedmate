@@ -1,4 +1,4 @@
-// input.c - version 1.0.3
+// input.c - version 1.0.4
 /* safe(r than scanf) input handling
  * This can be ported to any project, to be used as a standalone input library.
  * There are obviously better input libraries, but the purpose of this is to be
@@ -494,11 +494,14 @@ bool getBoolInput( void ) {
 		// Read single character, convert to lowercase
 		char c = getCharInput();
 
+		if ( c == EOF  ) {
+			printError( "EOF detected. Returning false by default.\n" );
+			return false;
+		})
+
 		// we avoid using tolower() due to EOF potentially triggering UB
-		if ( c == 'Y' ) return true;
-		if ( c == 'y' ) return true;
-		if ( c == 'N' ) return false;
-		if ( c == 'n' ) return false;
+		if ( c == 'Y' || c == 'y' ) return true;
+		if ( c == 'N' || c == 'n' ) return false;
 		printError( "Invalid input. Enter 'y' or 'n'.\n" );
 	}
 
