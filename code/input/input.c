@@ -1,4 +1,4 @@
-// input.c - version 1.0.2
+// input.c - version 1.0.3
 /* safe(r than scanf) input handling
  * This can be ported to any project, to be used as a standalone input library.
  * There are obviously better input libraries, but the purpose of this is to be
@@ -9,8 +9,8 @@
  */
 
 
-// TODO: Wrap more copy pasted shit into helpers.
-// TODO: Optimize codebase where possible.
+// TODO: 	Wrap more copy pasted shit into helpers.
+// TODO: 	Optimize codebase where possible.
 
 #include <stdio.h>
 #include <string.h>
@@ -18,7 +18,6 @@
 #include <limits.h>
 #include <errno.h>
 #include <math.h>
-#include <ctype.h>
 #include <stdbool.h>
 #include "input.h"
 
@@ -88,6 +87,8 @@ static int readInputLine( char *buf, size_t size ) {
  * getIntInput - a safer alternative to scanf for integers
  *
  * usage - int x = getIntInput();
+ * 
+ * returns INT_MIN on error or EOF
  */
 int getIntInput( void ) {
 
@@ -121,6 +122,8 @@ int getIntInput( void ) {
  * getUIntInput - a safer alternative to scanf for unsigned integers
  *
  * usage - unsigned int x = getUIntInput();
+ * 
+ * returns UINT_MAX on error or EOF
  */
 unsigned int getUIntInput( void ) {
 
@@ -159,6 +162,8 @@ unsigned int getUIntInput( void ) {
  * getFloatInput - a safer alternative to scanf for floating point numbers
  *
  * usage - float x = getFloatInput();
+ * 
+ * returns NAN on error or EOF
  */
 float getFloatInput( void ) {
 
@@ -193,6 +198,8 @@ float getFloatInput( void ) {
  * getDoubleInput - a safer alternative to scanf for doubles
  *
  * usage - double x = getDoubleInput();
+ * 
+ * returns NAN on error or EOF
  */
 double getDoubleInput( void ) {
 
@@ -226,6 +233,8 @@ double getDoubleInput( void ) {
  * getLongInput - a safer alternative to scanf for longs
  *
  * usage - long x = getLongInput();
+ * 
+ * returns LONG_MIN on error or EOF
  */
 long getLongInput( void ) {
 
@@ -259,6 +268,8 @@ long getLongInput( void ) {
  * getULongInput - a safer alternative to scanf for unsigned longs
  *
  * usage - unsigned long x = getULongInput();
+ * 
+ * returns ULONG_MAX on error or EOF
  */
 unsigned long getULongInput( void ) {
 
@@ -292,6 +303,8 @@ unsigned long getULongInput( void ) {
  * getLongLongInput - a safer alternative to scanf for long longs
  *
  * usage - long long x = getLongLongInput();
+ * 
+ * returns LLONG_MIN on error or EOF
  */
 long long getLongLongInput( void ) {
 
@@ -325,6 +338,8 @@ long long getLongLongInput( void ) {
  * getULongLongInput - a safer alternative to scanf for unsigned long longs
  *
  * usage - unsigned long long x = getULongLongInput();
+ * 
+ * returns ULLONG_MAX on error or EOF
  */
 unsigned long long getULongLongInput( void ) {
 
@@ -334,7 +349,7 @@ unsigned long long getULongLongInput( void ) {
 
 	while ( 1 ) {
 
-		if ( readInputLine( buffer, sizeof(buffer) )) return ULLONG_MAX;;
+		if ( readInputLine( buffer, sizeof(buffer) )) return ULLONG_MAX;
 
 		errno = 0;
 		value = strtoull( buffer, &endptr, 10 );
@@ -360,6 +375,8 @@ unsigned long long getULongLongInput( void ) {
  * usage - char x = getCharInput();
  *
  * IMPORTANT: Only accepts one character. " a" and "a " are considered invalid.
+ * 
+ * returns EOF on error or EOF
  */
 char getCharInput( void ) {
 
@@ -379,6 +396,8 @@ char getCharInput( void ) {
  * getCharInputFiltered - a safer alternative to scanf for chars
  *
  * usage - char x = getCharInputFiltered( "abc" );
+ * 
+ * returns EOF on error or EOF
  */
 char getCharInputFiltered( const char *allowed ) {
 
@@ -435,6 +454,8 @@ char getCharInputFiltered( const char *allowed ) {
  *
  * NOTE: we use memcpy() because it copies exactly len + 1 bytes from buffer, avoiding overflow and termination issues.
  * 			the overhead is worth it in this case for the safety is provides over strpy() or strncpy()
+ * 
+ * returns NULL on error or EOF
  */
 char *getStringInput( void ) {
 
@@ -464,14 +485,19 @@ char *getStringInput( void ) {
  * Accepts "y" or "n" (case-insensitive).
  *
  * usage - bool x = getBoolInput();
+ * 
+ * returns false on EOF. Terrible solution but it's the best i could figure out.
  */
 bool getBoolInput( void ) {
 
 	while ( 1 ) {
 		// Read single character, convert to lowercase
-		char c = tolower( getCharInput() );
+		char c = getCharInput();
 
+		// we avoid using tolower() due to EOF potentially triggering UB
+		if ( c == 'Y' ) return true;
 		if ( c == 'y' ) return true;
+		if ( c == 'N' ) return false;
 		if ( c == 'n' ) return false;
 		printError( "Invalid input. Enter 'y' or 'n'.\n" );
 	}
