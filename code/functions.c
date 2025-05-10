@@ -411,7 +411,7 @@ void renameStrain( void ) {
 	
 	// Get strain name from user
 	CLEAR_SCREEN();
-	printf( "Enter new name for strain #%d,  '%s':\n", slot, strains[slot].name );
+	printf( "Enter new name for strain #%d,  '%s':\n", slot, strains[slot-USER_INPUT_OFFSET].name );
 	char *str = getStringInput();
 
 	// Get length of string, or 0 if str is NULL
@@ -435,9 +435,16 @@ void renameStrain( void ) {
 		return;
 	}
 
+	// Prevent buffer overflow, ensure input fits (including '\0')
+	if( len + 1 > sizeof(strains[0].name) ) {
+		fputs( "Input too long. Max 20 characters.\n", stderr );
+		free(str);
+		return;
+	}
+
 	// Copy  len+1 bytes from heap to struct, which is stored in stack
 	memcpy(
-		strains[slot - USER_INPUT_OFFSET].name, // destination
+		strains[slot-USER_INPUT_OFFSET].name, // destination
 		str,                                    // source
 		len + 1                                 // include null terminator
 	);

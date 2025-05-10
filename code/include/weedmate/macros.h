@@ -15,7 +15,7 @@
 // === Strain constants ===
 #define STRAIN_COUNT			15
 #define FENT_KUSH				3
-#define MAX_STRAIN_LENGTH		20
+#define MAX_STRAIN_LENGTH		21
 #define MAX_STRAIN_PRICE		1000
 #define MIN_STRAIN_PRICE		0
 #define USER_INPUT_OFFSET		1

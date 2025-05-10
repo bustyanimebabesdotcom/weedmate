@@ -6,3 +6,4 @@ optimization_notes.txt
 ideas.txt
 .vscode/
 .idea/
+.cmake-build-debug-wsl/
