@@ -7,7 +7,7 @@ int currentCityIndex = 3;
 
 city_t cities[CITY_COUNT] = {
 	{ "Detroit", 			0.65f },
-	{ "San Fransisco",		1.95f },
+	{ "San Francisco",		1.95f },
 	{ "Minneapolis",		1.30f },
 	{ "Denver",				1.02f }
 };
