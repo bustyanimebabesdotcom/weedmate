@@ -20,27 +20,27 @@ void saveToFile ( void ) {
 		return;
 	}
 
+	// write section header
+	fprintf( file, "[Strains]\n" );
+
 	// fallback if somehow NULL or too long
 	for ( int i = 0; i < STRAIN_COUNT; i++ ) {
 		size_t len = strlen( strains[i].name );
 
 		if ( len == 0 || len >= MAX_STRAIN_LENGTH ) {
-			fprintf( file, "UnnamedStrain%d\n", i+1 );
+			fprintf( file, "strain_%02d=UnnamedStrain%d\n", i+1, i+1 );
 			continue;
 		}
-		// Write name with newline
-		fwrite( strains[i].name, 1, len, file );
-		fputc( '\n', file );
+
+		// Write strain name in key=value format
+		fprintf( file, "strain_%02d=%s\n", i+1, strains[i].name );
 	}
 
-	// Save city as final line
-	size_t cityLen = strlen(cities[currentCityIndex].name);
-	fwrite(cities[currentCityIndex].name, 1, cityLen, file);
-	fputc('\n', file);
-
+	// Save city in its own section
+	fprintf( file, "\n[City]\n" );
+	fprintf( file, "current=%s\n", cities[currentCityIndex].name );
 
 	fclose( file );
-
 }
 
 /**
@@ -56,19 +56,26 @@ void loadSaveFile( void ) {
 	char line [128];
 	int i = 0;
 
-	while ( i < STRAIN_COUNT && fgets( line, sizeof( line ), file )) {
+	while ( fgets( line, sizeof( line ), file ) ) {
 
 		// strip newline
 		line[strcspn( line, "\n" )] = '\0';
 
-		size_t len = strlen( line );
-
-		// Skip empty or garbage lines
-
-		if ( len == 0 ) {
-			i++;
+		// Skip comments, section headers, and empty lines
+		if ( line[0] == '#' || line[0] == '\0' || line[0] == '[' )
 			continue;
-		}
+
+		// Parse key=value
+		char *equal = strchr( line, '=' );
+		if ( !equal ) continue;
+
+		*equal = '\0';
+		char *key = line;
+		char *value = equal + 1;
+
+		size_t len = strlen( value );
+
+		// Bail out if string exceeds max length
 		if ( len >= MAX_STRAIN_LENGTH ) {
 			fclose(file);
 			remove( SAVE_FILE_NAME );
@@ -84,22 +91,23 @@ void loadSaveFile( void ) {
 			CLEAR_SCREEN();
 			return;
 		}
-		
-		// Copy line into strain struct safely
-		memcpy( strains[i].name, line, len+1 );
-		i++;
-	}
 
-	if (fgets(line, sizeof(line), file)) {
-	line[strcspn(line, "\n")] = '\0';
-	for (int j = 0; j < CITY_COUNT; j++) {
-		if (strcmp(line, cities[j].name) == 0) {
-			currentCityIndex = j;
-			break;
+		// Load strain names
+		if ( strncmp( key, "strain_", 7 ) == 0 && i < STRAIN_COUNT ) {
+			memcpy( strains[i].name, value, len+1 );
+			i++;
+		}
+
+		// Load city name and match it to index
+		if ( strcmp( key, "current" ) == 0 ) {
+			for ( int j = 0; j < CITY_COUNT; j++ ) {
+				if ( strcmp( value, cities[j].name ) == 0 ) {
+					currentCityIndex = j;
+					break;
+				}
+			}
 		}
 	}
-}
 
 	fclose( file );
-
 }
