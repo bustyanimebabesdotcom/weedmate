@@ -21,15 +21,8 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Source files to include
-add_executable(weedmate
-	code/main.c
-	code/signals.c
-	code/functions.c
-	code/savefile.c
-	code/strain.c
-	code/data.c
-	code/input/input.c
-)
+include(${CMAKE_SOURCE_DIR}/sources.cmake)
+add_executable(weedmate ${WEEDMATE_SOURCES})
 
 # Include directories for namespace
 target_include_directories(weedmate

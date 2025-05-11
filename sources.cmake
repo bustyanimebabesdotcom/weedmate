@@ -1,0 +1,9 @@
+set(WEEDMATE_SOURCES
+	code/main.c
+	code/signals.c
+	code/functions.c
+	code/savefile.c
+	code/strain.c
+	code/data.c
+	code/input/input.c
+)
