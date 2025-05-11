@@ -12,8 +12,9 @@
 // === UI ===
 #define RETURN_TO_MENU_MSG()	puts( "\npress 'm' to return to main menu." );
 
-// === Strain constants ===
+// === CONSTANTS ===
 #define STRAIN_COUNT			15
+#define CITY_COUNT				4
 #define FENT_KUSH				3
 #define MAX_STRAIN_LENGTH		21
 #define MAX_STRAIN_PRICE		1000

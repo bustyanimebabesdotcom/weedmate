@@ -1,4 +1,6 @@
 // signals.c
+// project: weedmate
+
 /**
  * Handles CTRL-Z and CTRL-C to make sure the user isn't stuck in the alt screen.
  * I sort of understand what this code does, but not line by line.

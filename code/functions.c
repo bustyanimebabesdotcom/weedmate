@@ -1,37 +1,89 @@
-// functions.c - arrays, functions, and the big meat of WeedMate
-// Main routing:            main.c
-// Input handling			input.c
-// Declarations:   			common.h
-//							input.h
-// Signals:					signals.c
-// Macros:					macros.h
-// project:					weedmate
+// functions.c
+// project: weedmate
 
 #include <stdio.h>
-#include <math.h>
-#include <stdbool.h>
-#include <limits.h>
+#include <stdlib.h>
 #include <string.h>
+#include <limits.h>
+#include <unistd.h>
 #include <weedmate/common.h>
 #include "input.h"
 
-strain_t strains[STRAIN_COUNT] = {
-	{ "White Death",            13 },
-	{ "Purple Plutonium OG",    12 },
-	{ "Dankmestic Abuse",       24 },
-	{ "Fentanyl Kush",          48 },
-	{ "Blunt Trauma",           10 },
-	{ "Petroleum #42",          35 },
-	{ "Ganjaffi",               23 },
-	{ "Dental Prescription",     9 },
-	{ "Hebrew Kush",             6 },
-	{ "Rohypno-Chronic",        30 },
-	{ "Holy Shit OG",            8 },
-	{ "George W Kush",           8 },
-	{ "Bad Dragon",             17 },
-	{ "Carpet Muncher",         11 },
-	{ "Freedom Highve",         22 }
-};
+
+/**
+ * motd - Displays the Message of the Day (program instructions).
+ *
+ * Called at startup or when the user presses 'm'.
+ */
+void motd ( void ) {
+
+	int useColor = isatty(STDOUT_FILENO);
+
+	puts( "  ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" );
+	puts( "  ██ ███ ██ ▄▄▄██ ▄▄▄██ ▄▄▀██ ▄▀▄ █ ▄▄▀█▄▄ ▄▄██ ▄▄▄██" );
+	puts( "  ██ █ █ ██ ▄▄▄██ ▄▄▄██ ██ ██ █ █ █ ▀▀ ███ ████ ▄▄▄██" );
+	puts( "  ██▄▀▄▀▄██ ▀▀▀██ ▀▀▀██ ▀▀ ██ ███ █ ██ ███ ████ ▀▀▀██" );
+	puts( "  ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" );
+	puts( "=======================================================\n" );
+
+	printf( "               Welcome to " GREEN "weedmate" RESET "!\n\n");
+
+	COLOR_KEY( 'l', "browse the strain list" );
+	COLOR_KEY( 'p', "check the price of individual strains." );
+	COLOR_KEY( 'r', "rename strains." );
+	COLOR_KEY( 'b', "open the budtender menu.\n" );
+
+	COLOR_KEY( '+', "double prices." );
+	COLOR_KEY( '-', "cut prices in half." );
+	COLOR_KEY( 'c', "open the calculator." );
+	COLOR_KEY( 's', "select your location.\n" );
+
+	COLOR_KEY( 'm', "reprint this message" );
+	QUIT_KEY( 'q', "quit.\n" );
+
+	printf( "Enter your input: " );
+
+}
+
+/** 
+ * selectCity - lets the user select a city from the cities array  
+ * which applies a price modifier to the strain prices.
+ * When new city is selected, it is written to the savefile and rememberd.
+ */
+void selectCity ( void ) {
+	
+	puts( "========== City List ==========\n" );
+
+	for ( int i = 0; i < CITY_COUNT; i++ ) {
+		printf( "%4d. %-20s\n", i+USER_INPUT_OFFSET, cities[i].name );
+	}
+	printf( "\nYour current city is: %s.\n", cities[currentCityIndex].name );
+	printf( "\nPlease select your location ( 1-%d ):\n", CITY_COUNT );
+	int choice = getIntInput();
+
+	if (choice >= 1 && choice <= CITY_COUNT) currentCityIndex = choice - 1;
+
+	CLEAR_SCREEN();
+	printf( "Your location has been set to: %s.\n", cities[currentCityIndex].name );
+
+	saveToFile();
+
+}
+
+/**
+ * exitWeedMate - Displays goodbye message and exits alt screen mode.
+ *
+ * Called when the user quits the program. Handles visual cleanup.
+ */
+void exitWeedMate ( void ) {
+
+	CLEAR_SCREEN();
+	EXIT_ALT_SCREEN();
+	puts( "Thank you for using weedmate!" );
+	putchar( '\n' );
+	printf( "Terminating with exit code %d!\n", EXIT_CODE );
+
+}
 
 /**
  * budTenderSanityCheck - Validates logical price constraints for a strain.
@@ -59,147 +111,6 @@ static int budTenderSanityCheck ( int x ) {
 	}
 
 	return BUDTENDER_OK;
-}
-
-/**
- * motd - Displays the Message of the Day (program instructions).
- *
- * Called at startup or when the user presses 'm'.
- */
-void motd ( void ) {
-
-	puts( " ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" );
-	puts( " ██ ███ ██ ▄▄▄██ ▄▄▄██ ▄▄▀██ ▄▀▄ █ ▄▄▀█▄▄ ▄▄██ ▄▄▄██" );
-	puts( " ██ █ █ ██ ▄▄▄██ ▄▄▄██ ██ ██ █ █ █ ▀▀ ███ ████ ▄▄▄██" );
-	puts( " ██▄▀▄▀▄██ ▀▀▀██ ▀▀▀██ ▀▀ ██ ███ █ ██ ███ ████ ▀▀▀██" );
-	puts( " ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\n" );
-
-	puts( "               Welcome to weedmate!\n" );
-
-	puts( "press 'l' to browse the strain list." );
-	puts( "press 'p' to check the price of individual strains." );
-	puts( "press 'b' to open the budtender menu.\n" );
-
-	puts( "press '+' to double prices." );
-	puts( "press '-' to cut prices in half." );
-	puts( "press 'c' to open the calculator." );
-	puts( "press 'r' to rename strains.\n" );
-
-	puts( "press 'm' to reprint this message." );
-	puts( "press 'q' to quit.\n" );
-
-	printf( "Enter your input: " );
-
-}
-
-static void printStrainPriceMessage ( int choice, const char* tense ) {
-
-	CLEAR_SCREEN();
-	if ( choice >= 0 && choice < STRAIN_COUNT ) {
-	printf( "The price of Strain #%d - %s %s $%u/g\n", choice + USER_INPUT_OFFSET, strains[choice].name, tense, strains[choice].price );
-	}
-
-}
-
-/**
- * printStrainPrice - Prints the price of a specific strain.
- *
- * @param choice Index of the strain in the array (0-based).
- */
-static void printStrainPrice ( int choice ) {
-
-	printStrainPriceMessage( choice, "is" );
-
-}
-
-/**
- * printNewStrainPrice - Displays updated price info for a strain.
- *
- * @param choice Index of the strain in the array (0-based).
- */
-static void printNewStrainPrice ( int choice ) {
-
-	printStrainPriceMessage( choice, "has been changed to" );
-
-}
-
-/**
- * printStrainList - Displays a formatted list of all strains and their prices.
- *
- * Called by both user lookup and budtender menu screens.
- */
-void printStrainList ( void ) {
-
-	puts( "========= Strain List =========" );
-	putchar( '\n' );
-
-	for ( int i = 0; i < STRAIN_COUNT; i++ ) {
-	printf( "%4d. %-20s $%2u\n", i + USER_INPUT_OFFSET, strains[i].name, strains[i].price );
-	}
-
-}
-
-/**
- * strainPriceAdjust - Lets you quickly double or halve all strain prices
- * 
- * strainPriceAdjust( strains, 1 ); - doubles prices
- * 
- * strainPriceAdjust( strains, -1 ); - halves prices
- */
-void strainPriceAdjust ( strain_t* strains, int mode ) {
-
-	for ( int i = 0; i < STRAIN_COUNT; i++) {
-		if ( mode == 1 ) {
-			strains[i].price <<= 1;
-		}
-		else if ( mode == -1 ) {
-			strains[i].price >>= 1;
-		}
-		else {
-			// error handling
-			fprintf( stderr, "strainPriceAdjust: invalid mode ( %d )\n", mode );
-		}
-	}
-
-}
-
-/**
- * exitWeedMate - Displays goodbye message and exits alt screen mode.
- *
- * Called when the user quits the program. Handles visual cleanup.
- */
-void exitWeedMate ( void ) {
-
-	CLEAR_SCREEN();
-	EXIT_ALT_SCREEN();
-	puts( "Thank you for using weedmate!" );
-	putchar( '\n' );
-	printf( "Terminating with exit code %d!\n", EXIT_CODE );
-
-}
-
-/**
- * getStrainChoice - Prompts user to select a strain by number.
- *
- * Prints the strain list and validates user input.
- */
-static int getStrainChoice( void ) {
-
-	int choice = getIntInput();
-	if ( choice == INT_MIN ) {
-		CLEAR_SCREEN();
-		fputs( "EOF detected. Function aborted.\n", stderr );
-		return BUDTENDER_BREAK;
-	}
-
-	if ( choice < 1 || choice > STRAIN_COUNT ) {
-		CLEAR_SCREEN();
-		printf( "That number is not on the list. Please pick a valid number.\n" );
-
-		return BUDTENDER_CONTINUE;
-	}
-
-	return choice;
 }
 
 /**
@@ -244,44 +155,6 @@ void budTenderMenu ( void ) {
 
 		strains[choice].price = newPrice;
 		printNewStrainPrice( choice );
-		break;
-
-	}
-
-}
-
-/**
- * handleStrainPriceLookup - Lets user select a strain and view its price.
- *
- * Provides a numbered list and handles bad input or out-of-range entries.
- */
-void handleStrainPriceLookup ( void ) {
-	
-	while (1) {
-
-		printf( "Enter strain number ( 1–%d ):\n", STRAIN_COUNT );
-
-		int choice = getIntInput();
-		if ( choice == INT_MIN ) {
-			CLEAR_SCREEN();
-			fputs( "EOF detected. Function aborted.\n", stderr );
-			break;
-		}
-
-		if ( choice == 0 ) {
-			CLEAR_SCREEN();
-			puts("Canceled strain search...");
-			break;
-		}
-
-		if ( choice < 1 || choice > STRAIN_COUNT ) {
-			printf( "Try Again.\n" );
-			continue;
-		}
-
-		choice -= USER_INPUT_OFFSET;
-
-		printStrainPrice( choice );
 		break;
 
 	}
@@ -382,163 +255,5 @@ void weedCalc ( void ) {
 	else {
 		printf( "%d\n", (int)result );
 	}
-
-}
-
-/**
- * saveToFile - writes strain names to SAVE_FILE_NAME
- *
- * Overwrites file. Falls back to default names if invalid.
- */
-static void saveToFile ( void ) {
-
-	FILE *file = fopen( SAVE_FILE_NAME, "w" );
-	if ( !file ) {
-		CLEAR_SCREEN();
-		fprintf( stderr, "Could not open %s for writing.\n", SAVE_FILE_NAME );
-		return;
-	}
-
-	// fallback if somehow NULL or too long
-	for ( int i = 0; i < STRAIN_COUNT; i++ ) {
-		size_t len = strlen( strains[i].name );
-
-		if ( len == 0 || len >= MAX_STRAIN_LENGTH ) {
-			fprintf( file, "UnnamedStrain%d\n", i+1 );
-			continue;
-		}
-		// Write name with newline
-		fwrite( strains[i].name, 1, len, file );
-		fputc( '\n', file );
-	}
-
-	fclose( file );
-
-}
-
-/**
- * loadSaveFile - loads strain names from SAVE_FILE_NAME
- *
- * Deletes file if any line exceeds MAX_STRAIN_LENGTH.
- */
-void loadSaveFile( void ) {
-
-	FILE *file = fopen( SAVE_FILE_NAME, "r" );
-	if ( !file ) return; // No file? Skip. Use defaults.
-
-	char line [128];
-	int i = 0;
-
-	while ( i < STRAIN_COUNT && fgets( line, sizeof( line ), file )) {
-
-		// strip newline
-		line[strcspn( line, "\n" )] = '\0';
-
-		size_t len = strlen( line );
-
-		// Skip empty or garbage lines
-
-		if ( len == 0 ) {
-			i++;
-			continue;
-		}
-		if ( len >= MAX_STRAIN_LENGTH ) {
-			fclose(file);
-			remove( SAVE_FILE_NAME );
-
-			CLEAR_SCREEN();
-			fputs( "[!] Save file corrupt or line length exceeded.\n", stderr );
-			fprintf( stderr, "%s has been deleted to prevent further issues.\n", SAVE_FILE_NAME );
-			fputs( "\nPress any key to continue...\n", stderr );
-
-			getchar();													// Wait for any key
-			for ( int ch; (ch = getchar()) != '\n' && ch != EOF; );		// Drain buffer
-
-			CLEAR_SCREEN();
-			return;
-		}
-		
-		// Copy line into strain struct safely
-		memcpy( strains[i].name, line, len+1 );
-		i++;
-	}
-
-	fclose( file );
-
-}
-
-/** 
- * renameStrain - uses getStringInput() from the input library to  
- * store a string in memory, write it to selected array slot
- * and freeing the memory at the end. clean shit.
- */
-void renameStrain( void ) {
-
-	// Get user selected strain slot
-	fprintf( stdout, "Enter strain to rename ( 1-%d ):\n", STRAIN_COUNT );
-	int slot = getIntInput();
-
-	// check for EOF
-	if ( slot == INT_MIN ) {
-		CLEAR_SCREEN();
-		fputs( "EOF detected. Rename aborted.\n", stderr );
-		return;
-	}
-	// Check that selected slot is a valid number
-	if ( slot < 1 || slot > STRAIN_COUNT ) {
-		CLEAR_SCREEN();
-		fprintf( stderr, "Invalid strain number. Must be between 1-%d!\n", STRAIN_COUNT );
-		return;
-	}
-	
-	// Get strain name from user
-	CLEAR_SCREEN();
-	printf( "Enter new name for strain #%d,  '%s':\n", slot, strains[slot-USER_INPUT_OFFSET].name );
-	char *str = getStringInput();
-
-	// Get length of string, or 0 if str is NULL
-	size_t len = str ? strlen(str) : 0;
-
-	// Check for NULL or empty string
-	if ( len == 0 ) {
-		free(str);
-		str = NULL;
-		CLEAR_SCREEN();
-		fputs( "Empty string or error, slot unchanged.\n", stderr );
-		return;
-	}
-	
-	// Check if string exceeds max length
-	if ( len >= MAX_STRAIN_LENGTH ) {
-		CLEAR_SCREEN();
-		fprintf( stderr, "Strain name exceeds max length of %d characters.\n", MAX_STRAIN_LENGTH - 1 );
-		free(str);
-		str = NULL;
-		return;
-	}
-
-	// Prevent buffer overflow, ensure input fits (including '\0')
-	if( len + 1 > sizeof(strains[0].name) ) {
-		fputs( "Input too long. Max 20 characters.\n", stderr );
-		free(str);
-		return;
-	}
-
-	// Copy  len+1 bytes from heap to struct, which is stored in stack
-	memcpy(
-		strains[slot-USER_INPUT_OFFSET].name, // destination
-		str,                                    // source
-		len + 1                                 // include null terminator
-	);
-	
-	// Display success message
-	CLEAR_SCREEN();
-	fprintf( stdout, "Strain name '%s' successfully applied to slot #%d\n", str, slot );
-
-	// Free the pointer
-	free(str);
-	str = NULL;
-
-	saveToFile();
 
 }

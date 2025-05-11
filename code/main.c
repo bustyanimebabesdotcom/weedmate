@@ -1,9 +1,11 @@
 // main.c — Terminal ritual grounds for WeedMate
 // Functions live in:       functions.c
 // Input handling:			input.c
-// Declarations:   			common.h
 //							input.h
+// Structs:					data.c
+// Strain logic:			strains.c
 // Signals:					signals.c
+// Declarations:   			common.h
 // Macros:					macros.h
 // project:					weedmate
 
@@ -95,6 +97,14 @@ int main ( void ) {
 				// lets user rename strains
 				CLEAR_SCREEN();
 				renameStrain();
+				RETURN_TO_MENU_MSG();
+				break;
+
+			case 's':
+			case 'S':
+				// lets the user select city
+				CLEAR_SCREEN();
+				selectCity();
 				RETURN_TO_MENU_MSG();
 				break;
 

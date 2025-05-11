@@ -9,14 +9,22 @@
 #include "macros.h"
 #include "terminal.h"
 
-// === strain_t: represents weed strains ( name + price) ===
+// === Structs ===
 typedef struct {
 	char						name[MAX_STRAIN_LENGTH];
 	unsigned int				price;
 }	strain_t;
 
-// === Global strain array ( defined in functions.c ) ===
+typedef struct {
+	const char					*name;
+	float						modifier;
+} city_t;
+
+// === Globals ===
 extern strain_t					strains[STRAIN_COUNT];
+extern city_t 					cities[4];
+extern int 						currentCityIndex;
+
 
 // === Init / Exit ===
 void motd						( void );
@@ -27,9 +35,14 @@ void printStrainList			( void );
 
 // === Menus / Interaction ===
 void budTenderMenu				( void );
-void handleStrainPriceLookup	( void );
+void selectCity					( void );
+
+// === Strain logic ===
+void printNewStrainPrice		( int choice );
+int getStrainChoice				( void );
 void strainPriceAdjust			( strain_t* strains, int mode );
 void renameStrain				( void );
+void handleStrainPriceLookup	( void );
 
 // === Signals ===
 void installSignalHandlers		( void );
@@ -39,5 +52,6 @@ void weedCalc					( void );
 
 // === FILE IO ===
 void loadSaveFile				( void );
+void saveToFile					( void );
 
 #endif // COMMON_H
