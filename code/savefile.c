@@ -13,6 +13,7 @@
  */
 void saveToFile ( void ) {
 
+	// Open a file with the name assigned in macros.h. The 'w' means we're writing to file.
 	FILE *file = fopen( SAVE_FILE_NAME, "w" );
 	if ( !file ) {
 		CLEAR_SCREEN();
@@ -20,8 +21,14 @@ void saveToFile ( void ) {
 		return;
 	}
 
+	// Write a little note at the top :)
+	fprintf( file, "[Note]\n");
+	fprintf( file, "# weedmate's save file can be edited quite easily.\n");
+	fprintf( file, "# If you screw too much with the formatting,\n");
+	fprintf( file, "# the save file will be deleted upon launch.\n");
+
 	// write section header
-	fprintf( file, "[Strains]\n" );
+	fprintf( file, "\n[Strains]\n" );
 
 	// fallback if somehow NULL or too long
 	for ( int i = 0; i < STRAIN_COUNT; i++ ) {

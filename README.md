@@ -1,65 +1,58 @@
 # WeedMate
 
-*Your friendly neighborhood weed pricing CLI app, my starter project for my C learning journey*
+*The stupidest concept for a CLI app ever made.*
 
 ---
 
 ## What is WeedMate?
 
-WeedMate is a terminal-based C application designed to make learning how to build CLI apps more fun ang engaging.
-The code is meant to be noob friendly, and readable. Comments for clarity are provided, mostly around less noob friendly function calls.
+WeedMate is a terminal-based C application designed to make learning how to build CLI apps more fun.
+Code is meant to be readable and noob friendly.
 
 It's also a clean, modular project demonstrating good practices for beginners learning modern C:
 
-- Proper multi-file organization
-- Clean headers, structs, and macros
+- Organized multi-file layout
 - Terminal UI with alternate-screen buffer
 - Input validation and handling
 - Basic encapsulation
 
-Do note, I'm a noob, so you may find bugs, or areas that can be improved. I'm by no means a professional programmer.
-
 ---
 
-## 📥 Custom Input Library
+## Custom Input Library
 
-WeedMate comes with a **fully modular input library** that replaces C's cursed `scanf()` with a safer, no-bullshit alternative.
-It's designed for beginners who understand the issues with `scanf()` but are not yet ready to write their own parsing logic from scratch.
+weedmate comes with a **fully modular input library** that replaces C's shitty `scanf()` with a safer alternative.
 
 Features:
-- Uses `fgets` + `strtol` / `strtof` / `strtod` internally — no garbage left in stdin.
-- Graceful handling of invalid input with helpful error messages.
-- Rejects junk like `"abc123"` when expecting numbers.
-- Cleanly parses the most common types of input.
-- Optional filtered character input (`getCharInputFiltered("yn")` style).
-- Easy to extend, dead simple to read.
+- Uses `fgets`, and sanitizes stdin from garbage.
+- Basic error handling and logging.
+- Rejects garbage input.
+- Optional filtered character input (`getCharInputFiltered("yn")`).
+- Easy to extend, easy to read.
 
-`scanf()` can chordle my balls. This is for people who don’t want to spend three hours debugging why their `scanf("%d")` keeps skipping lines.
-
----
-
-## 💾 Save File Support
-
-WeedMate now supports persistent strain names using a hidden save file:
-
-- Save file path: `.weedrc` (created in the same directory as the binary)
-- Format: plain text, one strain name per line (15 lines total)
-- Max name length: 19 characters (20 including null terminator)
-
-### 📝 Behavior
-
-- On startup, if `.weedrc` exists, WeedMate loads strain names from it.
-- If any line in the save file exceeds the max length, the file is considered corrupt and is deleted.
-- Renaming a strain will update `.weedrc` with all current strain names.
-- If the file doesn't exist, default strain names are used.
-
-You don't need to manage this file manually — WeedMate handles it for you.
+`scanf()` can chordle my balls.
 
 ---
 
-## 🛠️ How to Build
+## Save File Support
 
-You need `cmake` and `make`:
+weedmate supports persistent strain names, and prices.
+
+- Save file path: `.weedrc` (created in same directory as binary)
+- ini style formatting
+
+### Behavior
+
+- On startup, if `.weedrc` exists, program loads strain names and prices from file.
+- If line exceeds max length, file is considered corrupt and deleted.
+- Updating prices and names update save file.
+
+You can let the program handle it, or manually edit it.
+
+---
+
+## How to Build
+
+You need `cmake` and `make` or whatever other shit you use ( like `ninja` if you're based ):
 
 ```bash
 mkdir build
@@ -82,13 +75,8 @@ Then run the executable:
 
 ---
 
-## License
+## Disclaimer
 
-This project is proudly licensed under the [Unlicense](LICENSE). Use it, sell it, put your dick in it. I don't give a fuck.
-
----
-
-## 💡 Disclaimer
-
-WeedMate is intended for use in whatever-the-fuck-you-want. Take my code, put your name on it, sell it to the government, whatever you feel like.
-This is free, no strings attached, and I’m not responsible if it gets you rich or gets you in jail. 
+This project is intended for use in whatever-the-fuck-you-want.
+Take my code, put your name on it, sell it to North Korea, idgaf.
+This is free, no strings attached.

@@ -2,7 +2,7 @@
 /* safe(r than scanf) input handling
  * This can be ported to any project, to be used as a standalone input library.
  * There are obviously better input libraries, but the purpose of this is to be
- * a safe(r) alternative to scanf for noobs like me.
+ * a safe(r) alternative to scanf for morons like me.
  * 
  * Main safety features are simple prevention of buffer overflow exploits,
  * and validating input.
