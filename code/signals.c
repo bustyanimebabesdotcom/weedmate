@@ -3,43 +3,79 @@
 
 /**
  * Handles CTRL-Z and CTRL-C to make sure the user isn't stuck in the alt screen.
- * I sort of understand what this code does, but not line by line.
- * This is hacky and not at all robust. will fix if I manage to break it.
- * TODO: add SA_RESTART, error-check sigactions, guard-async-unsafe calls.
+ * SIGINT, SIGTERM, and SIGTSTP exit alt screen and re-raise default signal.
+ * SIGCONT resumes alt screen after a pause.
+ *
+ * Adds SA_RESTART so syscalls like fgets() don't break when signals hit.
  */
 
 #include <signal.h>
-#include <weedmate/common.h>		// for ENTER_ALT_SCREEN(), exitWeedMate()
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <weedmate/common.h>
 
-// on_stop (SIGINT/SIGTERM/SIGTSTP): exit alt buffer then re-raise so the shell suspends/exits.
+/**
+ * on_stop - Handles termination or suspend signals (like CTRL-C / CTRL-Z).
+ * Clears screen, exits alt screen, restores default handler and re-raises signal.
+ */
 static void on_stop( int signo ) {
 
 	CLEAR_SCREEN();
 	EXIT_ALT_SCREEN();
-	struct sigaction sa = { .sa_handler = SIG_DFL };
-	sigaction( signo, &sa, NULL );
-	raise( signo );
 
+	// Reset signal action to default
+	struct sigaction sa;
+	memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = SIG_DFL;
+	sigemptyset(&sa.sa_mask);
+
+	// Restore default handler for the signal
+	if ( sigaction(signo, &sa, NULL) != 0 ) {
+		fprintf(stderr, "sigaction restore failed: %s\n", strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+
+	// Raise the signal again with default behavior
+	raise(signo);
 }
 
-// on_cont (SIGCONT): re-enter alt buffer on resume.
+/**
+ * on_cont - Handles resume signal (SIGCONT).
+ * Re-enters alternate screen mode.
+ */
 static void on_cont( int signo ) {
-
-	(void)signo;
+	(void)signo; // Unused
 	ENTER_ALT_SCREEN();
 }
 
+/**
+ * installSignalHandlers - Installs all signal handlers needed for alt screen support.
+ * Catches CTRL-C, CTRL-Z, kill, and resume signals to keep UI consistent.
+ */
 void installSignalHandlers( void ) {
-	
-	struct sigaction sa = { .sa_flags = 0 };
+
+	struct sigaction sa;
+	memset(&sa, 0, sizeof(sa));
 	sigemptyset(&sa.sa_mask);
-	
+
+	// Handle exit/suspend signals
 	sa.sa_handler = on_stop;
-	sigaction( SIGINT,	&sa, NULL );	// Ctrl-c
-	sigaction( SIGTERM,	&sa, NULL );	// kill
-	sigaction( SIGTSTP, &sa, NULL );	// Ctrl-Z
+	sa.sa_flags = SA_RESTART;
 
+	if (sigaction(SIGINT, &sa, NULL) != 0 ||
+		sigaction(SIGTERM, &sa, NULL) != 0 ||
+		sigaction(SIGTSTP, &sa, NULL) != 0) {
+		fprintf(stderr, "Failed to install stop signal handlers: %s\n", strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+
+	// Handle resume signal
 	sa.sa_handler = on_cont;
-	sigaction( SIGCONT, &sa, NULL );
+	sa.sa_flags = SA_RESTART;
 
+	if (sigaction(SIGCONT, &sa, NULL) != 0) {
+		fprintf(stderr, "Failed to install continue signal handler: %s\n", strerror(errno));
+		exit(EXIT_FAILURE);
+	}
 }
