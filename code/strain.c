@@ -12,7 +12,12 @@ static void printStrainPriceMessage ( int choice, const char* tense ) {
 
 	CLEAR_SCREEN();
 	if ( choice >= 0 && choice < STRAIN_COUNT ) {
-	printf( "The price of Strain #%d - %s %s $%u/g\n", choice + USER_INPUT_OFFSET, strains[choice].name, tense, strains[choice].price );
+	printf( "The price of Strain #%d - " YELLOW "%s" RESET " %s $%s%u%s/g\n", 
+		choice + USER_INPUT_OFFSET,
+		strains[choice].name, tense,
+		GREEN,
+		strains[choice].price,
+		RESET );
 	}
 
 }
@@ -46,16 +51,24 @@ void printNewStrainPrice ( int choice ) {
  */
 void printStrainList ( void ) {
 
-	puts( "========= Strain List =========\n" );
+	puts( "=========== Strain List ===========\n" );
 	
-	float mod = cities[currentCityIndex].modifier;
+	float mod = cities[currentCityIndex].modifier;	
+	printf( BOLD "%4s  %-20s %s\n" RESET, "#", "Strain Name", "Price" );
+	puts("  --------------------------------");
 
-	for (int i = 0; i < STRAIN_COUNT; i++) {
+	for ( int i = 0; i < STRAIN_COUNT; i++ ) {
 		float adjusted = strains[i].price*mod;
-		printf("%4d. %-20s $%.2f\n", i+USER_INPUT_OFFSET, strains[i].name, adjusted);
+
+		printf( "%4d. %-20s $%s%.2f%s\n",
+			i+USER_INPUT_OFFSET,
+			strains[i].name,
+			GREEN,
+			adjusted,
+			RESET );
 	}
 
-	printf( "\nYour current city is: %s.\n", cities[currentCityIndex].name );
+	printf( "\nYour current city is: " YELLOW "%s" RESET ".\n", cities[currentCityIndex].name );
 
 }
 
@@ -80,6 +93,8 @@ void strainPriceAdjust ( strain_t* strains, int mode ) {
 			fprintf( stderr, "strainPriceAdjust: invalid mode ( %d )\n", mode );
 		}
 	}
+
+	saveToFile();
 
 }
 
@@ -118,7 +133,7 @@ void handleStrainPriceLookup ( void ) {
 	
 	while (1) {
 
-		printf( "Enter strain number ( 1–%d ):\n", STRAIN_COUNT );
+		printf( "Enter " YELLOW "strain" RESET " number ( 1–%d ).\n\n> ", STRAIN_COUNT );
 
 		int choice = getIntInput();
 		if ( choice == INT_MIN ) {
@@ -156,7 +171,8 @@ void handleStrainPriceLookup ( void ) {
 void renameStrain( void ) {
 
 	// Get user selected strain slot
-	fprintf( stdout, "Enter strain to rename ( 1-%d ):\n", STRAIN_COUNT );
+	printStrainList();
+	fprintf( stdout, "\nEnter strain to rename ( 1-%d ).\n\n> ", STRAIN_COUNT );
 	int slot = getIntInput();
 
 	// check for EOF
@@ -174,7 +190,10 @@ void renameStrain( void ) {
 	
 	// Get strain name from user
 	CLEAR_SCREEN();
-	printf( "Enter new name for strain #%d,  '%s':\n", slot, strains[slot-USER_INPUT_OFFSET].name );
+	printf( "Enter new name for strain #%d, '" YELLOW "%s" RESET "'.\n\n> ", 
+		slot, 
+		strains[slot-USER_INPUT_OFFSET].name );
+
 	char *str = getStringInput();
 
 	// Get length of string, or 0 if str is NULL
@@ -214,7 +233,7 @@ void renameStrain( void ) {
 	
 	// Display success message
 	CLEAR_SCREEN();
-	fprintf( stdout, "Strain name '%s' successfully applied to slot #%d\n", str, slot );
+	fprintf( stdout, "Strain name '" YELLOW "%s" RESET"' successfully applied to slot #%d\n", str, slot );
 
 	// Free the pointer
 	free(str);

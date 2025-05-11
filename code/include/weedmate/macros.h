@@ -1,5 +1,6 @@
 // macros.h - contains macros
 // project: weedmate
+#include <weedmate/terminal.h>
 
 #ifndef MACROS_H
 #define MACROS_H
@@ -10,7 +11,6 @@
 #define DECIMAL_EXIT			0.0
 
 // === UI ===
-#define RETURN_TO_MENU_MSG()	puts( "\npress 'm' to return to main menu." );
 
 // === CONSTANTS ===
 #define STRAIN_COUNT			15

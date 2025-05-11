@@ -5,45 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include <unistd.h>
 #include <weedmate/common.h>
 #include "input.h"
-
-
-/**
- * motd - Displays the Message of the Day (program instructions).
- *
- * Called at startup or when the user presses 'm'.
- */
-void motd ( void ) {
-
-	int useColor = isatty(STDOUT_FILENO);
-
-	puts( "  ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" );
-	puts( "  ██ ███ ██ ▄▄▄██ ▄▄▄██ ▄▄▀██ ▄▀▄ █ ▄▄▀█▄▄ ▄▄██ ▄▄▄██" );
-	puts( "  ██ █ █ ██ ▄▄▄██ ▄▄▄██ ██ ██ █ █ █ ▀▀ ███ ████ ▄▄▄██" );
-	puts( "  ██▄▀▄▀▄██ ▀▀▀██ ▀▀▀██ ▀▀ ██ ███ █ ██ ███ ████ ▀▀▀██" );
-	puts( "  ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" );
-	puts( "=======================================================\n" );
-
-	printf( "               Welcome to " GREEN "weedmate" RESET "!\n\n");
-
-	COLOR_KEY( 'l', "browse the strain list" );
-	COLOR_KEY( 'p', "check the price of individual strains." );
-	COLOR_KEY( 'r', "rename strains." );
-	COLOR_KEY( 'b', "open the budtender menu.\n" );
-
-	COLOR_KEY( '+', "double prices." );
-	COLOR_KEY( '-', "cut prices in half." );
-	COLOR_KEY( 'c', "open the calculator." );
-	COLOR_KEY( 's', "select your location.\n" );
-
-	COLOR_KEY( 'm', "reprint this message" );
-	QUIT_KEY( 'q', "quit.\n" );
-
-	printf( "Enter your input: " );
-
-}
 
 /** 
  * selectCity - lets the user select a city from the cities array  
@@ -55,16 +18,26 @@ void selectCity ( void ) {
 	puts( "========== City List ==========\n" );
 
 	for ( int i = 0; i < CITY_COUNT; i++ ) {
-		printf( "%4d. %-20s\n", i+USER_INPUT_OFFSET, cities[i].name );
+		printf( "%4d. %s%-20s%s\n", 
+			i+USER_INPUT_OFFSET,
+			GREEN,
+			cities[i].name,
+			RESET );
 	}
-	printf( "\nYour current city is: %s.\n", cities[currentCityIndex].name );
-	printf( "\nPlease select your location ( 1-%d ):\n", CITY_COUNT );
+	printf( "\nYour current city is: %s%s%s.\n", 
+		YELLOW,
+		cities[currentCityIndex].name,
+		RESET );
+	printf( "\nPlease select your location ( 1-%d )\n\n> ", CITY_COUNT );
 	int choice = getIntInput();
 
 	if (choice >= 1 && choice <= CITY_COUNT) currentCityIndex = choice - 1;
 
 	CLEAR_SCREEN();
-	printf( "Your location has been set to: %s.\n", cities[currentCityIndex].name );
+	printf( "Your location has been set to: %s%s%s.\n", 
+		GREEN, 
+		cities[currentCityIndex].name,
+		RESET );
 
 	saveToFile();
 
@@ -118,7 +91,7 @@ static int budTenderSanityCheck ( int x ) {
  */
 void budTenderMenu ( void ) {
 
-	puts( "=== Budtender Access Granted ===" );
+	printf( "===== " GREEN "Budtender Access Granted" RESET " ====\n" );
 
 	while ( 1 ) {
 
@@ -126,7 +99,8 @@ void budTenderMenu ( void ) {
 		printStrainList();
 		putchar( '\n' );
 
-		printf( "Enter strain number to update ( 1–%d ):\n", STRAIN_COUNT );
+		printf( "Enter strain number to update ( 1–%d ).\n", STRAIN_COUNT );
+		printf( "\n> " );
 		int choice = getStrainChoice();
 
 		if ( choice == BUDTENDER_BREAK ) break;
@@ -141,7 +115,11 @@ void budTenderMenu ( void ) {
 		}
 
 		CLEAR_SCREEN();
-		printf( "Enter your new price for %s.\n", strains[choice].name );
+		printf( "Enter your new price for %s%s%s.\n",
+			YELLOW,
+			strains[choice].name,
+			RESET );
+		printf( "\n> " );
 		unsigned int newPrice = getUIntInput();
 
 		if ( newPrice == UINT_MAX ) {
@@ -171,15 +149,18 @@ static bool weedCalcInput ( int *a, char *mod, int *b ) {
 	int x, y;
 	int m;
 
-	puts( "Enter your first number:" );
+	CLEAR_SCREEN();
+	printf( "Enter your first " GREEN "number" RESET ".\n\n> " );
 	x = getIntInput();
 	if ( x == INT_MIN ) return false;
 
-	puts( "Enter your modifier ( + - * / ):" );
+	CLEAR_SCREEN();
+	printf( "Enter your modifier ( " YELLOW "+ - * /" RESET " ).\n\n> " );
 	m = getCharInputFiltered("+-*/");
 	if ( m == EOF ) return false;
 
-	puts( "Enter your second number:" );
+	CLEAR_SCREEN();
+	printf( "Enter your second " GREEN "number" RESET ".\n\n> " );
 	y = getIntInput();
 	if ( y == INT_MIN ) return false;
 
@@ -206,6 +187,7 @@ static double doCalculation ( int a, char mod, int b, bool *success ) {
 		case '*': return a * b;
 		case '/': {
 			if ( b == 0) {
+				CLEAR_SCREEN();
 				puts( "You cannot divide by 0!" );
 				*success = false;
 				return DECIMAL_EXIT;
@@ -247,12 +229,11 @@ void weedCalc ( void ) {
 	}
 
 	// print result
+	CLEAR_SCREEN();
 	printf( "Your number is: " );
 	if ( mod == '/' ) {
 		printf( "%.8f\n", result );
-	}
-
-	else {
+	} else {
 		printf( "%d\n", (int)result );
 	}
 

@@ -5,5 +5,6 @@ set(WEEDMATE_SOURCES
 	code/savefile.c
 	code/strain.c
 	code/data.c
+	code/boot.c
 	code/input/input.c
 )

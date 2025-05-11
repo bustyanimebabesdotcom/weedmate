@@ -38,7 +38,7 @@ void saveToFile ( void ) {
 
 	// Save city in its own section
 	fprintf( file, "\n[City]\n" );
-	fprintf( file, "current=%s\n", cities[currentCityIndex].name );
+	fprintf( file, "index=%d\n", currentCityIndex );
 
 	fclose( file );
 }
@@ -54,15 +54,21 @@ void loadSaveFile( void ) {
 	if ( !file ) return; // No file? Skip. Use defaults.
 
 	char line [128];
-	int i = 0;
+	char section [32] = "";
 
 	while ( fgets( line, sizeof( line ), file ) ) {
 
 		// strip newline
 		line[strcspn( line, "\n" )] = '\0';
 
-		// Skip comments, section headers, and empty lines
-		if ( line[0] == '#' || line[0] == '\0' || line[0] == '[' )
+		// Section header?
+		if ( line[0] == '[' ) {
+			sscanf( line, "[%31[^]]", section );
+			continue;
+		}
+
+		// Skip empty or comment lines
+		if ( line[0] == '#' || line[0] == '\0' )
 			continue;
 
 		// Parse key=value
@@ -92,19 +98,20 @@ void loadSaveFile( void ) {
 			return;
 		}
 
-		// Load strain names
-		if ( strncmp( key, "strain_", 7 ) == 0 && i < STRAIN_COUNT ) {
-			memcpy( strains[i].name, value, len+1 );
-			i++;
+		// Copy strain names, only in [Strains]
+		if ( strcmp( section, "Strains" ) == 0 && strncmp( key, "strain_", 7 ) == 0 ) {
+			int index = atoi( key + 7 ) - 1;
+
+			if ( index >= 0 && index < STRAIN_COUNT ) {
+				memcpy( strains[index].name, value, len+1 );
+			}
 		}
 
-		// Load city name and match it to index
-		if ( strcmp( key, "current" ) == 0 ) {
-			for ( int j = 0; j < CITY_COUNT; j++ ) {
-				if ( strcmp( value, cities[j].name ) == 0 ) {
-					currentCityIndex = j;
-					break;
-				}
+		// Load city index in [City]
+		if ( strcmp( section, "City" ) == 0 && strcmp( key, "index" ) == 0 ) {
+			int id = atoi( value );
+			if ( id >= 0 && id < CITY_COUNT ) {
+				currentCityIndex = id;
 			}
 		}
 	}

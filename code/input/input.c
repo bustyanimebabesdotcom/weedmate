@@ -388,6 +388,7 @@ char getCharInput( void ) {
 		
 		if ( result == EOF ) return EOF;
 		if ( result == 1 ) continue;
+		if ( strlen(buffer) == 0 ) return '\n';
 		if ( strlen(buffer) == 1 ) return buffer[0];
 	
 		printError( "Invalid input. Please enter a single character.\n" );

@@ -16,11 +16,15 @@
 
 int main ( void ) {
 
-	ENTER_ALT_SCREEN();
+	loadSaveFile();
 	atexit(exitWeedMate);		// Make sure program runs exit function to leave alternate screen buffer
 	installSignalHandlers();	// Make sure we can catch CTRL-Z, CTRL-C, CTRL-D, etc...
+	int useColor = isatty(STDOUT_FILENO);
+
+	ENTER_ALT_SCREEN();
 	CLEAR_SCREEN();
-	loadSaveFile();
+//	bootAnimation();
+	CLEAR_SCREEN();
 	motd();
 
 	int c;
@@ -72,7 +76,7 @@ int main ( void ) {
 				// doubles all strain prices
 				CLEAR_SCREEN();
 				strainPriceAdjust( strains, 1 );
-				puts( "Strain prices have been doubled." );
+				puts( "Strain prices have been" GREEN" doubled" RESET "." );
 				RETURN_TO_MENU_MSG();
 				break;
 
@@ -80,7 +84,7 @@ int main ( void ) {
 				// halve all strain prices
 				CLEAR_SCREEN();
 				strainPriceAdjust( strains, -1 );
-				puts( "Strain prices have been cut in half." );
+				puts( "Strain prices have been" RED " halved" RESET "." );
 				RETURN_TO_MENU_MSG();
 				break;
 

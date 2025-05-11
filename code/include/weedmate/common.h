@@ -36,6 +36,7 @@ void printStrainList			( void );
 // === Menus / Interaction ===
 void budTenderMenu				( void );
 void selectCity					( void );
+void bootAnimation				( void );
 
 // === Strain logic ===
 void printNewStrainPrice		( int choice );
