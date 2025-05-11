@@ -23,6 +23,7 @@ int main ( void ) {
 
 	ENTER_ALT_SCREEN();
 	CLEAR_SCREEN();
+	// Run the loading screen. Comment out for faster startup time.
 //	bootAnimation();
 	CLEAR_SCREEN();
 	motd();
