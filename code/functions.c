@@ -24,6 +24,7 @@ void selectCity ( void ) {
 			cities[i].name,
 			RESET );
 	}
+	
 	printf( "\nYour current city is: %s%s%s.\n", 
 		YELLOW,
 		cities[currentCityIndex].name,
@@ -136,6 +137,8 @@ void budTenderMenu ( void ) {
 		break;
 
 	}
+
+	saveToFile();
 
 }
 

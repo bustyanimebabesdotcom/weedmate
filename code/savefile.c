@@ -36,6 +36,13 @@ void saveToFile ( void ) {
 		fprintf( file, "strain_%02d=%s\n", i+1, strains[i].name );
 	}
 
+	// Save prices
+	fprintf( file, "\n[Prices]\n" );
+	for ( int i = 0; i < STRAIN_COUNT; i++ ) {
+		fprintf( file, "price_%02d=%u\n", i + 1, strains[i].price );
+	}
+
+
 	// Save city in its own section
 	fprintf( file, "\n[City]\n" );
 	fprintf( file, "index=%d\n", currentCityIndex );
@@ -106,6 +113,16 @@ void loadSaveFile( void ) {
 				memcpy( strains[index].name, value, len+1 );
 			}
 		}
+
+		// Load prices in [Prices]
+	if ( strcmp( section, "Prices" ) == 0 && strncmp( key, "price_", 6 ) == 0 ) {
+		int index = atoi( key + 6 ) - 1;
+		if ( index >= 0 && index < STRAIN_COUNT ) {
+			unsigned int price = (unsigned int) strtoul( value, NULL, 10 );
+			strains[index].price = price;
+		}
+	}
+
 
 		// Load city index in [City]
 		if ( strcmp( section, "City" ) == 0 && strcmp( key, "index" ) == 0 ) {
