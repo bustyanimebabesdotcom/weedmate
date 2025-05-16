@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.10)
 project(weedmate)
 
 # Compiler
-set(CMAKE_C_COMPILER clang)
+set(CMAKE_C_COMPILER gcc)
 
 # Compiler flags
 set(CMAKE_C_FLAGS "-Wall -Wextra -Wpedantic -Werror")
