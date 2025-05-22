@@ -1,10 +1,17 @@
-// input.h - version 1.0.6
+// input.h - version 1.0.7
 
 #ifndef INPUT_H
 #define INPUT_H
 
 // === Includes ===
 #include <stdbool.h>
+#include <stddef.h> // for size_t
+
+// === STRUCTs ===
+typedef struct {
+	char	*buf;	// pointer to data
+	size_t	len;	// byte counter
+} string_t;
 
 // === INPUT BUFFER ===
 #define INPUT_BUFFER_SIZE				128

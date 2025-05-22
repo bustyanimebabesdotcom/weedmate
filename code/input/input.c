@@ -1,16 +1,18 @@
-// input.c - version 1.0.6
-/* safe(r than scanf) input handling
+/* input.c - version 1.0.7
+ *
+ * safe(r than scanf) input handling
  * This can be ported to any project, to be used as a standalone input library.
  * There are obviously better input libraries, but the purpose of this is to be
  * a safe(r) alternative to scanf for morons like me.
  * 
  * Main safety features are simple prevention of buffer overflow exploits,
  * and validating input.
+ *
+ * TODO: 	Wrap more copy pasted shit into helpers.
+ * TODO: 	Optimize codebase where possible.
+ * PHASE 2 PLAN
+ * TODO:	Implement string handling without null terminator. Byte for byte getchar() loop in a function that returns a string_t
  */
-
-
-// TODO: 	Wrap more copy pasted shit into helpers.
-// TODO: 	Optimize codebase where possible.
 
 #include <stdio.h>
 #include <string.h>
@@ -68,9 +70,12 @@ static int readInputLine( char *buf, size_t size ) {
 			return 1;	// caller should retry
 		}
 	}
+	
+	// check for newline
+	char *newline = strchr( buf, '\n' );
 
 	// Check for overflow: no newline and not EOF means input too long
-	if ( !strchr( buf, '\n' ) && !feof( stdin ) ) {
+	if ( !newline && !feof( stdin ) ) {
 		// flush excess input to prevent overflow
 		drainStdin();
 		printError( "Input exceeding buffer size. Try again.\n" );
@@ -78,7 +83,7 @@ static int readInputLine( char *buf, size_t size ) {
 	}
 
 	// strip trailing newline
-	buf[strcspn( buf, "\n" )] = '\0';
+	if ( newline ) *newline = '\0';
 	return 0;
 
 }

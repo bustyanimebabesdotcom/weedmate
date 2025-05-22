@@ -1,13 +1,21 @@
-// main.c — Terminal ritual grounds for WeedMate
-// Functions live in:       functions.c
-// Input handling:			input.c
-//							input.h
-// Structs:					data.c
-// Strain logic:			strains.c
-// Signals:					signals.c
-// Declarations:   			common.h
-// Macros:					macros.h
-// project:					weedmate
+/*
+ * main.c — Terminal ritual grounds for WeedMate
+ * Functions live in:       functions.c
+ * Input handling:			input.c
+ *							input.h
+ * Structs:					data.c
+ * Strain logic:			strains.c
+ * Signals:					signals.c
+ * Declarations:   			common.h
+ * Macros:					macros.h
+ * project:					weedmate
+ * 
+ * NOTE: glibc lazily allocates 1KB buffer for stdout.
+ * This triggers a false leak warning in Heaptrack.
+ * Harmless - OS reclaims it at exit.
+ * DO NOT workaround this on non-glibc platforms (portability risk).
+ */
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +40,6 @@ int main ( void ) {
 
 	// Main loop, runs until EOF
 	while ( ( c = getCharInput () ) != EOF ) {
-
 		// Input processing
 		switch ( c ) {
 

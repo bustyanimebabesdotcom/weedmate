@@ -122,13 +122,13 @@ void loadSaveFile( void ) {
 		}
 
 		// Load prices in [Prices]
-	if ( strcmp( section, "Prices" ) == 0 && strncmp( key, "price_", 6 ) == 0 ) {
-		int index = atoi( key + 6 ) - 1;
-		if ( index >= 0 && index < STRAIN_COUNT ) {
-			unsigned int price = (unsigned int) strtoul( value, NULL, 10 );
-			strains[index].price = price;
+		if ( strcmp( section, "Prices" ) == 0 && strncmp( key, "price_", 6 ) == 0 ) {
+			int index = atoi( key + 6 ) - 1;
+			if ( index >= 0 && index < STRAIN_COUNT ) {
+				unsigned int price = (unsigned int) strtoul( value, NULL, 10 );
+				strains[index].price = price;
+			}
 		}
-	}
 
 
 		// Load city index in [City]
