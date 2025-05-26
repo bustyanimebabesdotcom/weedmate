@@ -37,7 +37,7 @@ static void printError( const char *msg ) {
  * drainStdin - Drains leftover input from stdin to prevent buffer overflows.
  * Reads until newline or EOF is encountered
  * 
- * called by readInputLine()
+ * called by readByteInput()
  */
 static void drainStdin( void ) {
 
