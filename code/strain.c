@@ -199,6 +199,7 @@ void renameStrain( void ) {
 		slot, 
 		strains[slot-USER_INPUT_OFFSET].name );
 
+	// Read user input into a struct with .data (heap pointer) and .len (byte count)
 	string_t str = getStringInput();
 
 	// Get length of string, or 0 if str is NULL
@@ -234,7 +235,7 @@ void renameStrain( void ) {
 	memcpy(
 		strains[slot-USER_INPUT_OFFSET].name,	// destination
 		str.data,								// source
-		len										// include null terminator
+		len										// length
 	);
 
 	// Add null terminator

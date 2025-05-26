@@ -42,7 +42,7 @@ static void printError( const char *msg ) {
 static void drainStdin( void ) {
 
 	int ch;
-	// rRead and discard characters until newline or EOF
+	// Read and discard characters until newline or EOF
 	while ( ( ch = getchar() ) != '\n' && ch != EOF )
 		; // Empty loop body, smaller than {}
 
