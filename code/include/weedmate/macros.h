@@ -22,9 +22,11 @@
 #define USER_INPUT_OFFSET		1
 
 // === Menu flow ===
-#define BUDTENDER_CONTINUE		0
-#define BUDTENDER_BREAK			-1
-#define BUDTENDER_OK			1
+typedef enum {
+	BUDTENDER_BREAK 	= 		-1,
+	BUDTENDER_CONTINUE 	= 		0,
+	BUDTENDER_OK 		= 		1
+} budtenderStatus;
 
 // === File i/o ===
 #define SAVE_FILE_NAME			".weedrc"

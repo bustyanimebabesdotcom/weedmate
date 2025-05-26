@@ -61,10 +61,12 @@ void exitWeedMate ( void ) {
 
 /**
  * budTenderSanityCheck - Validates logical price constraints for a strain.
+ * 
+ * yes, budtenderStatus is a real return type. enum in macros.h
  *
  * @param x The price entered by the user.
  */
-static int budTenderSanityCheck ( int x ) {
+static budtenderStatus budTenderSanityCheck ( int x ) {
 
 	if ( x == MIN_STRAIN_PRICE ) {
 		CLEAR_SCREEN();
@@ -129,7 +131,7 @@ void budTenderMenu ( void ) {
 			break;
 		}
 
-		int sanityStatus = budTenderSanityCheck( newPrice );
+		budtenderStatus sanityStatus = budTenderSanityCheck( newPrice );
 		if (sanityStatus == BUDTENDER_CONTINUE) continue;
 
 		strains[choice].price = newPrice;
