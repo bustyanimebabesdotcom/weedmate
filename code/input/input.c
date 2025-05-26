@@ -1,4 +1,5 @@
-/* input.c - version 1.0.7
+/**
+ * input.c - version 1.0.7
  *
  * safe(r than scanf) input handling
  * This can be ported to any project, to be used as a standalone input library.
@@ -23,6 +24,9 @@
 #include <stdbool.h>
 #include "input.h"
 
+/**
+ * printError - calls fputs into stderr, simple wrapper
+ */
 static void printError( const char *msg ) {
 
 	fputs( msg, stderr );
