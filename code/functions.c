@@ -2,8 +2,6 @@
 // project: weedmate
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <limits.h>
 #include <weedmate/common.h>
 #include "input.h"

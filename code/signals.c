@@ -9,6 +9,7 @@
  * Adds SA_RESTART so syscalls like fgets() don't break when signals hit.
  */
 
+#include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <errno.h>

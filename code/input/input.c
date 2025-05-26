@@ -1,5 +1,5 @@
 /**
- * input.c - version 1.0.7
+ * input.c - version 1.0.8
  *
  * safe(r than scanf) input handling
  * This can be ported to any project, to be used as a standalone input library.
@@ -9,10 +9,10 @@
  * Main safety features are simple prevention of buffer overflow exploits,
  * and validating input.
  *
- * TODO: 	Wrap more copy pasted shit into helpers.
- * TODO: 	Optimize codebase where possible.
+ * TODO: 		Wrap more copy pasted shit into helpers.
+ * TODO: 		Optimize codebase where possible.
  * PHASE 2 PLAN
- * TODO:	Implement string handling without null terminator. Byte for byte getchar() loop in a function that returns a string_t
+ * COMPLETE:	Implement string handling without null terminator. Byte for byte getchar() loop in a function that returns a string_t
  */
 
 #include <stdio.h>
@@ -49,45 +49,47 @@ static void drainStdin( void ) {
 }
 
 /**
- * readInputLine - read one line from stdin into buffer, strip newline,
- * 					drain the rest if line is too long, and handle EOF/errors
+ * readByteInput - read up to maxLen bytes from stdin into buffer, 
+ * 					stop at newline or EOF, drain excess input, and report length.
  * 
- * @buf: buffer to fill
- * @size: size of buf (e.g. INPUT_BUFFER_SIZE)
+ * @buf:		buffer to fill with input characters
+ * @maxLen:		maximum number of bytes to read into buf
+ * @outLen:		pointer to size_t to receive the number of bytes read
  * 
  * Returns:
- * 		0 - on success,
- *		1 - on error,
- *	   -1 - on EOF ( caller should check and handle appropriately ),
+ * 		0 - on success
+ * 		1 - on error ( NULL buf or outLen, or maxLen < 1 )
+ *	   -1 - on EOF ( caller should check and handle appropriately )
  */
-static int readInputLine( char *buf, size_t size ) {
+static int readByteInput( char *buf, size_t maxLen, size_t *outLen ) {
 
-	// Read input line into buffer, check for errors or EOF
-	if ( fgets( buf, size, stdin ) == NULL ) {
-		if ( feof( stdin ) ) {
-			clearerr(stdin);
-			return -1;
-		}
+	// Validate parameters
+	if ( buf == NULL || outLen == NULL || maxLen < 1 ) return 1;
 
-		else {
-			printError( "Error in input stream.\n" );
-			return 1;	// caller should retry
-		}
+	// Init byte counter and input char
+	size_t i = 0;
+	int c;
+
+	// Read up to maxLen bytes, stopping at newline or EOF
+	for ( ; i < maxLen; i++ ) {
+		c = getchar();
+		if ( c == '\n' || c == EOF ) break;
+		buf[i] = (char)c;
 	}
-	
-	// check for newline
-	char *newline = strchr( buf, '\n' );
 
-	// Check for overflow: no newline and not EOF means input too long
-	if ( !newline && !feof( stdin ) ) {
-		// flush excess input to prevent overflow
+	// Store number of bytes read
+	*outLen = i;
+
+	// If buffer filled without newline or EOF, flush excess input
+	if ( i == maxLen && c != '\n' && c != EOF ) {
 		drainStdin();
 		printError( "Input exceeding buffer size. Try again.\n" );
 		return 1;
 	}
 
-	// strip trailing newline
-	if ( newline ) *newline = '\0';
+	// If EOF before any byte read, signal EOF
+	if ( c == EOF && i == 0 ) return -1;
+
 	return 0;
 
 }
@@ -107,7 +109,9 @@ int getIntInput( void ) {
 
 	while ( 1 ) {
 
-		if ( readInputLine( buffer, sizeof(buffer) )) return INT_MIN;
+		size_t len;
+		if ( readByteInput( buffer, sizeof(buffer) - 1, &len )) return INT_MIN;
+		buffer[len] = '\0';
 
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
@@ -117,7 +121,7 @@ int getIntInput( void ) {
 			continue;
 		}
 
-		if ( errno == ERANGE || value < INT_MIN || value > INT_MAX ) {
+		if ( errno == ERANGE || value != (int)value ) {
 			printError( "Value out of range. Try again.\n" );
 			continue;
 		}
@@ -142,7 +146,9 @@ unsigned int getUIntInput( void ) {
 
 	while ( 1 ) {
 
-		if ( readInputLine( buffer, sizeof(buffer) )) return UINT_MAX;
+		size_t len;
+		if ( readByteInput( buffer, sizeof(buffer) - 1, &len )) return UINT_MAX;
+		buffer[len] = '\0';
 
 		if ( buffer[0] == '-' ) {
 			printError( "Invalid number. Try again.\n" );
@@ -182,7 +188,9 @@ float getFloatInput( void ) {
 
 	while ( 1 ) {
 
-		if ( readInputLine( buffer, sizeof(buffer) )) return NAN;
+		size_t len;
+		if ( readByteInput( buffer, sizeof(buffer) - 1, &len )) return NAN;
+		buffer[len] = '\0';
 
 		errno = 0;
 		// Convert string to float. 'endptr' is set to the first invalid character after the number.
@@ -218,7 +226,9 @@ double getDoubleInput( void ) {
 
 	while ( 1 ) {
 
-		if ( readInputLine( buffer, sizeof(buffer) )) return NAN;
+		size_t len;
+		if ( readByteInput( buffer, sizeof(buffer) - 1, &len )) return NAN;
+		buffer[len] = '\0';
 
 		errno = 0;
 		value = strtod( buffer, &endptr );
@@ -253,7 +263,9 @@ long getLongInput( void ) {
 
 	while ( 1 ) {
 
-		if ( readInputLine( buffer, sizeof(buffer) )) return LONG_MIN;
+		size_t len;
+		if ( readByteInput( buffer, sizeof(buffer) - 1, &len )) return LONG_MIN;
+		buffer[len] = '\0';
 
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
@@ -288,7 +300,9 @@ unsigned long getULongInput( void ) {
 
 	while ( 1 ) {
 
-		if ( readInputLine( buffer, sizeof(buffer) )) return ULONG_MAX;
+		size_t len;
+		if ( readByteInput( buffer, sizeof(buffer) - 1, &len )) return ULONG_MAX;
+		buffer[len] = '\0';
 
 		errno = 0;
 		value = strtoul( buffer, &endptr, 10 );
@@ -323,7 +337,9 @@ long long getLongLongInput( void ) {
 
 	while ( 1 ) {
 
-		if ( readInputLine( buffer, sizeof(buffer) )) return LLONG_MIN;
+		size_t len;
+		if ( readByteInput( buffer, sizeof(buffer) - 1, &len )) return LLONG_MIN;
+		buffer[len] = '\0';
 
 		errno = 0;
 		value = strtoll( buffer, &endptr, 10 );
@@ -358,7 +374,9 @@ unsigned long long getULongLongInput( void ) {
 
 	while ( 1 ) {
 
-		if ( readInputLine( buffer, sizeof(buffer) )) return ULLONG_MAX;
+		size_t len;
+		if ( readByteInput( buffer, sizeof(buffer) - 1, &len )) return ULLONG_MAX;
+		buffer[len] = '\0';
 
 		errno = 0;
 		value = strtoull( buffer, &endptr, 10 );
@@ -381,26 +399,28 @@ unsigned long long getULongLongInput( void ) {
 /**
  * getCharInput - a safer alternative to scanf for chars
  *
- * usage - char x = getCharInput();
+ * usage - int x = getCharInput();
  *
  * IMPORTANT: Only accepts one character. " a" and "a " are considered invalid.
  * 
  * returns EOF on error or EOF
  */
-char getCharInput( void ) {
+int getCharInput( void ) {
 
 	char buffer[CHAR_INPUT_BUFFER_SIZE];
+	size_t len;
 
 	while ( 1 ) {
 
-		int result = readInputLine( buffer, sizeof(buffer) );
-		
+		int result = readByteInput( buffer, sizeof(buffer) - 1, &len );
+		buffer[len] = '\0';
+
 		if ( result == EOF ) return EOF;
 		if ( result == 1 ) continue;
-		if ( strlen(buffer) == 0 ) return '\n';
-		if ( strlen(buffer) == 1 ) return buffer[0];
-	
+		if ( len == 0 ) return '\n';
+		if ( len == 1 ) return (unsigned char)buffer[0];
 		printError( "Invalid input. Please enter a single character.\n" );
+
 	}
 
 }
@@ -408,11 +428,11 @@ char getCharInput( void ) {
 /**
  * getCharInputFiltered - a safer alternative to scanf for chars
  *
- * usage - char x = getCharInputFiltered( "abc" );
+ * usage - int x = getCharInputFiltered( "abc" );
  * 
  * returns EOF on error or EOF
  */
-char getCharInputFiltered( const char *allowed ) {
+int getCharInputFiltered( const char *allowed ) {
 
 	if ( allowed == NULL ){
 		printError( "getCharInputFiltered(): NULL passed to 'allowed'. Exiting.\n" );
@@ -425,17 +445,18 @@ char getCharInputFiltered( const char *allowed ) {
 	}
 
 	char buffer[CHAR_INPUT_BUFFER_SIZE];
+	size_t len;
 
 	while ( 1 ) {
 
-		int result = readInputLine( buffer, sizeof(buffer) );
+		int result = readByteInput( buffer, sizeof(buffer) - 1, &len );
+		buffer[len] = '\0';
 		
 		if ( result == EOF ) return EOF;
 		if ( result == 1 ) continue;
-		if ( strlen(buffer) == 1 ) return buffer[0];
 		
 		// Ensure input is exactly one character
-		if ( strlen(buffer) != 1 ) {
+		if ( len != 1 ) {
 			printError( "Invalid input. Please enter a single character.\n" );
 			continue;
 		}
@@ -443,7 +464,7 @@ char getCharInputFiltered( const char *allowed ) {
 		char c = buffer[0];
 
 		// Return if character is in allowed set
-		if ( strchr( allowed, c ) != NULL ) return c;
+		if ( strchr( allowed, c ) != NULL ) return (unsigned char)c;
 	
 		fprintf( stderr, "Invalid input. Allowed: %s\n", allowed );
 		
@@ -452,15 +473,15 @@ char getCharInputFiltered( const char *allowed ) {
 }
 
 /**
- * getStringInput - allocates and returns a line of user input from stdin
+ * getCStringInput - allocates and returns a line of user input from stdin
  *
- * NOTE: Caller must free the returned string!!!
+ * NOTE: 	Caller must free the returned string!!!
  * 
  *
  * safe usage example
  * 
  *
- *	char *input = getStringInput();
+ *	char *input = getCStringInput();
  *
  *	if (!input) fputs( "Failed to read input. Try again.\n", stderr );
  *	else {
@@ -469,18 +490,21 @@ char getCharInputFiltered( const char *allowed ) {
  *		input = NULL;
  *	}
  *
- * NOTE: we use memcpy() because it copies exactly len + 1 bytes from buffer, avoiding overflow and termination issues.
- * 			the overhead is worth it in this case for the safety is provides over strpy() or strncpy()
+ * NOTE: 	we use memcpy() because it copies exactly len + 1 bytes from buffer, avoiding overflow and termination issues.
+ * 			the overhead is worth it in this case for the safety is provides over strcpy() or strncpy()
  * 
  * returns NULL on error or EOF
  */
-char *getStringInput( void ) {
+char *getCStringInput( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
+	size_t len;
 
-	// read input (return NULL on error/EOF ), get length of input string
-	if ( readInputLine( buffer, sizeof(buffer) )) return NULL;
-	size_t len = strlen( buffer );
+	// read input (return NULL on error/EOF )
+	if ( readByteInput( buffer, sizeof(buffer)-1, &len )) return NULL;
+
+	// add null-terminator for C string
+	buffer[len] = '\0';
 
 	// Allocate memory for string( length + 1 for null terminator )
 	char *str = malloc( len+1 );
@@ -492,6 +516,51 @@ char *getStringInput( void ) {
 
 	// copy buffer to allocated string
 	memcpy( str, buffer, len+1 );
+	return str;
+
+}
+
+/**
+ * getStringInput - reads a line from stdin into a heap-allocated string_t
+ * 
+ * NOTE: 	Caller is responsible for freeing the returned buffer:
+ * 			free(str.data);
+ * 
+ * Safe usage example:
+ * 
+ * 		char str = getStringInput();
+ *
+ *		if (!str.data) return;
+ *		printf("%.*s", (int)str.len, str.data)
+ *		free(str.data);
+ *		str.data = NULL;
+ *
+ * NOTE: 	Uses memcpy() to copy exactly len bytes from internal buffer
+ * 			No null terminator is appended-use the length field for safe access.
+ * 
+ * Returns:
+ * 		A string_t with .data == NULL and .len == 0 on error or EOF,
+ * 		otherwise .data points to malloc( len ? len : 1 ) and .len is the byte count.
+ */
+string_t getStringInput ( void ) {
+
+	char buffer[INPUT_BUFFER_SIZE];
+	size_t len;
+
+	// read input ( return NULL on error/EOF )
+	if ( readByteInput( buffer, sizeof(buffer), &len )) return (string_t){ NULL, 0 };
+
+	// Allocate memory for string data, length is stored in len parameter
+	string_t str;
+	str.data = malloc( len ? len : 1 );
+	if ( !str.data ) {
+		printError( "Memory allocation failed.\n" );
+		return (string_t){ NULL, 0 };
+	}
+
+	// copy buffer to string data
+	memcpy( str.data, buffer, len );
+	str.len = len;
 	return str;
 
 }
@@ -511,7 +580,7 @@ bool getBoolInput( void ) {
 		// Read single character, convert to lowercase
 		char c = getCharInput();
 
-		if ( c == EOF  ) {
+		if ( c == EOF ) {
 			printError( "EOF detected. Returning false by default.\n" );
 			return false;
 		}

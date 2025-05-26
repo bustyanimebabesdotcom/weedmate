@@ -7,3 +7,4 @@ ideas.txt
 .vscode/
 .idea/
 .cmake-build-debug-wsl/
+.clangd

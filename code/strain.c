@@ -162,11 +162,16 @@ void handleStrainPriceLookup ( void ) {
 
 }
 
-
 /** 
- * renameStrain - uses getStringInput() from the input library to  
- * store a string in memory, write it to selected array slot
- * and freeing the memory at the end. clean shit.
+ * renameStrain - prompts user to select and rename a strain entry
+ * 
+ * This function displays the strain list, reads a slot number with
+ * getIntInput(), then prompts for a new name with getStringInput().
+ * 
+ * It performs comprehensive validation
+ * ( EOF, out-of-range slot, empty input, and max-length checks),
+ * updates the fixed-size name buffer in the strains array,
+ * frees the temporary heap allocation, and saves the updated list to file.
  */
 void renameStrain( void ) {
 
@@ -194,15 +199,15 @@ void renameStrain( void ) {
 		slot, 
 		strains[slot-USER_INPUT_OFFSET].name );
 
-	char *str = getStringInput();
+	string_t str = getStringInput();
 
 	// Get length of string, or 0 if str is NULL
-	size_t len = str ? strlen(str) : 0;
+	size_t len = str.data ? str.len : 0;
 
 	// Check for NULL or empty string
-	if ( len == 0 ) {
-		free(str);
-		str = NULL;
+	if ( !str.data || len == 0 ) {
+		free(str.data);
+		str.data = NULL;
 		CLEAR_SCREEN();
 		fputs( "Empty string or error, slot unchanged.\n", stderr );
 		return;
@@ -212,32 +217,36 @@ void renameStrain( void ) {
 	if ( len >= MAX_STRAIN_LENGTH ) {
 		CLEAR_SCREEN();
 		fprintf( stderr, "Strain name exceeds max length of %d characters.\n", MAX_STRAIN_LENGTH - 1 );
-		free(str);
-		str = NULL;
+		free(str.data);
+		str.data = NULL;
 		return;
 	}
 
 	// Prevent buffer overflow, ensure input fits (including '\0')
 	if( len + 1 > sizeof(strains[0].name) ) {
 		fputs( "Input too long. Max 20 characters.\n", stderr );
-		free(str);
+		free(str.data);
+		str.data = NULL;
 		return;
 	}
 
 	// Copy  len+1 bytes from heap to struct, which is stored in stack
 	memcpy(
-		strains[slot-USER_INPUT_OFFSET].name, // destination
-		str,                                    // source
-		len + 1                                 // include null terminator
+		strains[slot-USER_INPUT_OFFSET].name,	// destination
+		str.data,								// source
+		len										// include null terminator
 	);
+
+	// Add null terminator
+	strains[slot-USER_INPUT_OFFSET].name[len] = '\0';
 	
 	// Display success message
 	CLEAR_SCREEN();
-	fprintf( stdout, "Strain name '" YELLOW "%s" RESET"' successfully applied to slot #%d\n", str, slot );
+	fprintf( stdout, "Strain name '" YELLOW "%s" RESET"' successfully applied to slot #%d\n", strains[slot-USER_INPUT_OFFSET].name, slot );
 
 	// Free the pointer
-	free(str);
-	str = NULL;
+	free(str.data);
+	str.data = NULL;
 
 	saveToFile();
 

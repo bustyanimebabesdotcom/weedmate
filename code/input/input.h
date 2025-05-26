@@ -1,4 +1,4 @@
-// input.h - version 1.0.7
+// input.h - version 1.0.8
 
 #ifndef INPUT_H
 #define INPUT_H
@@ -9,7 +9,7 @@
 
 // === STRUCTs ===
 typedef struct {
-	char	*buf;	// pointer to data
+	char	*data;	// pointer to data
 	size_t	len;	// byte counter
 } string_t;
 
@@ -29,10 +29,11 @@ unsigned long getULongInput				( void );
 long long getLongLongInput				( void );
 unsigned long long getULongLongInput	( void );
 
-char getCharInput						( void );
-char getCharInputFiltered				( const char *allowed );
+int getCharInput						( void );
+int getCharInputFiltered				( const char *allowed );
 
-char *getStringInput					( void );
+char *getCStringInput					( void );
+string_t getStringInput					( void );
 
 bool getBoolInput						( void );
 
