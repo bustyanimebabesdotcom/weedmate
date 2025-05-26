@@ -23,11 +23,11 @@ It's also a clean, modular project demonstrating good practices for beginners le
 weedmate comes with a **fully modular input library** that replaces C's shitty `scanf()` with a safer alternative.
 
 Features:
-- Uses `fgets`, and sanitizes stdin from garbage.
+- Uses `getchar()` in a byte for byte input loop, giving us airtight control. no libc roulette.
 - Basic error handling and logging.
-- Rejects garbage input.
-- Optional filtered character input (`getCharInputFiltered("yn")`).
-- Easy to extend, easy to read.
+- Garbage-resistant — rejects malformed input.
+- Filtered character input support: getCharInputFiltered("yn") lets you restrict responses with zero effort.
+- EModular and readable — drop-in safe I/O that won’t stab you in production.
 
 `scanf()` can chordle my balls.
 
