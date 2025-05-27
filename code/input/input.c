@@ -1,6 +1,9 @@
 /**
  * input.c - version 1.0.8
  *
+ * Author: 		https://github.com/bustyanimebabesdotcom
+ * License:		The Unlicense
+ *
  * safe(r than scanf) input handling
  * This can be ported to any project, to be used as a standalone input library.
  * There are obviously better input libraries, but the purpose of this is to be
@@ -13,6 +16,11 @@
  * TODO: 		Optimize codebase where possible.
  * PHASE 2 PLAN
  * COMPLETE:	Implement string handling without null terminator. Byte for byte getchar() loop in a function that returns a string_t
+ *
+ * You are free to use this in any project, commercial or personal.
+ * Attribution is appreciated but not required.
+ *
+ * For more information, see LICENSE or visit <https://unlicense.org/>
  */
 
 #include <stdio.h>
