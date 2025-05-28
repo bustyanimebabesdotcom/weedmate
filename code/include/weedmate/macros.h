@@ -2,15 +2,13 @@
 // project: weedmate
 #include <weedmate/terminal.h>
 
-#ifndef MACROS_H
-#define MACROS_H
+#ifndef MACROS_H_
+#define MACROS_H_
 
 // === Exit codes ===
 #define EXIT_CODE				0
 #define CRASH_CODE				1
 #define DECIMAL_EXIT			0.0
-
-// === UI ===
 
 // === CONSTANTS ===
 #define STRAIN_COUNT			15
@@ -22,13 +20,13 @@
 #define USER_INPUT_OFFSET		1
 
 // === Menu flow ===
-typedef enum {
+typedef enum budtender_e {
 	BUDTENDER_BREAK 	= 		-1,
 	BUDTENDER_CONTINUE 	= 		0,
 	BUDTENDER_OK 		= 		1
-} budtenderStatus;
+} budtender_e;
 
 // === File i/o ===
 #define SAVE_FILE_NAME			".weedrc"
 
-#endif // MACROS_H
+#endif // MACROS_H_

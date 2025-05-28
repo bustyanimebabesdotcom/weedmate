@@ -6,5 +6,6 @@ set(WEEDMATE_SOURCES
 	code/strain.c
 	code/data.c
 	code/boot.c
+	code/args.c
 	code/input/input.c
 )

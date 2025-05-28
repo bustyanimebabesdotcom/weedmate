@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include <weedmate/common.h>
-#include "input.h"
+#include <input.h>
 
 /** 
  * selectCity - lets the user select a city from the cities array  
@@ -51,9 +51,9 @@ void exitWeedMate ( void ) {
 
 	CLEAR_SCREEN();
 	EXIT_ALT_SCREEN();
-	puts( "Thank you for using weedmate!" );
-	putchar( '\n' );
-	printf( "Terminating with exit code %d!\n", EXIT_CODE );
+//	puts( "Thank you for using weedmate!" );
+//	putchar( '\n' );
+//	printf( "Terminating with exit code %d!\n", EXIT_CODE );
 
 }
 
@@ -64,7 +64,7 @@ void exitWeedMate ( void ) {
  *
  * @param x The price entered by the user.
  */
-static budtenderStatus budTenderSanityCheck ( int x ) {
+static budtender_e budTenderSanityCheck ( int x ) {
 
 	if ( x == MIN_STRAIN_PRICE ) {
 		CLEAR_SCREEN();
@@ -129,7 +129,7 @@ void budTenderMenu ( void ) {
 			break;
 		}
 
-		budtenderStatus sanityStatus = budTenderSanityCheck( newPrice );
+		budtender_e sanityStatus = budTenderSanityCheck( newPrice );
 		if (sanityStatus == BUDTENDER_CONTINUE) continue;
 
 		strains[choice].price = newPrice;

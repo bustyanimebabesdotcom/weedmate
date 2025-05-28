@@ -1,17 +1,17 @@
-// input.h - version 1.0.8
+// input.h - version 1.0.9
 
-#ifndef INPUT_H
-#define INPUT_H
+#ifndef INPUT_H_
+#define INPUT_H_
 
 // === Includes ===
 #include <stdbool.h>
 #include <stddef.h> // for size_t
 
 // === STRUCTs ===
-typedef struct {
+typedef struct string_s {
 	char	*data;	// pointer to data
 	size_t	len;	// byte counter
-} string_t;
+} string_s;
 
 // === INPUT BUFFER ===
 #define INPUT_BUFFER_SIZE				128
@@ -33,8 +33,8 @@ int getCharInput						( void );
 int getCharInputFiltered				( const char *allowed );
 
 char *getCStringInput					( void );
-string_t getStringInput					( void );
+string_s getStringInput					( void );
 
 bool getBoolInput						( void );
 
-#endif // INPUT_H
+#endif // INPUT_H_

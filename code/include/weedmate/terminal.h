@@ -1,8 +1,8 @@
 // terminal.h - contains ANSI escape codes. Hacky as FUCK.
 // project: weedmate
 
-#ifndef TERMINAL_H
-#define TERMINAL_H
+#ifndef TERMINAL_H_
+#define TERMINAL_H_
 
 #include <unistd.h>
 
@@ -46,12 +46,20 @@
 	if(useColor) printf(" Press [" RED "%c" RESET "] to %s\n", char, desc); \
 	else         printf(" Press [%c] to %s\n", char, desc);
 
+#define ANY_KEY(key, desc) \
+	if(useColor) printf("\nPress " YELLOW "%s" RESET " to %s\n", key, desc); \
+	else         printf("\nPress [%s] to %s\n", key, desc);
+
 #define MENU_KEY(char, desc) \
 	if(useColor) printf("\nPress [" YELLOW "%c" RESET "] to %s\n", char, desc); \
 	else         printf("\nPress [%c] to %s\n", char, desc);
+
+#define ANY_KEY_MSG() \
+	ANY_KEY("any key", "continue"); \
+	printf("\n> ");
 
 #define RETURN_TO_MENU_MSG() \
 	MENU_KEY( 'm', "return to main menu." ); \
 	printf( "\n> " );
 
-#endif // TERMINAL_H
+#endif // TERMINAL_H_

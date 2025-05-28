@@ -6,7 +6,7 @@
 #include <limits.h>
 #include <string.h>
 #include <weedmate/common.h>
-#include "input.h"
+#include <input.h>
 
 static void printStrainPriceMessage ( int choice, const char* tense ) {
 
@@ -79,7 +79,7 @@ void printStrainList ( void ) {
  * 
  * strainPriceAdjust( strains, -1 ); - halves prices
  */
-void strainPriceAdjust ( strain_t* strains, int mode ) {
+void strainPriceAdjust ( strain_s* strains, int mode ) {
 
 	for ( int i = 0; i < STRAIN_COUNT; i++) {
 		if ( mode == 1 ) {
@@ -200,7 +200,7 @@ void renameStrain( void ) {
 		strains[slot-USER_INPUT_OFFSET].name );
 
 	// Read user input into a struct with .data (heap pointer) and .len (byte count)
-	string_t str = getStringInput();
+	string_s str = getStringInput();
 
 	// Get length of string, or 0 if str is NULL
 	size_t len = str.data ? str.len : 0;

@@ -1,5 +1,5 @@
 /**
- * input.c - version 1.0.8
+ * input.c - version 1.0.9
  *
  * Author: 		https://github.com/bustyanimebabesdotcom
  * License:		The Unlicense
@@ -15,7 +15,7 @@
  * TODO: 		Wrap more copy pasted shit into helpers.
  * TODO: 		Optimize codebase where possible.
  * PHASE 2 PLAN
- * COMPLETE:	Implement string handling without null terminator. Byte for byte getchar() loop in a function that returns a string_t
+ * COMPLETE:	Implement string handling without null terminator. Byte for byte getchar() loop in a function that returns a string_s
  *
  * You are free to use this in any project, commercial or personal.
  * Attribution is appreciated but not required.
@@ -35,7 +35,7 @@
 /**
  * printError - calls fputs into stderr, simple wrapper
  */
-static void printError( const char *msg ) {
+static void printError ( const char *msg ) {
 
 	fputs( msg, stderr );
 
@@ -47,7 +47,7 @@ static void printError( const char *msg ) {
  * 
  * called by readByteInput()
  */
-static void drainStdin( void ) {
+static void drainStdin ( void ) {
 
 	int ch;
 	// Read and discard characters until newline or EOF
@@ -69,7 +69,7 @@ static void drainStdin( void ) {
  * 		1 - on error ( NULL buf or outLen, or maxLen < 1 )
  *	   -1 - on EOF ( caller should check and handle appropriately )
  */
-static int readByteInput( char *buf, size_t maxLen, size_t *outLen ) {
+static int readByteInput ( char *buf, size_t maxLen, size_t *outLen ) {
 
 	// Validate parameters
 	if ( buf == NULL || outLen == NULL || maxLen < 1 ) return 1;
@@ -109,7 +109,7 @@ static int readByteInput( char *buf, size_t maxLen, size_t *outLen ) {
  * 
  * returns INT_MIN on error or EOF
  */
-int getIntInput( void ) {
+int getIntInput ( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 	char *endptr;
@@ -146,7 +146,7 @@ int getIntInput( void ) {
  * 
  * returns UINT_MAX on error or EOF
  */
-unsigned int getUIntInput( void ) {
+unsigned int getUIntInput ( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 	char *endptr;
@@ -188,7 +188,7 @@ unsigned int getUIntInput( void ) {
  * 
  * returns NAN on error or EOF
  */
-float getFloatInput( void ) {
+float getFloatInput ( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 	char *endptr;
@@ -226,7 +226,7 @@ float getFloatInput( void ) {
  * 
  * returns NAN on error or EOF
  */
-double getDoubleInput( void ) {
+double getDoubleInput ( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 	char *endptr;
@@ -263,7 +263,7 @@ double getDoubleInput( void ) {
  * 
  * returns LONG_MIN on error or EOF
  */
-long getLongInput( void ) {
+long getLongInput ( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 	char *endptr;
@@ -300,7 +300,7 @@ long getLongInput( void ) {
  * 
  * returns ULONG_MAX on error or EOF
  */
-unsigned long getULongInput( void ) {
+unsigned long getULongInput ( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 	char *endptr;
@@ -337,7 +337,7 @@ unsigned long getULongInput( void ) {
  * 
  * returns LLONG_MIN on error or EOF
  */
-long long getLongLongInput( void ) {
+long long getLongLongInput ( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 	char *endptr;
@@ -374,7 +374,7 @@ long long getLongLongInput( void ) {
  * 
  * returns ULLONG_MAX on error or EOF
  */
-unsigned long long getULongLongInput( void ) {
+unsigned long long getULongLongInput ( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 	char *endptr;
@@ -413,7 +413,7 @@ unsigned long long getULongLongInput( void ) {
  * 
  * returns EOF on error or EOF
  */
-int getCharInput( void ) {
+int getCharInput ( void ) {
 
 	char buffer[CHAR_INPUT_BUFFER_SIZE];
 	size_t len;
@@ -440,7 +440,7 @@ int getCharInput( void ) {
  * 
  * returns EOF on error or EOF
  */
-int getCharInputFiltered( const char *allowed ) {
+int getCharInputFiltered ( const char *allowed ) {
 
 	if ( allowed == NULL ){
 		printError( "getCharInputFiltered(): NULL passed to 'allowed'. Exiting.\n" );
@@ -503,7 +503,7 @@ int getCharInputFiltered( const char *allowed ) {
  * 
  * returns NULL on error or EOF
  */
-char *getCStringInput( void ) {
+char *getCStringInput ( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 	size_t len;
@@ -529,7 +529,7 @@ char *getCStringInput( void ) {
 }
 
 /**
- * getStringInput - reads a line from stdin into a heap-allocated string_t
+ * getStringInput - reads a line from stdin into a heap-allocated string_s
  * 
  * NOTE: 	Caller is responsible for freeing the returned buffer:
  * 			free(str.data);
@@ -547,23 +547,23 @@ char *getCStringInput( void ) {
  * 			No null terminator is appended-use the length field for safe access.
  * 
  * Returns:
- * 		A string_t with .data == NULL and .len == 0 on error or EOF,
+ * 		A string_s with .data == NULL and .len == 0 on error or EOF,
  * 		otherwise .data points to malloc( len ? len : 1 ) and .len is the byte count.
  */
-string_t getStringInput ( void ) {
+string_s getStringInput ( void ) {
 
 	char buffer[INPUT_BUFFER_SIZE];
 	size_t len;
 
 	// read input ( return NULL on error/EOF )
-	if ( readByteInput( buffer, sizeof(buffer), &len )) return (string_t){ NULL, 0 };
+	if ( readByteInput( buffer, sizeof(buffer), &len )) return (string_s){ NULL, 0 };
 
 	// Allocate memory for string data, length is stored in len parameter
-	string_t str;
+	string_s str;
 	str.data = malloc( len ? len : 1 );
 	if ( !str.data ) {
 		printError( "Memory allocation failed.\n" );
-		return (string_t){ NULL, 0 };
+		return (string_s){ NULL, 0 };
 	}
 
 	// copy buffer to string data
@@ -582,11 +582,11 @@ string_t getStringInput ( void ) {
  * 
  * returns false on EOF. Terrible solution but it's the best i could figure out.
  */
-bool getBoolInput( void ) {
+bool getBoolInput ( void ) {
 
 	while ( 1 ) {
 		// Read single character, convert to lowercase
-		char c = getCharInput();
+		int c = getCharInput();
 
 		if ( c == EOF ) {
 			printError( "EOF detected. Returning false by default.\n" );

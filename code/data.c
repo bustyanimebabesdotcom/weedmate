@@ -5,14 +5,14 @@
 
 int currentCityIndex = 3;
 
-city_t cities[CITY_COUNT] = {
+city_s cities[CITY_COUNT] = {
 	{ "Detroit", 			0.65f },
 	{ "San Francisco",		1.95f },
 	{ "Minneapolis",		1.30f },
 	{ "Denver",				1.02f }
 };
 
-strain_t strains[STRAIN_COUNT] = {
+strain_s strains[STRAIN_COUNT] = {
 	{ "White Death",			13 },
 	{ "Purple Plutonium OG",	12 },
 	{ "Dankmestic Abuse",		24 },

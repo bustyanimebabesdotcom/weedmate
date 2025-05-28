@@ -48,6 +48,28 @@ weedmate supports persistent strain names, and prices.
 
 You can let the program handle it, or manually edit it.
 
+## CLI Arguments
+
+WeedMate supports a few **standard CLI arguments**.
+
+### Usage
+
+```bash
+./weedmate [OPTION]
+```
+
+### Options
+
+- `-r`, `--remove`  
+  Delete save file.
+
+- `-h`, `--help`  
+  Show help message.
+
+- `-v`, `--version`  
+  Print current version, license, and author.
+
+
 ---
 
 ## How to Build

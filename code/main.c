@@ -19,11 +19,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <weedmate/args.h>
 #include <weedmate/common.h>
-#include "input.h"
+#include <weedmate/version.h>
+#include <input.h>
 
-int main ( void ) {
+int main ( int argc, char *argv[] ) {
 
+	if ( handleArgs( argc, argv ) != ARGS_NOT_HANDLED ) return EXIT_CODE;
 	loadSaveFile();
 	atexit(exitWeedMate);		// Make sure program runs exit function to leave alternate screen buffer
 	installSignalHandlers();	// Make sure we can catch CTRL-Z, CTRL-C, CTRL-D, etc...
@@ -31,16 +34,11 @@ int main ( void ) {
 
 	ENTER_ALT_SCREEN();
 	CLEAR_SCREEN();
-	// Run the loading screen. Comment out for faster startup time.
-//	bootAnimation();
-	CLEAR_SCREEN();
 	motd();
 
 	int c;
 
-	// Main loop, runs until EOF
 	while ( ( c = getCharInput () ) != EOF ) {
-		// Input processing
 		switch ( c ) {
 
 			case 'm':
