@@ -39,7 +39,6 @@ void selectCity ( void ) {
 		RESET );
 
 	saveToFile();
-
 }
 
 /**
@@ -51,10 +50,6 @@ void exitWeedMate ( void ) {
 
 	CLEAR_SCREEN();
 	EXIT_ALT_SCREEN();
-//	puts( "Thank you for using weedmate!" );
-//	putchar( '\n' );
-//	printf( "Terminating with exit code %d!\n", EXIT_CODE );
-
 }
 
 /**
@@ -139,7 +134,6 @@ void budTenderMenu ( void ) {
 	}
 
 	saveToFile();
-
 }
 
 /**
@@ -171,7 +165,6 @@ static bool weedCalcInput ( int *a, char *mod, int *b ) {
 	*mod = (char)m;
 	*b = y;
 	return true;
-
 }
 
 /*
@@ -189,7 +182,7 @@ static double doCalculation ( int a, char mod, int b, bool *success ) {
 		case '-': return a - b;
 		case '*': return a * b;
 		case '/': {
-			if ( b == 0) {
+			if ( b == 0 ) {
 				CLEAR_SCREEN();
 				puts( "You cannot divide by 0!" );
 				*success = false;
@@ -205,9 +198,7 @@ static double doCalculation ( int a, char mod, int b, bool *success ) {
 			*success = false;
 			return DECIMAL_EXIT;
 		}
-
 	}
-
 }
 
 /** 
@@ -239,5 +230,4 @@ void weedCalc ( void ) {
 	} else {
 		printf( "%d\n", (int)result );
 	}
-
 }

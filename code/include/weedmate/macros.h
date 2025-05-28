@@ -26,6 +26,11 @@ typedef enum budtender_e {
 	BUDTENDER_OK 		= 		1
 } budtender_e;
 
+typedef enum strainprice_e {
+	ADJUST_DOUBLE	=			1,
+	ADJUST_HALVE	=		   -1
+} strainprice_e;
+
 // === File i/o ===
 #define SAVE_FILE_NAME			".weedrc"
 

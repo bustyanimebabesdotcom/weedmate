@@ -11,10 +11,10 @@
 static const argmap_t commandMap[] = {
 
 	{ "-r", "--remove",	"Delete save file.", 		CMD_DELETE	},
+	{ "-c", "--create",	"Create save file.", 		CMD_CREATE	},
 	{ "-h", "--help",	"Show this help message.",	CMD_HELP	},
 	{ "-v", "--version","Print current version.",	CMD_VERSION	},
 	{ NULL,	NULL,		NULL,						CMD_NONE	}
-
 };
 
 // === Declarations for file structure ===
@@ -22,6 +22,7 @@ static void showHelp			( void );
 static cmdtype_e parseCommand	( const char *arg );
 static void printVersion		( void );
 static void deleteSaveFile		( void );
+static void createSaveFile		( void );
 
 // === Code ===
 int handleArgs ( int argc, char *argv[] ) {
@@ -35,6 +36,10 @@ int handleArgs ( int argc, char *argv[] ) {
 			deleteSaveFile();
 			return ARGS_HANDLED;
 
+		case CMD_CREATE:
+			createSaveFile();
+			return ARGS_HANDLED;
+
 		case CMD_HELP:
 			showHelp();
 			return ARGS_HANDLED;
@@ -46,11 +51,11 @@ int handleArgs ( int argc, char *argv[] ) {
 		default:
 			fprintf( stderr,
 				"Usage: weedmate [OPTION]\n"
-				"Try 'weedmate --help' for more information.\n");
+				"Try 'weedmate --help' for more information.\n"
+			);
 			return ARGS_INVALID;
 
 	}
-
 }
 
 static cmdtype_e parseCommand ( const char *arg ) {
@@ -65,18 +70,27 @@ static cmdtype_e parseCommand ( const char *arg ) {
 	}
 
 	return CMD_NONE;
-
 }
 
 void deleteSaveFile ( void ) {
 	
-	int result = removeSaveFile();
+	removeSaveFile() == 0
+		? printf( "Deleted %s successfully.\n", SAVE_FILE_NAME )
+		: fputs( "No save file found on disk.\n", stderr );
+}
 
-	if ( result == 0 )
-		printf( "Deleted %s successfully.\n", SAVE_FILE_NAME );
-	else
-		fputs( "No save file found on disk.\n", stderr );
+void createSaveFile ( void ) {
 
+	FILE *file = fopen( SAVE_FILE_NAME , "r" );
+
+	if ( !file ) {
+		saveToFile();
+		printf( "Created %s successfully.\n", SAVE_FILE_NAME );
+		return;
+	}
+
+	fclose( file );
+	fputs( "Save file already exists.\n", stderr );
 }
 
 
@@ -91,7 +105,6 @@ static void printVersion ( void ) {
 		"<https://github.com/bustyanimebabesdotcom>.\n",
 		WEEDMATE_VERSION_STRING
 	);
-
 }
 
 static void showHelp ( void ) {
@@ -104,5 +117,4 @@ static void showHelp ( void ) {
 			commandMap[i].longFlag,
 			commandMap[i].description );
 	}
-
 }

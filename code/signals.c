@@ -46,6 +46,7 @@ static void on_stop( int signo ) {
  * Re-enters alternate screen mode.
  */
 static void on_cont( int signo ) {
+	
 	(void)signo; // Unused
 	ENTER_ALT_SCREEN();
 }

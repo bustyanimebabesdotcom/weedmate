@@ -32,7 +32,6 @@ void saveToFile ( void ) {
 	writeSaveHeader( file );
 	writeSaveData( file );
 	fclose( file );
-
 }
 
 void loadSaveFile ( void ) {
@@ -52,7 +51,6 @@ void loadSaveFile ( void ) {
 	}
 
 	fclose( file );
-
 }
 
 /**
@@ -64,7 +62,6 @@ static void writeSaveHeader ( FILE *file ) {
 	fprintf( file, "# weedmate's save file can be edited quite easily.\n");
 	fprintf( file, "# If you screw too much with the formatting,\n");
 	fprintf( file, "# the save file will be deleted upon launch.\n");
-
 }
 
 static void writeSaveData ( FILE *file ) {
@@ -89,7 +86,6 @@ static void writeSaveData ( FILE *file ) {
 
 	// City
 	fprintf( file, "\n[City]\nindex=%d\n", currentCityIndex );
-
 }
 
 static void handleSaveData ( const char *section, const char *key, const char *value, size_t len ) {
@@ -111,7 +107,6 @@ static void handleSaveData ( const char *section, const char *key, const char *v
 		int i = atoi( value );
 		if ( i >= 0 && i < CITY_COUNT ) currentCityIndex = i;
 	}
-
 }
 
 static int parseLine ( FILE *file, char *line, char *section ) {
@@ -144,7 +139,6 @@ static int parseLine ( FILE *file, char *line, char *section ) {
 
 	handleSaveData( section, key, value, len );
 	return 0; // OK
-
 }
 
 static void handleCorruptSaveFile ( FILE *file, const char *msg ) {
@@ -166,7 +160,6 @@ static void handleCorruptSaveFile ( FILE *file, const char *msg ) {
 
 	CLEAR_SCREEN();
 	EXIT_ALT_SCREEN();
-
 }
 
 int removeSaveFile ( void ) {
@@ -176,7 +169,6 @@ int removeSaveFile ( void ) {
 	fclose(file);
 
 	return remove( SAVE_FILE_NAME );
-	
 }
 
 static void waitForAnyKey ( void ) {
@@ -196,5 +188,4 @@ static void waitForAnyKey ( void ) {
 
 	// Restore original settings
 	tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
-
 }

@@ -19,7 +19,6 @@ static void printStrainPriceMessage ( int choice, const char* tense ) {
 		strains[choice].price,
 		RESET );
 	}
-
 }
 
 /**
@@ -30,7 +29,6 @@ static void printStrainPriceMessage ( int choice, const char* tense ) {
 static void printStrainPrice ( int choice ) {
 
 	printStrainPriceMessage( choice, "is" );
-
 }
 
 /**
@@ -41,7 +39,6 @@ static void printStrainPrice ( int choice ) {
 void printNewStrainPrice ( int choice ) {
 
 	printStrainPriceMessage( choice, "has been changed to" );
-
 }
 
 /**
@@ -69,7 +66,6 @@ void printStrainList ( void ) {
 	}
 
 	printf( "\nYour current city is: " YELLOW "%s" RESET ".\n", cities[currentCityIndex].name );
-
 }
 
 /**
@@ -82,20 +78,12 @@ void printStrainList ( void ) {
 void strainPriceAdjust ( strain_s* strains, int mode ) {
 
 	for ( int i = 0; i < STRAIN_COUNT; i++) {
-		if ( mode == 1 ) {
-			strains[i].price <<= 1;
-		}
-		else if ( mode == -1 ) {
-			strains[i].price >>= 1;
-		}
-		else {
-			// error handling
-			fprintf( stderr, "strainPriceAdjust: invalid mode ( %d )\n", mode );
-		}
+		if ( mode == ADJUST_DOUBLE ) strains[i].price <<= 1;
+		else if ( mode == ADJUST_HALVE ) strains[i].price >>= 1;
+		else fprintf( stderr, "strainPriceAdjust: invalid mode ( %d )\n", mode );
 	}
 
 	saveToFile();
-
 }
 
 
@@ -157,9 +145,7 @@ void handleStrainPriceLookup ( void ) {
 
 		printStrainPrice( choice );
 		break;
-
 	}
-
 }
 
 /** 
@@ -206,7 +192,7 @@ void renameStrain( void ) {
 	size_t len = str.data ? str.len : 0;
 
 	// Check for NULL or empty string
-	if ( !str.data || len == 0 ) {
+	if ( !str.data || !len ) {
 		free(str.data);
 		str.data = NULL;
 		CLEAR_SCREEN();
@@ -224,21 +210,15 @@ void renameStrain( void ) {
 	}
 
 	// Prevent buffer overflow, ensure input fits (including '\0')
-	if( len + 1 > sizeof(strains[0].name) ) {
+	if( len+1 > sizeof(strains[0].name) ) {
 		fputs( "Input too long. Max 20 characters.\n", stderr );
 		free(str.data);
 		str.data = NULL;
 		return;
 	}
 
-	// Copy  len+1 bytes from heap to struct, which is stored in stack
-	memcpy(
-		strains[slot-USER_INPUT_OFFSET].name,	// destination
-		str.data,								// source
-		len										// length
-	);
-
-	// Add null terminator
+	// Copy string from heap to struct, manually add null terminator
+	memcpy( strains[slot-USER_INPUT_OFFSET].name, str.data, len );
 	strains[slot-USER_INPUT_OFFSET].name[len] = '\0';
 	
 	// Display success message
@@ -250,5 +230,4 @@ void renameStrain( void ) {
 	str.data = NULL;
 
 	saveToFile();
-
 }

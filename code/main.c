@@ -26,9 +26,11 @@
 int main ( int argc, char *argv[] ) {
 
 	if ( handleArgs( argc, argv ) != ARGS_NOT_HANDLED ) return EXIT_CODE;
+	
 	loadSaveFile();
 	atexit(exitWeedMate);		// Make sure program runs exit function to leave alternate screen buffer
 	installSignalHandlers();	// Make sure we can catch CTRL-Z, CTRL-C, CTRL-D, etc...
+	
 	int useColor = isatty(STDOUT_FILENO);
 
 	ENTER_ALT_SCREEN();
@@ -49,13 +51,10 @@ int main ( int argc, char *argv[] ) {
 
 			case 'q':
 			case 'Q':
-				// clean exit
-				CLEAR_SCREEN();
 				return EXIT_CODE;
 
 			case 'l':
 			case 'L':
-				// prints strain list
 				CLEAR_SCREEN();
 				printStrainList();
 				RETURN_TO_MENU_MSG();
@@ -64,38 +63,33 @@ int main ( int argc, char *argv[] ) {
 			case 'p':
 			case 'P':
 				CLEAR_SCREEN();
-				// redundant function, might be useful one day
 				handleStrainPriceLookup();
 				RETURN_TO_MENU_MSG();
 				break;
 
 			case 'b':
 			case 'B':
-				// secret menu
 				CLEAR_SCREEN();
 				budTenderMenu();
 				RETURN_TO_MENU_MSG();
 				break;
 
 			case '+':
-				// doubles all strain prices
 				CLEAR_SCREEN();
-				strainPriceAdjust( strains, 1 );
+				strainPriceAdjust( strains, ADJUST_DOUBLE );
 				puts( "Strain prices have been" GREEN" doubled" RESET "." );
 				RETURN_TO_MENU_MSG();
 				break;
 
 			case '-':
-				// halve all strain prices
 				CLEAR_SCREEN();
-				strainPriceAdjust( strains, -1 );
+				strainPriceAdjust( strains, ADJUST_HALVE );
 				puts( "Strain prices have been" RED " halved" RESET "." );
 				RETURN_TO_MENU_MSG();
 				break;
 
 			case 'c':
 			case 'C':
-				// opens the calculator
 				CLEAR_SCREEN();
 				weedCalc();
 				RETURN_TO_MENU_MSG();
@@ -103,7 +97,6 @@ int main ( int argc, char *argv[] ) {
 
 			case 'r':
 			case 'R':
-				// lets user rename strains
 				CLEAR_SCREEN();
 				renameStrain();
 				RETURN_TO_MENU_MSG();
@@ -111,18 +104,15 @@ int main ( int argc, char *argv[] ) {
 
 			case 's':
 			case 'S':
-				// lets the user select city
 				CLEAR_SCREEN();
 				selectCity();
 				RETURN_TO_MENU_MSG();
 				break;
 
 			default:
-				// in case of oh shit moment
 				CLEAR_SCREEN();
 				puts( "Unrecognized input." );
 				RETURN_TO_MENU_MSG();
-
 		}
 	}
 

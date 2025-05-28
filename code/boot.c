@@ -37,5 +37,4 @@ void motd ( void ) {
 	QUIT_KEY( 'q', "quit.\n" );
 
 	printf( "> " );
-
 }

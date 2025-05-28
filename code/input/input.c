@@ -38,7 +38,6 @@
 static void printError ( const char *msg ) {
 
 	fputs( msg, stderr );
-
 }
 
 /**
@@ -53,7 +52,6 @@ static void drainStdin ( void ) {
 	// Read and discard characters until newline or EOF
 	while ( ( ch = getchar() ) != '\n' && ch != EOF )
 		; // Empty loop body, smaller than {}
-
 }
 
 /**
@@ -72,7 +70,7 @@ static void drainStdin ( void ) {
 static int readByteInput ( char *buf, size_t maxLen, size_t *outLen ) {
 
 	// Validate parameters
-	if ( buf == NULL || outLen == NULL || maxLen < 1 ) return 1;
+	if ( !buf || !outLen || maxLen < 1 ) return 1;
 
 	// Init byte counter and input char
 	size_t i = 0;
@@ -99,7 +97,6 @@ static int readByteInput ( char *buf, size_t maxLen, size_t *outLen ) {
 	if ( c == EOF && i == 0 ) return -1;
 
 	return 0;
-
 }
 
 /**
@@ -136,7 +133,6 @@ int getIntInput ( void ) {
 
 		return (int)value;
 	}
-
 }
 
 /**
@@ -178,7 +174,6 @@ unsigned int getUIntInput ( void ) {
 
 		return (unsigned int)value;
 	}
-
 }
 
 /**
@@ -216,7 +211,6 @@ float getFloatInput ( void ) {
 	
 		return value;
 	}
-
 }
 
 /**
@@ -253,7 +247,6 @@ double getDoubleInput ( void ) {
 
 		return value;
 	}
-
 }
 
 /**
@@ -290,7 +283,6 @@ long getLongInput ( void ) {
 
 		return value;
 	}
-
 }
 
 /**
@@ -327,7 +319,6 @@ unsigned long getULongInput ( void ) {
 
 		return value;
 	}
-
 }
 
 /**
@@ -364,7 +355,6 @@ long long getLongLongInput ( void ) {
 
 		return value;
 	}
-
 }
 
 /**
@@ -401,7 +391,6 @@ unsigned long long getULongLongInput ( void ) {
 
 		return value;
 	}
-
 }
 
 /**
@@ -430,7 +419,6 @@ int getCharInput ( void ) {
 		printError( "Invalid input. Please enter a single character.\n" );
 
 	}
-
 }
 
 /**
@@ -477,7 +465,6 @@ int getCharInputFiltered ( const char *allowed ) {
 		fprintf( stderr, "Invalid input. Allowed: %s\n", allowed );
 		
 	}
-
 }
 
 /**
@@ -525,7 +512,6 @@ char *getCStringInput ( void ) {
 	// copy buffer to allocated string
 	memcpy( str, buffer, len+1 );
 	return str;
-
 }
 
 /**
@@ -570,7 +556,6 @@ string_s getStringInput ( void ) {
 	memcpy( str.data, buffer, len );
 	str.len = len;
 	return str;
-
 }
 
 /**
@@ -598,5 +583,4 @@ bool getBoolInput ( void ) {
 		if ( c == 'N' || c == 'n' ) return false;
 		printError( "Invalid input. Enter 'y' or 'n'.\n" );
 	}
-
 }

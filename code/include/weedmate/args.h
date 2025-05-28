@@ -11,10 +11,11 @@
 
 // === Structs/Enums ===
 typedef enum cmdtype_e {
-	CMD_NONE,
 	CMD_DELETE,
+	CMD_CREATE,
 	CMD_HELP,
-	CMD_VERSION
+	CMD_VERSION,
+	CMD_NONE
 } cmdtype_e;
 
 typedef struct argmap_t {
