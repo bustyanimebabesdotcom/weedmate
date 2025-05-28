@@ -16,7 +16,6 @@
  * DO NOT workaround this on non-glibc platforms (portability risk).
  */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <weedmate/args.h>
