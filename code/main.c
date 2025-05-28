@@ -28,8 +28,8 @@ int main ( int argc, char *argv[] ) {
 	if ( handleArgs( argc, argv ) != ARGS_NOT_HANDLED ) return EXIT_CODE;
 	
 	loadSaveFile();
-	atexit(exitWeedMate);		// Make sure program runs exit function to leave alternate screen buffer
-	installSignalHandlers();	// Make sure we can catch CTRL-Z, CTRL-C, CTRL-D, etc...
+	atexit(exitWeedMate);
+	installSignalHandlers();
 	
 	int useColor = isatty(STDOUT_FILENO);
 
@@ -44,7 +44,6 @@ int main ( int argc, char *argv[] ) {
 
 			case 'm':
 			case 'M':
-				// Prints menu
 				CLEAR_SCREEN();
 				motd();
 				break;
