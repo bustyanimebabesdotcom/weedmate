@@ -1,17 +1,9 @@
-/*
- * main.c — Terminal ritual grounds for WeedMate
- * Functions live in:       functions.c
- * Input handling:			input.c
- *							input.h
- * Structs:					data.c
- * Strain logic:			strains.c
- * Signals:					signals.c
- * Declarations:   			common.h
- * Macros:					macros.h
- * project:					weedmate
- * 
+// main.c
+// project: weedmate
+
+/** 
  * NOTE: glibc lazily allocates 1KB buffer for stdout.
- * This triggers a false leak warning in Heaptrack.
+ * This triggers a false leak warning in Heaptrack for 2KB.
  * Harmless - OS reclaims it at exit.
  * DO NOT workaround this on non-glibc platforms (portability risk).
  */

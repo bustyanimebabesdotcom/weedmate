@@ -1,5 +1,10 @@
-// terminal.h - contains ANSI escape codes. Hacky as FUCK.
+// terminal.h
 // project: weedmate
+
+/**
+ * NOTE: This file is full of macros and is by design extremely hacky
+ * There are guaranteed better ways to do this. 
+ */
 
 #ifndef TERMINAL_H_
 #define TERMINAL_H_

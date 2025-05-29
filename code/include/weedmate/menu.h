@@ -6,4 +6,4 @@
 
 void initMenu ( void );
 
-#endif
+#endif // MENU_H_
