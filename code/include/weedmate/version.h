@@ -6,7 +6,7 @@
 
 #define WEEDMATE_VERSION_MAJOR		0
 #define WEEDMATE_VERSION_MINOR		1
-#define WEEDMATE_VERSION_PATCH		0
+#define WEEDMATE_VERSION_PATCH		5
 
 #define _STR(x) 	#x
 #define STR(x) 		_STR(x)
