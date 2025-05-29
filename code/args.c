@@ -17,6 +17,8 @@ static const argmap_t commandMap[] = {
 	{ NULL,	NULL,		NULL,						CMD_NONE	}
 };
 
+
+
 // === Declarations for file structure ===
 static void showHelp			( void );
 static cmdtype_e parseCommand	( const char *arg );
@@ -24,7 +26,10 @@ static void printVersion		( void );
 static void deleteSaveFile		( void );
 static void createSaveFile		( void );
 
+
+
 // === Code ===
+
 int handleArgs ( int argc, char *argv[] ) {
 
 	if ( argc < 2 ) return ARGS_NOT_HANDLED;
@@ -58,6 +63,8 @@ int handleArgs ( int argc, char *argv[] ) {
 	}
 }
 
+
+
 static cmdtype_e parseCommand ( const char *arg ) {
 
 	if ( !arg ) return CMD_NONE;
@@ -72,12 +79,16 @@ static cmdtype_e parseCommand ( const char *arg ) {
 	return CMD_NONE;
 }
 
+
+
 void deleteSaveFile ( void ) {
 	
 	removeSaveFile() == 0
 		? printf( "Deleted %s successfully.\n", SAVE_FILE_NAME )
 		: fputs( "No save file found on disk.\n", stderr );
 }
+
+
 
 void createSaveFile ( void ) {
 
@@ -94,6 +105,7 @@ void createSaveFile ( void ) {
 }
 
 
+
 static void printVersion ( void ) {
 
 	printf(
@@ -106,6 +118,8 @@ static void printVersion ( void ) {
 		WEEDMATE_VERSION_STRING
 	);
 }
+
+
 
 static void showHelp ( void ) {
 

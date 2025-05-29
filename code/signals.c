@@ -41,6 +41,8 @@ static void on_stop( int signo ) {
 	raise(signo);
 }
 
+
+
 /**
  * on_cont - Handles resume signal (SIGCONT).
  * Re-enters alternate screen mode.
@@ -50,6 +52,8 @@ static void on_cont( int signo ) {
 	(void)signo; // Unused
 	ENTER_ALT_SCREEN();
 }
+
+
 
 /**
  * installSignalHandlers - Installs all signal handlers needed for alt screen support.

@@ -40,6 +40,8 @@ static void printError ( const char *msg ) {
 	fputs( msg, stderr );
 }
 
+
+
 /**
  * drainStdin - Drains leftover input from stdin to prevent buffer overflows.
  * Reads until newline or EOF is encountered
@@ -53,6 +55,8 @@ static void drainStdin ( void ) {
 	while ( ( ch = getchar() ) != '\n' && ch != EOF )
 		; // Empty loop body, smaller than {}
 }
+
+
 
 /**
  * readByteInput - read up to maxLen bytes from stdin into buffer, 
@@ -99,6 +103,8 @@ static int readByteInput ( char *buf, size_t maxLen, size_t *outLen ) {
 	return 0;
 }
 
+
+
 /**
  * getIntInput - a safer alternative to scanf for integers
  *
@@ -134,6 +140,8 @@ int getIntInput ( void ) {
 		return (int)value;
 	}
 }
+
+
 
 /**
  * getUIntInput - a safer alternative to scanf for unsigned integers
@@ -176,6 +184,8 @@ unsigned int getUIntInput ( void ) {
 	}
 }
 
+
+
 /**
  * getFloatInput - a safer alternative to scanf for floating point numbers
  *
@@ -213,6 +223,8 @@ float getFloatInput ( void ) {
 	}
 }
 
+
+
 /**
  * getDoubleInput - a safer alternative to scanf for doubles
  *
@@ -248,6 +260,8 @@ double getDoubleInput ( void ) {
 		return value;
 	}
 }
+
+
 
 /**
  * getLongInput - a safer alternative to scanf for longs
@@ -285,6 +299,8 @@ long getLongInput ( void ) {
 	}
 }
 
+
+
 /**
  * getULongInput - a safer alternative to scanf for unsigned longs
  *
@@ -320,6 +336,8 @@ unsigned long getULongInput ( void ) {
 		return value;
 	}
 }
+
+
 
 /**
  * getLongLongInput - a safer alternative to scanf for long longs
@@ -357,6 +375,8 @@ long long getLongLongInput ( void ) {
 	}
 }
 
+
+
 /**
  * getULongLongInput - a safer alternative to scanf for unsigned long longs
  *
@@ -393,6 +413,8 @@ unsigned long long getULongLongInput ( void ) {
 	}
 }
 
+
+
 /**
  * getCharInput - a safer alternative to scanf for chars
  *
@@ -420,6 +442,8 @@ int getCharInput ( void ) {
 
 	}
 }
+
+
 
 /**
  * getCharInputFiltered - a safer alternative to scanf for chars
@@ -466,6 +490,8 @@ int getCharInputFiltered ( const char *allowed ) {
 		
 	}
 }
+
+
 
 /**
  * getCStringInput - allocates and returns a line of user input from stdin
@@ -514,6 +540,8 @@ char *getCStringInput ( void ) {
 	return str;
 }
 
+
+
 /**
  * getStringInput - reads a line from stdin into a heap-allocated string_s
  * 
@@ -557,6 +585,8 @@ string_s getStringInput ( void ) {
 	str.len = len;
 	return str;
 }
+
+
 
 /**
  * getBoolInput - a safer alternative to scanf for boolean values

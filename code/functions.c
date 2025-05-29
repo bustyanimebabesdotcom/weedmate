@@ -41,6 +41,8 @@ void selectCity ( void ) {
 	saveToFile();
 }
 
+
+
 /**
  * exitWeedMate - Displays goodbye message and exits alt screen mode.
  *
@@ -51,6 +53,8 @@ void exitWeedMate ( void ) {
 	CLEAR_SCREEN();
 	EXIT_ALT_SCREEN();
 }
+
+
 
 /**
  * budTenderSanityCheck - Validates logical price constraints for a strain.
@@ -81,6 +85,8 @@ static budtender_e budTenderSanityCheck ( int x ) {
 
 	return BUDTENDER_OK;
 }
+
+
 
 /**
  * budTenderMenu - Allows the user to update strain prices.
@@ -136,6 +142,8 @@ void budTenderMenu ( void ) {
 	saveToFile();
 }
 
+
+
 /**
  * weedCalcInput - handles input for weedcalc
  *
@@ -166,6 +174,8 @@ static bool weedCalcInput ( int *a, char *mod, int *b ) {
 	*b = y;
 	return true;
 }
+
+
 
 /*
  * doCalculation - performs basic arithmetic operations for weedCalc
@@ -200,6 +210,8 @@ static double doCalculation ( int a, char mod, int b, bool *success ) {
 		}
 	}
 }
+
+
 
 /** 
  * weedCalc - simple calculator, self explanatory.  

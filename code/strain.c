@@ -21,6 +21,8 @@ static void printStrainPriceMessage ( int choice, const char* tense ) {
 	}
 }
 
+
+
 /**
  * printStrainPrice - Prints the price of a specific strain.
  *
@@ -31,6 +33,8 @@ static void printStrainPrice ( int choice ) {
 	printStrainPriceMessage( choice, "is" );
 }
 
+
+
 /**
  * printNewStrainPrice - Displays updated price info for a strain.
  *
@@ -40,6 +44,8 @@ void printNewStrainPrice ( int choice ) {
 
 	printStrainPriceMessage( choice, "has been changed to" );
 }
+
+
 
 /**
  * printStrainList - Displays a formatted list of all strains and their prices.
@@ -68,6 +74,8 @@ void printStrainList ( void ) {
 	printf( "\nYour current city is: " YELLOW "%s" RESET ".\n", cities[currentCityIndex].name );
 }
 
+
+
 /**
  * strainPriceAdjust - Lets you quickly double or halve all strain prices
  * 
@@ -85,6 +93,7 @@ void strainPriceAdjust ( strain_s* strains, int mode ) {
 
 	saveToFile();
 }
+
 
 
 /**
@@ -110,6 +119,7 @@ int getStrainChoice( void ) {
 
 	return choice;
 }
+
 
 
 /**
@@ -147,6 +157,8 @@ void handleStrainPriceLookup ( void ) {
 		break;
 	}
 }
+
+
 
 /** 
  * renameStrain - prompts user to select and rename a strain entry

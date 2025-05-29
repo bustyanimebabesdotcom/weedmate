@@ -5,12 +5,16 @@
 
 int currentCityIndex = 3;
 
+
+
 city_s cities[CITY_COUNT] = {
 	{ "Detroit", 			0.65f },
 	{ "San Francisco",		1.95f },
 	{ "Minneapolis",		1.30f },
 	{ "Denver",				1.02f }
 };
+
+
 
 strain_s strains[STRAIN_COUNT] = {
 	{ "White Death",			13 },

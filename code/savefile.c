@@ -18,6 +18,7 @@ static void handleSaveData			( const char *section, const char *key, const char 
 static int parseLine				( FILE *file, char *line, char *section );
 
 // === Code ===
+
 void saveToFile ( void ) {
 
 	// Open a file with the name assigned in macros.h. The 'w' means we're writing to file.
@@ -33,6 +34,8 @@ void saveToFile ( void ) {
 	writeSaveData( file );
 	fclose( file );
 }
+
+
 
 void loadSaveFile ( void ) {
 
@@ -53,6 +56,8 @@ void loadSaveFile ( void ) {
 	fclose( file );
 }
 
+
+
 /**
  * writeSaveHeader - writes file header to savefile
  */
@@ -63,6 +68,8 @@ static void writeSaveHeader ( FILE *file ) {
 	fprintf( file, "# If you screw too much with the formatting,\n");
 	fprintf( file, "# the save file will be deleted upon launch.\n");
 }
+
+
 
 static void writeSaveData ( FILE *file ) {
 
@@ -88,26 +95,41 @@ static void writeSaveData ( FILE *file ) {
 	fprintf( file, "\n[City]\nindex=%d\n", currentCityIndex );
 }
 
+
+
+static int fastParseInt ( const char *s ) {
+
+	int n = 0;
+	for ( ; *s >= '0' && *s <= '9'; s++ )
+		n = n * 10+( *s - '0' );
+
+	return n;
+}
+
+
+
 static void handleSaveData ( const char *section, const char *key, const char *value, size_t len ) {
 
 	// Copy names in [Strains]
 	if ( strcmp( section, "Strains" ) == 0 && strncmp( key, "strain_", 7 ) == 0 ) {
-		int i = atoi( key+7 )-1;
+		int i = fastParseInt( key+7 )-1;
 		if ( i >= 0 && i < STRAIN_COUNT ) memcpy( strains[i].name, value, len+1 );
 	}
 
 	// Load prices in [Prices]
 	else if ( strcmp( section, "Prices" ) == 0 && strncmp( key, "price_", 6 ) == 0 ) {
-		int i = atoi( key+6 )-1;
+		int i = fastParseInt( key+6 )-1;
 		if ( i >= 0 && i < STRAIN_COUNT ) strains[i].price = (unsigned)strtoul( value, NULL, 10 );
 	}
 	
 	// Load city index in [City]
 	if ( strcmp( section, "City" ) == 0 && strcmp( key, "index" ) == 0 ) {
-		int i = atoi( value );
+		int i = fastParseInt( value );
 		if ( i >= 0 && i < CITY_COUNT ) currentCityIndex = i;
 	}
 }
+
+
 
 static int parseLine ( FILE *file, char *line, char *section ) {
 	
@@ -141,6 +163,8 @@ static int parseLine ( FILE *file, char *line, char *section ) {
 	return 0; // OK
 }
 
+
+
 static void handleCorruptSaveFile ( FILE *file, const char *msg ) {
 
 	int useColor = isatty(STDOUT_FILENO);
@@ -162,6 +186,8 @@ static void handleCorruptSaveFile ( FILE *file, const char *msg ) {
 	EXIT_ALT_SCREEN();
 }
 
+
+
 int removeSaveFile ( void ) {
 	
 	FILE *file = fopen( SAVE_FILE_NAME, "r" );
@@ -170,6 +196,8 @@ int removeSaveFile ( void ) {
 
 	return remove( SAVE_FILE_NAME );
 }
+
+
 
 static void waitForAnyKey ( void ) {
 	
