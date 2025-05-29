@@ -127,13 +127,8 @@ int getIntInput ( void ) {
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
 		
-		if ( endptr == buffer || *endptr != '\0' ) {
-			printError( "Invalid number. Try again.\n" );
-			continue;
-		}
-
-		if ( errno == ERANGE || value != (int)value ) {
-			printError( "Value out of range. Try again.\n" );
+		if ( endptr == buffer || *endptr != '\0' || errno == ERANGE || value != (int)value ) {
+			printError( "Invalid input. Try again.\n" );
 			continue;
 		}
 
@@ -162,21 +157,16 @@ unsigned int getUIntInput ( void ) {
 		if ( readByteInput( buffer, sizeof(buffer) - 1, &len )) return UINT_MAX;
 		buffer[len] = '\0';
 
-		if ( buffer[0] == '-' ) {
-			printError( "Invalid number. Try again.\n" );
-			continue;
-		}
-
 		errno = 0;
 		value = strtoul( buffer, &endptr, 10 );
 
-		if ( endptr == buffer || *endptr != '\0') {
-			printError( "Invalid number. Try again.\n" );
+		if ( buffer[0] == '-' ) {
+			printError( "Value can not be negative.\n" );
 			continue;
 		}
-		
-		if ( errno == ERANGE || value > UINT_MAX ) {
-			printError( "Value out of range. Try again.\n" );
+
+		if ( endptr == buffer || *endptr != '\0' || errno == ERANGE || value > UINT_MAX ) {
+			printError( "Invalid input. Try again.\n" );
 			continue;
 		}
 
@@ -209,16 +199,11 @@ float getFloatInput ( void ) {
 		// Convert string to float. 'endptr' is set to the first invalid character after the number.
 		value = strtof( buffer, &endptr );
 
-		if ( endptr == buffer || *endptr != '\0') {
-			printError( "Invalid number. Try again." );
+		if ( endptr == buffer || *endptr != '\0' || errno == ERANGE || !isfinite( value )) {
+			printError( "Invalid input. Try again.\n" );
 			continue;
 		}
 
-		if ( errno == ERANGE || !isfinite( value ) ) {
-			printError( "Number out of range. Try again.\n" );
-			continue;
-		}
-	
 		return value;
 	}
 }
@@ -247,13 +232,8 @@ double getDoubleInput ( void ) {
 		errno = 0;
 		value = strtod( buffer, &endptr );
 		
-		if ( endptr == buffer || *endptr != '\0' ) {
-			printError( "Invalid number. Try again.\n" );
-			continue;
-		}
-
-		if ( errno == ERANGE || !isfinite( value ) ) {
-			printError( "Value out of range. Try again.\n" );
+		if ( endptr == buffer || *endptr != '\0' || errno == ERANGE || !isfinite( value )) {
+			printError( "Invalid input. Try again.\n" );
 			continue;
 		}
 
@@ -285,13 +265,8 @@ long getLongInput ( void ) {
 		errno = 0;
 		value = strtol( buffer, &endptr, 10 );
 		
-		if ( endptr == buffer || *endptr != '\0' ) {
-			printError( "Invalid number. Try again.\n" );
-			continue;
-		}
-
-		if ( errno == ERANGE ) {
-			printError( "Value out of range. Try again.\n" );
+		if ( endptr == buffer || *endptr != '\0' || errno == ERANGE) {
+			printError( "Invalid input. Try again.\n" );
 			continue;
 		}
 
@@ -323,13 +298,8 @@ unsigned long getULongInput ( void ) {
 		errno = 0;
 		value = strtoul( buffer, &endptr, 10 );
 		
-		if ( endptr == buffer || *endptr != '\0' ) {
-			printError( "Invalid number. Try again.\n" );
-			continue;
-		}
-
-		if ( errno == ERANGE ) {
-			printError( "Value out of range. Try again.\n" );
+		if ( endptr == buffer || *endptr != '\0' || errno == ERANGE ) {
+			printError( "Invalid input. Try again.\n" );
 			continue;
 		}
 
@@ -361,13 +331,8 @@ long long getLongLongInput ( void ) {
 		errno = 0;
 		value = strtoll( buffer, &endptr, 10 );
 		
-		if ( endptr == buffer || *endptr != '\0' ) {
-			printError( "Invalid number. Try again.\n" );
-			continue;
-		}
-
-		if ( errno == ERANGE ) {
-			printError( "Value out of range. Try again.\n" );
+		if ( endptr == buffer || *endptr != '\0' || errno == ERANGE ) {
+			printError( "Invalid input. Try again.\n" );
 			continue;
 		}
 
@@ -399,13 +364,8 @@ unsigned long long getULongLongInput ( void ) {
 		errno = 0;
 		value = strtoull( buffer, &endptr, 10 );
 		
-		if ( endptr == buffer || *endptr != '\0' ) {
-			printError( "Invalid number. Try again.\n" );
-			continue;
-		}
-
-		if ( errno == ERANGE ) {
-			printError( "Value out of range. Try again.\n" );
+		if ( endptr == buffer || *endptr != '\0' || errno == ERANGE ) {
+			printError( "Invalid input. Try again.\n" );
 			continue;
 		}
 
