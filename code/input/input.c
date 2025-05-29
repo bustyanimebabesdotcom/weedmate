@@ -98,7 +98,7 @@ static int readByteInput ( char *buf, size_t maxLen, size_t *outLen ) {
 	}
 
 	// If EOF before any byte read, signal EOF
-	if ( c == EOF && i == 0 ) return -1;
+	if ( c == EOF && i == 0 ) return EOF;
 
 	return 0;
 }

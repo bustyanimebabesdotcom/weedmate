@@ -11,14 +11,13 @@
 static void printStrainPriceMessage ( int choice, const char* tense ) {
 
 	CLEAR_SCREEN();
-	if ( choice >= 0 && choice < STRAIN_COUNT ) {
-	printf( "The price of Strain #%d - " YELLOW "%s" RESET " %s $%s%u%s/g\n", 
-		choice + USER_INPUT_OFFSET,
-		strains[choice].name, tense,
-		GREEN,
-		strains[choice].price,
-		RESET );
-	}
+	if ( choice >= 0 && choice < STRAIN_COUNT )
+		printf( "The price of Strain #%d - " YELLOW "%s" RESET " %s $%s%u%s/g\n", 
+			choice + USER_INPUT_OFFSET,
+			strains[choice].name, tense,
+			GREEN,
+			strains[choice].price,
+			RESET );
 }
 
 
@@ -140,14 +139,8 @@ void handleStrainPriceLookup ( void ) {
 			break;
 		}
 
-		if ( choice == 0 ) {
-			CLEAR_SCREEN();
-			puts("Canceled strain search...");
-			break;
-		}
-
 		if ( choice < 1 || choice > STRAIN_COUNT ) {
-			printf( "Try Again.\n" );
+			printf( "That number is not on the list. Please pick a valid number.\n" );
 			continue;
 		}
 

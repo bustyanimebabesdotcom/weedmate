@@ -30,7 +30,7 @@ void selectCity ( void ) {
 	printf( "\nPlease select your location ( 1-%d )\n\n> ", CITY_COUNT );
 	int choice = getIntInput();
 
-	if (choice >= 1 && choice <= CITY_COUNT) currentCityIndex = choice - 1;
+	if ( choice >= 1 && choice <= CITY_COUNT ) currentCityIndex = choice-1;
 
 	CLEAR_SCREEN();
 	printf( "Your location has been set to: %s%s%s.\n", 
@@ -145,33 +145,28 @@ void budTenderMenu ( void ) {
 
 
 /**
- * weedCalcInput - handles input for weedcalc
+ * CalcInput - handles input for weedcalc
  *
  * Lets the user input first number, second number, and a modifier
  */
-static bool weedCalcInput ( int *a, char *mod, int *b ) {
-
-	int x, y;
-	int m;
+static bool calcInput ( int *a, char *op, int *b ) {
 
 	CLEAR_SCREEN();
 	printf( "Enter your first " GREEN "number" RESET ".\n\n> " );
-	x = getIntInput();
-	if ( x == INT_MIN ) return false;
+	*a = getIntInput();
+	if ( *a == INT_MIN ) return false;
 
 	CLEAR_SCREEN();
-	printf( "Enter your modifier ( " YELLOW "+ - * /" RESET " ).\n\n> " );
-	m = getCharInputFiltered("+-*/");
-	if ( m == EOF ) return false;
+	printf( "Enter your operator ( " YELLOW "+ - * /" RESET " ).\n\n> " );
+	int inputChar = getCharInputFiltered("+-*/");
+	if ( inputChar == EOF ) return false;
+	*op = (char)inputChar;
 
 	CLEAR_SCREEN();
 	printf( "Enter your second " GREEN "number" RESET ".\n\n> " );
-	y = getIntInput();
-	if ( y == INT_MIN ) return false;
+	*b = getIntInput();
+	if ( *b == INT_MIN ) return false;
 
-	*a = x;
-	*mod = (char)m;
-	*b = y;
 	return true;
 }
 
@@ -182,64 +177,50 @@ static bool weedCalcInput ( int *a, char *mod, int *b ) {
  *
  * No input, automates the process.
  */
-static double doCalculation ( int a, char mod, int b, bool *success ) {
+static float doCalculation ( int a, char op, int b, bool *success ) {
 	
 	*success = true;
 
-	switch ( mod ) {
-
+	switch ( op ) {
 		case '+': return a + b;
 		case '-': return a - b;
 		case '*': return a * b;
-		case '/': {
+
+		case '/':
 			if ( b == 0 ) {
 				CLEAR_SCREEN();
 				puts( "You cannot divide by 0!" );
 				*success = false;
 				return DECIMAL_EXIT;
 			}
+			return (float)a / b;
 
-			return (double)a / b;
-		}
-
-		default: {
+		default:
 			CLEAR_SCREEN();
 			fputs( "Invalid input or EOF detected. Function aborted.\n", stderr );
 			*success = false;
 			return DECIMAL_EXIT;
-		}
 	}
 }
 
 
 
 /** 
- * weedCalc - simple calculator, self explanatory.  
+ * weedCalc - simple calculator
  */
 void weedCalc ( void ) {
 
-	// declare variables
-	int num1 = 0;
-	int num2 = 0;
-	char mod = 0;
-	double result = 0.0;
+	int a = 0, b = 0;
+	char op = 0;
+	float result = 0.0;
 	bool success = false;
 
-	// take user input, and perform arithmetic operation
-	weedCalcInput( &num1, &mod, &num2 );
-	result = doCalculation( num1, mod, num2, &success );
+	calcInput( &a, &op, &b );
+	result = doCalculation( a, op, b, &success );
+	if ( !success ) return;
 
-	if ( !success ) {
-		// Error handled by doCalculation
-		return;
-	}
-
-	// print result
 	CLEAR_SCREEN();
 	printf( "Your number is: " );
-	if ( mod == '/' ) {
-		printf( "%.8f\n", result );
-	} else {
-		printf( "%d\n", (int)result );
-	}
+	if ( op == '/' ) printf( "%.6f\n", result );
+	else printf( "%d\n", (int)result );
 }

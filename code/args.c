@@ -28,8 +28,6 @@ static void createSaveFile		( void );
 
 
 
-// === Code ===
-
 int handleArgs ( int argc, char *argv[] ) {
 
 	if ( argc < 2 ) return ARGS_NOT_HANDLED;
@@ -59,7 +57,6 @@ int handleArgs ( int argc, char *argv[] ) {
 				"Try 'weedmate --help' for more information.\n"
 			);
 			return ARGS_INVALID;
-
 	}
 }
 

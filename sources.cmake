@@ -1,5 +1,6 @@
 set(WEEDMATE_SOURCES
 	code/main.c
+	code/menu.c
 	code/signals.c
 	code/functions.c
 	code/savefile.c
