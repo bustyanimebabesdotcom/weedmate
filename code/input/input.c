@@ -414,8 +414,8 @@ int getCharInput ( void ) {
  */
 int getCharInputFiltered ( const char *allowed ) {
 
-	if ( allowed == NULL ){
-		printError( "getCharInputFiltered(): NULL passed to 'allowed'. Exiting.\n" );
+	if ( !allowed ){
+		printError( "ERROR: NULL passed to 'allowed'.\n" );
 		exit(EXIT_FAILURE);
 	}
 
