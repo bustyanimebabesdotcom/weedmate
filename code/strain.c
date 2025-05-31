@@ -183,12 +183,15 @@ void renameStrain( void ) {
 		fprintf( stderr, "Invalid strain number. Must be between 1-%d!\n", STRAIN_COUNT );
 		return;
 	}
+
+	strain_s *s = &strains[slot-USER_INPUT_OFFSET];
 	
 	// Get strain name from user
 	CLEAR_SCREEN();
+
 	printf( "Enter new name for strain #%d, '" YELLOW "%s" RESET "'.\n\n> ", 
 		slot, 
-		strains[slot-USER_INPUT_OFFSET].name );
+		s->name );
 
 	// Read user input into a struct with .data (heap pointer) and .len (byte count)
 	string_s str = getStringInput();
@@ -215,7 +218,7 @@ void renameStrain( void ) {
 	}
 
 	// Prevent buffer overflow, ensure input fits (including '\0')
-	if( len+1 > sizeof(strains[0].name) ) {
+	if( len+1 > sizeof( s->name ) ) {
 		fputs( "Input too long. Max 20 characters.\n", stderr );
 		free(str.data);
 		str.data = NULL;
@@ -223,12 +226,12 @@ void renameStrain( void ) {
 	}
 
 	// Copy string from heap to struct, manually add null terminator
-	memcpy( strains[slot-USER_INPUT_OFFSET].name, str.data, len );
-	strains[slot-USER_INPUT_OFFSET].name[len] = '\0';
+	memcpy( s->name, str.data, len );
+	s->name[len] = '\0';
 	
 	// Display success message
 	CLEAR_SCREEN();
-	fprintf( stdout, "Strain name '" YELLOW "%s" RESET"' successfully applied to slot #%d\n", strains[slot-USER_INPUT_OFFSET].name, slot );
+	fprintf( stdout, "Strain name '" YELLOW "%s" RESET"' successfully applied to slot #%d\n", s->name, slot );
 
 	// Free the pointer
 	free(str.data);

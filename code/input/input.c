@@ -15,7 +15,8 @@
  * TODO: 		Wrap more copy pasted shit into helpers.
  * TODO: 		Optimize codebase where possible.
  * PHASE 2 PLAN
- * COMPLETE:	Implement string handling without null terminator. Byte for byte getchar() loop in a function that returns a string_s
+ * COMPLETE:	Implement string handling without null terminator. 
+ *				Byte for byte getchar() loop in a function that returns a string_s
  *
  * You are free to use this in any project, commercial or personal.
  * Attribution is appreciated but not required.
@@ -35,7 +36,7 @@
 /**
  * printError - calls fputs into stderr, simple wrapper
  */
-static void printError ( const char *msg ) {
+static inline void printError ( const char *msg ) {
 
 	fputs( msg, stderr );
 }
@@ -48,12 +49,12 @@ static void printError ( const char *msg ) {
  * 
  * called by readByteInput()
  */
-static void drainStdin ( void ) {
+static inline void drainStdin ( void ) {
 
-	int ch;
-	// Read and discard characters until newline or EOF
-	while ( ( ch = getchar() ) != '\n' && ch != EOF )
-		; // Empty loop body, smaller than {}
+	int c;
+
+	while ( ( c = getchar_unlocked() ) != '\n' && c != EOF )
+		;
 }
 
 
@@ -71,33 +72,27 @@ static void drainStdin ( void ) {
  * 		1 - on error ( NULL buf or outLen, or maxLen < 1 )
  *	   -1 - on EOF ( caller should check and handle appropriately )
  */
-static int readByteInput ( char *buf, size_t maxLen, size_t *outLen ) {
+static inline int readByteInput ( char *buf, size_t maxLen, size_t *outLen ) {
 
-	// Validate parameters
 	if ( !buf || !outLen || maxLen < 1 ) return 1;
 
-	// Init byte counter and input char
 	size_t i = 0;
 	int c;
 
-	// Read up to maxLen bytes, stopping at newline or EOF
 	for ( ; i < maxLen; i++ ) {
-		c = getchar();
+		c = getchar_unlocked();
 		if ( c == '\n' || c == EOF ) break;
 		buf[i] = (char)c;
 	}
 
-	// Store number of bytes read
 	*outLen = i;
 
-	// If buffer filled without newline or EOF, flush excess input
 	if ( i == maxLen && c != '\n' && c != EOF ) {
 		drainStdin();
 		printError( "Input exceeding buffer size. Try again.\n" );
 		return 1;
 	}
 
-	// If EOF before any byte read, signal EOF
 	if ( c == EOF && i == 0 ) return EOF;
 
 	return 0;
@@ -196,7 +191,6 @@ float getFloatInput ( void ) {
 		buffer[len] = '\0';
 
 		errno = 0;
-		// Convert string to float. 'endptr' is set to the first invalid character after the number.
 		value = strtof( buffer, &endptr );
 
 		if ( endptr == buffer || *endptr != '\0' || errno == ERANGE || !isfinite( value )) {
@@ -443,7 +437,6 @@ int getCharInputFiltered ( const char *allowed ) {
 
 		char c = buffer[0];
 
-		// Return if character is in allowed set
 		if ( strchr( allowed, c ) != NULL ) return (unsigned char)c;
 	
 		fprintf( stderr, "Invalid input. Allowed: %s\n", allowed );
@@ -471,8 +464,9 @@ int getCharInputFiltered ( const char *allowed ) {
  *		input = NULL;
  *	}
  *
- * NOTE: 	we use memcpy() because it copies exactly len + 1 bytes from buffer, avoiding overflow and termination issues.
- * 			the overhead is worth it in this case for the safety is provides over strcpy() or strncpy()
+ * NOTE: 	we use memcpy() because it copies exactly len + 1 bytes from buffer, 
+ *			avoiding overflow and termination issues.
+ * 			the overhead is minimal, memcpy() is well optimized.
  * 
  * returns NULL on error or EOF
  */

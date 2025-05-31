@@ -5,16 +5,17 @@ cmake_minimum_required(VERSION 3.10)
 project(weedmate)
 
 # Compiler
-set(CMAKE_C_COMPILER gcc)
+set(CMAKE_C_COMPILER clang)
 
 # Compiler flags
 set(CMAKE_C_FLAGS "-Wall -Wextra -Wpedantic -Werror")
 
 # Release flags
-set(CMAKE_C_FLAGS_RELEASE "-O3")
+set(CMAKE_C_FLAGS_RELEASE "-O3 -march=native -flto")
 
 # Debug flags
-set(CMAKE_C_FLAGS_DEBUG "-g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer")
+#set(CMAKE_C_FLAGS_DEBUG "-g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer")
+set(CMAKE_C_FLAGS_DEBUG "-g3 -O0 -fno-omit-frame-pointer -fno-inline")
 
 # C standard
 set(CMAKE_C_STANDARD 99)
