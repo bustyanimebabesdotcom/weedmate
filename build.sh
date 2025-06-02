@@ -21,8 +21,7 @@ cd "$BUILD_DIR"
 # Select build system
 echo -e "\n[\e[33m?\e[0m] Select your build system:\n"
 echo -e "    \e[32m1\e[0m. Ninja"
-echo -e "    \e[32m2\e[0m. Make"
-echo
+echo -e "    \e[32m2\e[0m. Make\n"
 read -rp "> " choice
 
 case "$choice" in
