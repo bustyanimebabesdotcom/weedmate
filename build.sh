@@ -1,11 +1,9 @@
 #!/bin/bash
-
-# Die on error
 set -e
 
 BUILD_DIR="build"
 
-# Initial setup
+# Init
 echo -e "[\e[33m*\e[0m] Checking for build directory..."
 
 if [ -d "$BUILD_DIR" ]; then
@@ -20,7 +18,7 @@ echo -e "[\e[32m+\e[0m] Creating build directory..."
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 
-# Pick build system
+# Select build system
 echo -e "\n[\e[33m?\e[0m] Select your build system:\n"
 echo -e "    \e[32m1\e[0m. Ninja"
 echo -e "    \e[32m2\e[0m. Make"
@@ -43,33 +41,25 @@ case "$choice" in
 		;;
 esac
 
-# Remove prompt lines w options
-for _ in {1..6}; do
-	tput cuu1	# Move cursor up
-	tput el		# Erase line
-done
+# Clean up build system prompt
+for _ in {1..6}; do tput cuu1; tput el; done
 
 # Run cmake
 echo -e "[\e[32m+\e[0m] Running CMake with Clang and $GENERATOR..."
-CC=clang \
-cmake -G "$GENERATOR" \
+CC=clang cmake -G "$GENERATOR" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
     ..
 
-echo -e "\n[\e[33m?\e[0m] Build now? [y/N]"
-echo
+echo -e "\n[\e[33m?\e[0m] Build now? [y/N]\n"
 read -rp "> " BUILD_NOW
 
-# Remove prompt lines w options
-for _ in {1..3}; do
-	tput cuu1	# Move cursor up
-	tput el		# Erase line
-done
+# Clean up build prompt
+for _ in {1..3}; do tput cuu1; tput el; done
 
 # Finish
 if [[ "$BUILD_NOW" =~ ^[Yy]$ ]]; then
-    echo -e "[\e[32m+\e[0m] Building weedmate with $GENERATOR..."
+    echo -e "[\e[32m+\e[0m] Building project with $GENERATOR..."
     if $BUILD_CMD; then
     	echo -e "\n[\e[32m!\e[0m] Build complete."
 	else
