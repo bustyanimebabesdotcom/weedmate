@@ -63,7 +63,7 @@ WeedMate supports a few **standard CLI arguments**.
 - `-r`, `--remove`  
   Delete save file.
 
-- 'c', '--create'
+- `c`, `--create`
   Create save file.
   
 - `-h`, `--help`  
