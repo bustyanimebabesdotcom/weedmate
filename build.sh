@@ -19,13 +19,10 @@ say() {
 # Init
 say "*" $YELLOW "Checking for build directory..."
 
-if [ -d "$BUILD_DIR" ]; then
+[ -d "$BUILD_DIR" ] && {
 	say "!" $RED "Deleting existing build directory..."
     rm -rf "$BUILD_DIR"
-
-else
-	say "+" $GREEN "No build directory found..."
-fi
+} || say "+" $GREEN "No build directory found..."
 
 say "+" $GREEN "Creating build directory..."
 echo
@@ -70,17 +67,13 @@ echo
 say "?" $YELLOW "Build now? [y/N]"
 echo
 read -rp "> " BUILD_NOW
-
-# Default to "n" if empty input
-if [[ -z "$BUILD_NOW" ]]; then
-	BUILD_NOW="n"
-fi
+: "${BUILD_NOW:=n}"
 
 # Clean up build prompt
 for _ in {1..3}; do tput cuu1; tput el; done
 
 # Finish
-if [[ "$BUILD_NOW" =~ ^[Yy]$ ]]; then
+[[ "$BUILD_NOW" =~ ^[Yy]$ ]] && {
 	say "+" $GREEN "Building project with $GENERATOR..."
     if $BUILD_CMD; then
 		echo
@@ -90,6 +83,4 @@ if [[ "$BUILD_NOW" =~ ^[Yy]$ ]]; then
 		say "!" $RED "Build failed."
 		exit 1
 	fi
-else
-	say "~" $YELLOW "Build skipped. Run '$BUILD_CMD' later in ./build"
-fi
+} || say "~" $YELLOW "Build skipped. Run '$BUILD_CMD' later in ./build"
