@@ -63,6 +63,9 @@ WeedMate supports a few **standard CLI arguments**.
 - `-r`, `--remove`  
   Delete save file.
 
+- 'c', '--create'
+  Create save file.
+  
 - `-h`, `--help`  
   Show help message.
 
@@ -74,8 +77,23 @@ WeedMate supports a few **standard CLI arguments**.
 
 ## How to Build
 
-You need `cmake` and `make` or whatever other shit you use ( like `ninja` if you're based ):
+You need `cmake` and `make`, or 'ninja'.
 
+### Build script
+
+Included is a build script that you can run. It relies on clang, if you do not have clang, you can edit the script and comment out the 'CC=clang' line.
+
+To run it, simply do
+
+```bash
+chmod +x build.sh
+./build.sh
+
+```
+
+And it will do it for you. The script also generates 'compile_commands.json' for 'clangd'.
+
+### Manual
 ```bash
 mkdir build
 cd build
