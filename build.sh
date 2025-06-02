@@ -1,27 +1,43 @@
 #!/bin/bash
 set -e
-
 BUILD_DIR="build"
 
+# Colors
+RED=31
+GREEN=32
+YELLOW=33
+INDENT="    "
+
+say() {
+	local symbol="$1"
+	local color="$2"
+	local msg="$3"
+	local indent="${4:-}"
+	echo -e "${indent}[\e[${color}m${symbol}\e[0m] $msg"
+}
+
 # Init
-echo -e "[\e[33m*\e[0m] Checking for build directory..."
+say "*" $YELLOW "Checking for build directory..."
 
 if [ -d "$BUILD_DIR" ]; then
-    echo -e "[\e[31m!\e[0m] Deleting existing build directory..."
+	say "!" $RED "Deleting existing build directory..."
     rm -rf "$BUILD_DIR"
 
 else
-    echo -e "[\e[32m+\e[0m] No build directory found..."
+	say "+" $GREEN "No build directory found..."
 fi
 
-echo -e "[\e[32m+\e[0m] Creating build directory..."
+say "+" $GREEN "Creating build directory..."
+echo
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 
 # Select build system
-echo -e "\n[\e[33m?\e[0m] Select your build system:\n"
-echo -e "    \e[32m1\e[0m. Ninja"
-echo -e "    \e[32m2\e[0m. Make\n"
+say "?" $YELLOW "Select your build system:"
+echo
+say "1" $GREEN "Ninja" "$INDENT"
+say "2" $GREEN "Make" "$INDENT"
+echo
 read -rp "> " choice
 
 case "$choice" in
@@ -34,7 +50,6 @@ case "$choice" in
 		BUILD_CMD="make -j$(nproc)"
 		;;
 	*)
-		echo -e "[\e[31m!\e[0m] Invalid choice. Defaulting to Ninja."
 		GENERATOR="Ninja"
 		BUILD_CMD="ninja"
 		;;
@@ -44,27 +59,37 @@ esac
 for _ in {1..6}; do tput cuu1; tput el; done
 
 # Run cmake
-echo -e "[\e[32m+\e[0m] Running CMake with Clang and $GENERATOR..."
+say "+" $GREEN "Running CMake with Clang and $GENERATOR..."
 CC=clang cmake -G "$GENERATOR" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
     ..
 
-echo -e "\n[\e[33m?\e[0m] Build now? [y/N]\n"
+# Build prompt
+echo
+say "?" $YELLOW "Build now? [y/N]"
+echo
 read -rp "> " BUILD_NOW
+
+# Default to "n" if empty input
+if [[ -z "$BUILD_NOW" ]]; then
+	BUILD_NOW="n"
+fi
 
 # Clean up build prompt
 for _ in {1..3}; do tput cuu1; tput el; done
 
 # Finish
 if [[ "$BUILD_NOW" =~ ^[Yy]$ ]]; then
-    echo -e "[\e[32m+\e[0m] Building project with $GENERATOR..."
+	say "+" $GREEN "Building project with $GENERATOR..."
     if $BUILD_CMD; then
-    	echo -e "\n[\e[32m!\e[0m] Build complete."
+		echo
+		say "!" $GREEN "Build complete."
 	else
-		echo -e "\n[\e[31m!\e[0m] Build failed."
+		echo
+		say "!" $RED "Build failed."
 		exit 1
 	fi
 else
-    echo -e "[\e[33m~\e[0m] Build skipped. Run '$BUILD_CMD' later in ./build"
+	say "~" $YELLOW "Build skipped. Run '$BUILD_CMD' later in ./build"
 fi
