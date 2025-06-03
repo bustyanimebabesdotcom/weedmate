@@ -1,6 +1,7 @@
 .PHONY: all configure build install clean run script help debug
 
 # Defaults
+PROJECT_NAME		?= weedmate
 BUILD_DIR			?= build
 PREFIX				?= /usr/local
 CMAKE_BUILD_TYPE	?= Release
@@ -63,7 +64,7 @@ clean:
 	@rm -rf $(BUILD_DIR)
 
 run: build
-	@$(BUILD_DIR)/weedmate
+	@$(BUILD_DIR)/$(PROJECT_NAME)
 
 help:
 	@echo "Usage: make [OPTION]"
