@@ -16,6 +16,19 @@ say() {
 	echo -e "${indent}[\e[${color}m${symbol}\e[0m] $msg"
 }
 
+# Detect architecture and choose compiler
+UNAME_ARCH="$(uname -m)"
+case "$UNAME_ARCH" in
+	aarch64|arm64|armv7l|armv6l)
+		CC="gcc"
+		CC_NAME="GCC"
+		;;
+	*)
+		CC="clang"
+		CC_NAME="Clang"
+		;;
+esac
+
 # Init
 say "*" $YELLOW "Checking for build directory..."
 
@@ -56,8 +69,8 @@ esac
 for _ in {1..6}; do tput cuu1; tput el; done
 
 # Run cmake
-say "+" $GREEN "Running CMake with Clang and $GENERATOR..."
-CC=clang cmake -G "$GENERATOR" \
+say "+" $GREEN "Running CMake with $CC_NAME and $GENERATOR..."
+CC="$CC" cmake -G "$GENERATOR" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
     ..
