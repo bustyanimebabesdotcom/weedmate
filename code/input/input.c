@@ -504,7 +504,7 @@ char *getCStringInput ( void ) {
  * 
  * Safe usage example:
  * 
- * 		char str = getStringInput();
+ * 		string_ str = getStringInput();
  *
  *		if (!str.data) return;
  *		printf("%.*s", (int)str.len, str.data)
