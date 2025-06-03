@@ -4,8 +4,10 @@ cmake_minimum_required(VERSION 3.10)
 # Project name
 project(weedmate LANGUAGES C)
 
-# Compiler
-set(CMAKE_C_COMPILER clang)
+# Compiler (defaults to clang if unspecified)
+if (NOT DEFINED CMAKE_C_COMPILER)
+  set(CMAKE_C_COMPILER clang)
+endif()
 
 # Compiler flags
 set(CMAKE_C_FLAGS "-Wall -Wextra -Wpedantic -Werror")
