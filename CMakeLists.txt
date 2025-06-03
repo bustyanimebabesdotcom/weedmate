@@ -6,7 +6,7 @@ project(weedmate LANGUAGES C)
 
 # Compiler (defaults to clang if unspecified)
 if (NOT DEFINED CMAKE_C_COMPILER)
-  set(CMAKE_C_COMPILER clang)
+	set(CMAKE_C_COMPILER clang)
 endif()
 
 # Compiler flags
@@ -29,9 +29,9 @@ add_executable(weedmate ${WEEDMATE_SOURCES})
 
 # Include directories for namespace
 target_include_directories(weedmate
-  PRIVATE
-	${CMAKE_SOURCE_DIR}/code/include
-	${CMAKE_SOURCE_DIR}/code/input
+	PRIVATE
+		${CMAKE_SOURCE_DIR}/code/include
+		${CMAKE_SOURCE_DIR}/code/input
 )
 
 # Link math library
