@@ -77,35 +77,33 @@ WeedMate supports a few **standard CLI arguments**.
 
 ## How to Build
 
-You need `cmake` and `make`, or 'ninja'.
-
-### Build script
-
-Included is a build script that you can run. It relies on clang, if you do not have clang, you can edit the script and comment out the 'CC=clang' line.
-
-To run it, simply do
+You need a C compiler, `cmake` and `make`.
+The build script and Makefile defaults to Ninja and Clang (gcc on ARM) with build type set to release.
+I recommend you use Ninja, as it has faster buildtimes.
+To build the project, simply run:
 
 ```bash
-chmod +x build.sh
-./build.sh
-
-```
-
-And it will do it for you. The script also generates 'compile_commands.json' for 'clangd'.
-
-### Manual
-```bash
-mkdir build
-cd build
-cmake ..
 make
+
 ```
-To build debug or release builds, replace the `cmake ..` command with one of the commands below
+This will run the interactive script on the first run.
+Once you've ran it once and build folder has been made, you can simply run `make` again to build normally.
+This has all been set up to be as easy as possbile for anyone to use.
+
+For non-interactive build:
 
 ```bash
-cmake -DCMAKE_BUILD_TYPE=Release ..
-cmake -DCMAKE_BUILD_TYPE=Debug ..
+make build
+
 ```
+
+For debug build:
+
+```bash
+make debug
+```
+
+The script also generates 'compile_commands.json' for 'clangd'.
 
 Then run the executable:
 
