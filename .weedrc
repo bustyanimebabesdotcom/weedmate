@@ -1,0 +1,41 @@
+[Note]
+# weedmate's save file can be edited quite easily.
+# If you screw too much with the formatting,
+# the save file will be deleted upon launch.
+
+[Strains]
+strain_01=White Death
+strain_02=Purple Plutonium OG
+strain_03=Dankmestic Abuse
+strain_04=Fentanyl Kush
+strain_05=Blunt Trauma
+strain_06=Petroleum #42
+strain_07=Ganjaffi
+strain_08=Dental Prescription
+strain_09=Nigger Nigger
+strain_10=Rohypno-Chronic
+strain_11=Holy Shit OG
+strain_12=George W Kush
+strain_13=Bad Dragon
+strain_14=Carpet Muncher
+strain_15=Freedom Highve
+
+[Prices]
+price_01=13
+price_02=12
+price_03=24
+price_04=48
+price_05=10
+price_06=35
+price_07=23
+price_08=9
+price_09=6
+price_10=30
+price_11=8
+price_12=8
+price_13=17
+price_14=11
+price_15=22
+
+[City]
+index=3

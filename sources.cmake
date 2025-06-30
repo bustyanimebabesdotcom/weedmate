@@ -1,12 +1,12 @@
 set(WEEDMATE_SOURCES
-	code/main.c
-	code/menu.c
-	code/signals.c
-	code/functions.c
-	code/savefile.c
-	code/strain.c
-	code/data.c
-	code/boot.c
-	code/args.c
-	code/input/input.c
+	src/main.c
+	src/menu.c
+	src/signals.c
+	src/functions.c
+	src/savefile.c
+	src/strain.c
+	src/data.c
+	src/boot.c
+	src/args.c
+	input/input.c
 )

@@ -30,8 +30,8 @@ add_executable(weedmate ${WEEDMATE_SOURCES})
 # Include directories for namespace
 target_include_directories(weedmate
 	PRIVATE
-		${CMAKE_SOURCE_DIR}/code/include
-		${CMAKE_SOURCE_DIR}/code/input
+		${CMAKE_SOURCE_DIR}/include
+		${CMAKE_SOURCE_DIR}/input
 )
 
 # Link math library

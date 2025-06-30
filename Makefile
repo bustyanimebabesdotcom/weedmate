@@ -3,6 +3,7 @@
 # Defaults
 PROJECT_NAME		?= weedmate
 BUILD_DIR			?= build
+BUILD_COMMAND		?= ./$(PROJECT_NAME)
 PREFIX				?= /usr/local
 CMAKE_BUILD_TYPE	?= Release
 CMAKE_GENERATOR		?= Ninja
@@ -24,14 +25,23 @@ ifeq ($(shell command -v ninja 2>/dev/null),)
 	endif
 endif
 
+# Check that build.sh exists
+SCRIPT_EXISTS := $(wildcard build.sh)
+
 # Check dependencies
 CMAKE := $(shell command -v cmake || (echo "Error: cmake not found" >&2; exit 1)) 
 
 # Targets
-ifneq ($(wildcard $(BUILD_DIR)),)
+ifneq ($(wildcard $(BUILD_DIR)/.configured),)
 all: build
 else
+ifneq ($(SCRIPT_EXISTS),)
 all: script
+else
+all:
+	@echo "[!] build.sh not found, using direct configuration..."
+	@$(MAKE) --no-print-directory configure build
+endif
 endif
 
 script:
@@ -61,17 +71,20 @@ install: build
 	@cmake --install $(BUILD_DIR) --prefix $(DESTDIR)$(PREFIX)
 
 clean:
+	@echo "[!] Cleaning up..."
 	@rm -rf $(BUILD_DIR)
 
 run: build
-	@$(BUILD_DIR)/$(PROJECT_NAME)
+	@cd $(BUILD_DIR) && $(BUILD_COMMAND)
 
 help:
 	@echo "Usage: make [OPTION]"
 	@echo
 	@echo "Targets:"
 	@echo "  all            - Build the project (default)."
-	@echo "  script         - Run the build script."
+ifneq ($(SCRIPT_EXISTS),)
+	@echo "  script         - Run the build script (detected)."
+endif
 	@echo "  configure      - Run CMake configuration." 
 	@echo "  build          - Non-interactive configuration and build."
 	@echo "  debug          - Deletes folder and makes debug build."
